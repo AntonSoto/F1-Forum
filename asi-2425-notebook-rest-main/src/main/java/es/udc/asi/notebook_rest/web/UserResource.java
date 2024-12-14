@@ -33,6 +33,11 @@ public class UserResource {
     return userService.findOne(id);
   }
 
+  @PutMapping("/{id}/admin")
+  public UserDTOPublic makeAdmin(@PathVariable Long id) throws NotFoundException, OperationNotAllowed {
+    return userService.updateAdmin(id, true);
+  }
+
   @PutMapping("/{id}/active")
   public UserDTOPublic activate(@PathVariable Long id) throws NotFoundException, OperationNotAllowed {
     return userService.updateActive(id, true);

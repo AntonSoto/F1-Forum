@@ -119,4 +119,31 @@ public class UserService {
     userDAO.delete(theUser);
   }
 
+  @PreAuthorize("hasAuthority('ADMIN')")
+  @Transactional(readOnly = false)
+  public UserDTOPublic updateAdmin(Long id, boolean makeAdmin) throws NotFoundException, OperationNotAllowed {
+    User user = userDAO.findById(id);
+    if (user == null) {
+      throw new NotFoundException(id.toString(), User.class);
+    }
+
+    UserDTOPrivate currentUser = getCurrentUserWithAuthority();
+    if (currentUser.getId().equals(user.getId())) {
+      throw new OperationNotAllowed("The user cannot activate/deactive itself");
+    }
+    UserAuthority authority;
+    if(makeAdmin){
+      authority = UserAuthority.ADMIN;
+      user.setAuthority(authority);
+      userDAO.update(user);
+      return new UserDTOPublic(user);
+    }else{
+      authority = UserAuthority.USER;
+      user.setAuthority(authority);
+      userDAO.update(user);
+      return new UserDTOPublic(user);
+    }
+
+  }
+
 }
