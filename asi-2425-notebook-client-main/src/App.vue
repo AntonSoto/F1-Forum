@@ -51,7 +51,8 @@
           </li>
         </ul>
 
-        <span v-if="store.state.user.logged"> autenticado como {{ store.state.user.login }} </span>
+        <span v-if="store.state.user.logged"> autenticado como&nbsp; </span>
+        <router-link :to="'/profile/' + user.id" v-if="store.state.user.logged">{{ store.state.user.login }} </router-link>
         <ul class="navbar-nav">
           <!-- <li class="nav-item" v-if="!store.state.user.logged">
             <router-link class="nav-link" to="/login" active-class="active">
@@ -71,11 +72,13 @@
 <script>
 import { getStore } from "./common/store";
 import auth from "./common/auth";
+import AccountRepository from "./repositories/AccountRepository";
 
 export default {
   data() {
     return {
       store: getStore(),
+      user: {},
       auth
     };
   },
@@ -86,12 +89,18 @@ export default {
     }
   },
   watch: {
-    $route(newValue) {
+    async $route(newValue) {
       if (this.store.state.user.logged) {
-        if (["NoteList", "NoteListSetup"].includes(newValue.name)) {
-          this.$refs.dropdownElement.classList.add("active");
-        } else {
-          this.$refs.dropdownElement.classList.remove("active");
+        try {
+          this.user = await AccountRepository.getAccount();
+          console.log(this.user.id)
+          if (["NoteList", "NoteListSetup"].includes(newValue.name)) {
+            this.$refs.dropdownElement.classList.add("active");
+          } else {
+            this.$refs.dropdownElement.classList.remove("active");
+          }
+        } catch (error) {
+          console.error("Error fetching account:", error);
         }
       }
     }

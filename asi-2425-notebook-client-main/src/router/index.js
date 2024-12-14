@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AboutView from "../views/AboutView.vue";
 import NoteList from "../components/NoteList.vue";
 import NoteForm from "../components/NoteForm.vue";
 import NoteDetail from "../components/NoteDetail.vue";
@@ -7,6 +6,7 @@ import ErrorNotFoundView from "../views/ErrorNotFoundView.vue";
 import LoginForm from "../components/LoginForm.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
 import UserList from "@/components/UserList.vue";
+import UserProfile from "@/components/UserProfile.vue";
 
 import auth from "@/common/auth";
 import { getStore } from "@/common/store";
@@ -32,9 +32,9 @@ const routes = [
     meta: { public: true }
   },
   {
-    path: "/about",
-    name: "about",
-    component: AboutView
+    path: "/profile/:noteId",
+    name: "profile",
+    component: UserProfile
   },
   {
     path: "/notes",
