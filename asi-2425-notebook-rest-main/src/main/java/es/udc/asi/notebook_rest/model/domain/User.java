@@ -1,6 +1,7 @@
 package es.udc.asi.notebook_rest.model.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -27,6 +28,12 @@ public class User {
 
   private String password;
 
+  private String nombrePila;
+
+  private String apellidos;
+
+  private Date fechaNacimiento;
+
   @Enumerated(EnumType.STRING)
   private UserAuthority authority;
 
@@ -34,6 +41,8 @@ public class User {
   private List<Note> notes = new ArrayList<>();
 
   private boolean active = true;
+
+
 
   public User() {
   }
@@ -85,5 +94,17 @@ public class User {
   public void setActive(boolean active) {
     this.active = active;
   }
+
+  public String getNombrePila() {return nombrePila;}
+
+  public void setNombrePila(String nombrePila) {this.nombrePila = nombrePila;}
+
+  public String getApellidos() {return apellidos;}
+
+  public void setApellidos(String apellidos) {this.apellidos = apellidos;}
+
+  public Date getFechaNacimiento() {return fechaNacimiento;}
+
+  public void setFechaNacimiento(Date fechaNacimiento) {this.fechaNacimiento = fechaNacimiento;}
 
 }

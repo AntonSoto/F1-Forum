@@ -6,6 +6,7 @@ export default {
   logout,
   getToken,
   isAdmin,
+  register,
   isAuthenticationChecked: isAuthenticationChecked()
 };
 
@@ -18,6 +19,10 @@ async function login(credentials) {
   const response = await AccountRepository.authenticate(credentials);
   _saveToken(response.token);
   return _authenticate();
+}
+
+async function register(credentials) {
+  await AccountRepository.registerAccount(credentials);
 }
 
 function logout() {

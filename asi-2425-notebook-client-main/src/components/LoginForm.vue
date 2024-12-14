@@ -11,6 +11,9 @@
     <div>
       <button @click="autenticarme()">autenticarse</button>
     </div>
+    <div>
+      <router-link :to="'/register'">Registrarse</router-link>
+    </div>
   </div>
 </template>
 
