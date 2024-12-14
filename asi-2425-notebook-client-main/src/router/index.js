@@ -6,6 +6,7 @@ import NoteDetail from "../components/NoteDetail.vue";
 import ErrorNotFoundView from "../views/ErrorNotFoundView.vue";
 import LoginForm from "../components/LoginForm.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
+import UserList from "@/components/UserList.vue";
 
 import auth from "@/common/auth";
 import { getStore } from "@/common/store";
@@ -22,6 +23,12 @@ const routes = [
     path: "/register",
     name: "Register",
     component: RegisterForm,
+    meta: { public: true }
+  },
+  {
+    path: "/users",
+    name: "Users",
+    component: UserList,
     meta: { public: true }
   },
   {

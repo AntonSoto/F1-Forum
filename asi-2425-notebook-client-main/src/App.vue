@@ -16,6 +16,11 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0" v-if="store.state.user.logged">
           <li class="nav-item">
+            <router-link class="nav-link" to="/users" active-class="active">
+              Usuarios
+            </router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link" to="/about" active-class="active">
               Acerca de
             </router-link>
