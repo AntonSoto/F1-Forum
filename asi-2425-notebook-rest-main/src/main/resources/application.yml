@@ -5,8 +5,8 @@ spring:
     host: localhost
     port: 5432
     database: asi
-    username: postgres
-    password: postgres
+    username: asi
+    password: asi
     url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.database}
   jpa:
     open-in-view: false
