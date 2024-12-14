@@ -15,7 +15,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0" v-if="store.state.user.logged">
-          <li class="nav-item">
+          <li class="nav-item" v-if="auth.isAdmin()">
             <router-link class="nav-link" to="/users" active-class="active">
               Usuarios
             </router-link>
@@ -75,7 +75,8 @@ import auth from "./common/auth";
 export default {
   data() {
     return {
-      store: getStore()
+      store: getStore(),
+      auth
     };
   },
   methods: {
@@ -94,7 +95,7 @@ export default {
         }
       }
     }
-  }
+  },
 };
 </script>
 
