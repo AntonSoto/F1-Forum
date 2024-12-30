@@ -9,7 +9,7 @@
       <input type="password" id="pass" v-model="auxPass" @keyup.enter="autenticarme()" />
     </div>
     <div>
-      <button @click="autenticarme()">autenticarse</button>
+      <button @click="autenticarme()">Autenticarse</button>
     </div>
     <div>
       <router-link :to="'/register'">Registrarse</router-link>
