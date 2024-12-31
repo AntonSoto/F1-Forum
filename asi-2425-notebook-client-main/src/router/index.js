@@ -7,6 +7,7 @@ import LoginForm from "../components/LoginForm.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
 import UserList from "@/components/UserList.vue";
 import UserProfile from "@/components/UserProfile.vue";
+import CircuitoIndividual from "@/components/CircuitoIndividual.vue";
 
 import auth from "@/common/auth";
 import { getStore } from "@/common/store";
@@ -61,6 +62,11 @@ const routes = [
     path: "/notes/:noteId/edit",
     name: "NoteEdit",
     component: NoteForm
+  },
+  {
+    path: "/circuitos/:circuitoId",
+    name: "CircuitoId",
+    component: CircuitoIndividual
   },
   {
     path: "/:catchAll(.*)*",

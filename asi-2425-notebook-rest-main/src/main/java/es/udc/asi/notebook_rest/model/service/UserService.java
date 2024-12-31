@@ -1,5 +1,6 @@
 package es.udc.asi.notebook_rest.model.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,12 +55,12 @@ public class UserService {
   }
 
   @Transactional(readOnly = false)
-  public void registerUser(String login, String password) throws UserLoginExistsException {
-    registerUser(login, password, false);
+  public void registerUser(String login, String password, String nombre, String apellidos, Date fechaNacimiento) throws UserLoginExistsException {
+    registerUser(login, password, nombre, apellidos, fechaNacimiento,false);
   }
 
   @Transactional(readOnly = false)
-  public void registerUser(String login, String password, boolean isAdmin) throws UserLoginExistsException {
+  public void registerUser(String login, String password, String nombre, String apellidos, Date fechaNacimiento, boolean isAdmin) throws UserLoginExistsException {
     if (userDAO.findByLogin(login) != null) {
       throw new UserLoginExistsException(login);
     }
@@ -69,6 +70,10 @@ public class UserService {
 
     user.setLogin(login);
     user.setPassword(encryptedPassword);
+    user.setNombrePila(nombre);
+    user.setApellidos(apellidos);
+    user.setFechaNacimiento(fechaNacimiento);
+
     user.setAuthority(UserAuthority.USER);
     if (isAdmin) {
       user.setAuthority(UserAuthority.ADMIN);

@@ -1,18 +1,18 @@
 <template>
-  <div>
-    <div class="mb-3 mt-3">
-      <label for="login">Login: </label>
-      <input type="text" id="login" v-model="auxLogin" @keyup.enter="autenticarme()" />
+  <div class="f1-container">
+    <div class="form-group mb-3 mt-3">
+      <label for="login" class="f1-label">Login:</label>
+      <input type="text" id="login" class="f1-input" v-model="auxLogin" @keyup.enter="autenticarme()" />
     </div>
-    <div class="mb-3">
-      <label for="pass">Password: </label>
-      <input type="password" id="pass" v-model="auxPass" @keyup.enter="autenticarme()" />
-    </div>
-    <div>
-      <button @click="autenticarme()">Autenticarse</button>
+    <div class="form-group mb-3">
+      <label for="pass" class="f1-label">Password:</label>
+      <input type="password" id="pass" class="f1-input" v-model="auxPass" @keyup.enter="autenticarme()" />
     </div>
     <div>
-      <router-link :to="'/register'">Registrarse</router-link>
+      <button class="f1-button" @click="autenticarme()">Autenticarse</button>
+    </div>
+    <div>
+      <router-link :to="'/register'" class="f1-link">Registrarse</router-link>
     </div>
   </div>
 </template>
@@ -47,3 +47,7 @@ export default {
   }
 };
 </script>
+
+<style>
+
+</style>
