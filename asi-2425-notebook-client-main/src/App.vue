@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-      <router-link class="navbar-brand" to="/notes"> Notebook 2024/2025 </router-link>
+      <router-link class="navbar-brand" to="/circuitos"> F1 FORUM </router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -20,35 +20,7 @@
               Usuarios
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/about" active-class="active">
-              Acerca de
-            </router-link>
-          </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              ref="dropdownElement"
-            >
-              Notas
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <router-link class="dropdown-item" to="/notes" active-class="active"
-                  >Lista de notas</router-link
-                >
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/asdf" active-class="active">
-                  URL incorrecta
-                </router-link>
-              </li>
-            </ul>
-          </li>
+        
         </ul>
 
         <span v-if="store.state.user.logged"> autenticado como&nbsp; </span>
@@ -128,7 +100,5 @@ nav a {
 }
 
 /* fixing popper warning in bootstrap 5.2: */
-.dropdown-menu {
-  margin-top: 0px !important;
-}
+
 </style>
