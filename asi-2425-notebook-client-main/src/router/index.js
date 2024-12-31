@@ -8,7 +8,7 @@ import RegisterForm from "@/components/RegisterForm.vue";
 import UserList from "@/components/UserList.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import CircuitoIndividual from "@/components/CircuitoIndividual.vue";
-
+import Circuitos from "@/components/Circuitos.vue";
 import auth from "@/common/auth";
 import { getStore } from "@/common/store";
 
@@ -68,6 +68,12 @@ const routes = [
     name: "CircuitoId",
     component: CircuitoIndividual
   },
+  {
+    path: '/circuitos',
+    name: 'Circuitos',
+    component: Circuitos,
+  },
+
   {
     path: "/:catchAll(.*)*",
     component: ErrorNotFoundView,
