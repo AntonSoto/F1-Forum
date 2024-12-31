@@ -1,28 +1,46 @@
 <template>
     <div class="circuitos-container">
       <h2 class="circuitos-title">Circuitos</h2>
-      
+  
       <!-- Carrusel -->
-    <div class="carousel-container">
-      <div class="carousel">
-        <!-- Imagen clickeable -->
-        <a class= "carousel" :href="'/circuitos/' + images[currentIndex].name">
-          <img :src="images[currentIndex].src" :alt="images[currentIndex].name" class="carousel-image" />
-        </a>
-      </div>
+      <div class="carousel-container">
+        <div class="carousel">
+          <!-- Imagen clickeable -->
+          <a class="carousel" :href="'/circuitos/' + images[currentIndex].name">
+            <img :src="images[currentIndex].src" :alt="images[currentIndex].name" class="carousel-image" />
+          </a>
+        </div>
   
         <button @click="prevImage" class="carousel-button prev">‹</button>
         <button @click="nextImage" class="carousel-button next">›</button>
-  
-        <div class="indicator">
-          <span v-for="(image, index) in images" :key="index" :class="['dot', { active: index === currentIndex }]"></span>
-        </div>
         
+        <div class="indicator">
+          <span v-for="(image, index) in images" :key="index"
+                :class="['dot', { active: index === currentIndex }]"></span>
+        </div>
+  
         <!-- Enlace debajo de la imagen -->
         <div class="circuito-link">
           <a :href="'/circuitos/' + images[currentIndex].name" class="circuito-name">
             Ver circuito: {{ images[currentIndex].name }}
           </a>
+        </div>
+      </div>
+  
+      <!-- Lista de todos los circuitos con foto -->
+      <div class="circuitos-list">
+        <h3>Todos los Circuitos</h3>
+        <div class="circuitos-list-container">
+          <div class="circuitos-row">
+            <div class="circuito-item" v-for="(image, index) in images" :key="index">
+              <a :href="'/circuitos/' + image.name" class="circuito-link-item">
+                <!-- Imagen del circuito -->
+                <img :src="image.src" :alt="image.name" class="circuito-thumbnail" />
+                <!-- Nombre del circuito -->
+                <span>{{ image.name }}</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -148,6 +166,68 @@
   
   .circuito-name:hover {
     text-decoration: underline;
+  }
+  
+  /* Estilos para la lista de circuitos */
+  .circuitos-list {
+    margin-top: 30px;
+  }
+  
+  .circuitos-list h3 {
+    font-size: 22px;
+    color: #ff1801;
+    margin-bottom: 15px;
+  }
+  
+  .circuitos-list-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten */
+    justify-content: center;
+    gap: 20px;
+    padding: 0 20px;
+  }
+  
+  .circuitos-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  
+  .circuito-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 30%; /* Tres elementos por fila */
+  }
+  
+  .circuito-link-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.3s ease;
+  }
+  
+  .circuito-link-item:hover {
+    transform: scale(1.05);
+    color: #ff1801;
+  }
+  
+  /* Imagen más grande y centrada */
+  .circuito-thumbnail {
+    width: 100%;
+    height: auto;
+    max-width: 150px; /* Tamaño de la imagen */
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .circuito-link-item span {
+    font-size: 18px;
+    margin-top: 10px;
   }
   </style>
   
