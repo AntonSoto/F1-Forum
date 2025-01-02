@@ -30,7 +30,7 @@
         <button class="f1-button" @click="registrarme()">Registrarse</button>
       </div>
       <div>
-        <router-link :to="'/'" class="f1-link">Log In</router-link>
+        <router-link :to="'/login'" class="f1-link">Log In</router-link>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@ export default {
               alert(e.message);
             }
           }
-          this.$router.push("/notes");
+          this.$router.push("/");
         } catch (e) {
           console.error(e);
           if (e.response?.data?.message) {

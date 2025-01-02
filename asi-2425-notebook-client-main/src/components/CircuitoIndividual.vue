@@ -1,7 +1,7 @@
 <template>
   <div class="circuit-info">
-      <h1>{{ circuit.nombreCircuito }}</h1>
-      <p><strong>Ubicación:</strong> {{ circuit.localidad }}, {{ circuit.pais }}</p>
+      <h1>{{ circuit.name }}</h1>
+      <p><strong>Ubicación:</strong> {{ circuit.location }}, {{ circuit.country }}</p>
       <p><strong>Horarios:</strong> {{ circuit.schedule }}</p>
       <p><strong>Valoraciones:</strong> {{ circuit.rating || "Sin valoraciones" }}</p>
 
@@ -17,12 +17,13 @@ export default {
   data() {
       return {
           circuit: {
-              id:"",
-              nombreCircuito: "",
-              localidad: "",
-              pais: "",
-              latitud: null,
-              longitud: null,
+              name: "",
+              location: "",
+              country: "",
+              latitude: null,
+              longitude: null,
+              schedule: "No disponible", // Placeholder
+              rating: null, // Placeholder
           },
       };
   },
@@ -30,40 +31,40 @@ export default {
       async fetchCircuitData() {
         const circuitoId = this.$route.params.circuitoId; 
         try{
-
+          // Intentamos obtener el circuito desde el backend
           const circuitData = await CircuitRepository.findOne(circuitoId);
           this.circuit = circuitData;
           this.initializeMap();
-
         }catch{
-
+          console.log("hola")
+            // Si no encontramos el circuito en el backend, obtenemos la información desde la API externa
             const response = await fetch(
                   `https://ergast.com/api/f1/circuits/${circuitoId}.json`
-            );
+              );
               const data = await response.json();
               console.log(data)
   
               const circuitData = data.MRData.CircuitTable.Circuits[0];
               this.circuit = {
-                id: circuitoId,
-                nombreCircuito: circuitData.circuitName,
-                localidad: circuitData.Location.locality,
-                pais: circuitData.Location.country,
-                latitud: circuitData.Location.lat,
-                longitud: circuitData.Location.long,
+                name: circuitData.circuitName,
+                location: circuitData.Location.locality,
+                country: circuitData.Location.country,
+                latitude: circuitData.Location.lat,
+                longitude: circuitData.Location.long,
+                schedule: "No disponible", // Placeholder
+                rating: null, // Placeholder
               };
-
               this.initializeMap();
 
               // Después de mostrar la información, guardamos el circuito en el backend
-              await CircuitRepository.save(this.circuit);
+              //await CircuitRepository.save(circuitFromApi);
         }
 
       },
       initializeMap() {
-          if (this.circuit.latitud && this.circuit.longitud) {
+          if (this.circuit.latitude && this.circuit.longitude) {
               const map = L.map("map").setView(
-                  [this.circuit.latitud, this.circuit.longitud],
+                  [this.circuit.latitude, this.circuit.longitude],
                   13
               );
 
@@ -71,9 +72,9 @@ export default {
                   maxZoom: 19,
               }).addTo(map);
 
-              L.marker([this.circuit.latitud, this.circuit.longitud])
+              L.marker([this.circuit.latitude, this.circuit.longitude])
                   .addTo(map)
-                  .bindPopup(this.circuit.nombreCircuito)
+                  .bindPopup(this.circuit.name)
                   .openPopup();
           }
       },

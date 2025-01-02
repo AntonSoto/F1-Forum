@@ -13,7 +13,10 @@
       <ul class="usuariosList">
         <li v-for="user in users" :key="user.id">
           {{ user.login }}
-          <button @click="makeAdmin(user.id)">Convertir en administrador</button>
+          <div>
+            <button @click="makeAdmin(user.id)">Convertir en administrador</button>
+            <button @click="deleteUser(user.id)" class="delete-btn">Eliminar</button>
+          </div>
         </li>
       </ul>
     </div>
@@ -21,7 +24,7 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import UserRepository from "../repositories/UserRepository";
 
 export default {
@@ -32,10 +35,10 @@ export default {
     };
   },
   methods: {
-    makeAdmin(id) {
+    async makeAdmin(id) {
       Swal.fire({
-        title: "Estás seguro?",
-        text: "Vas a convertir un usuario en administrador",
+        title: "¿Estás seguro?",
+        text: "Vas a convertir un usuario en administrador.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -43,28 +46,65 @@ export default {
         confirmButtonText: "Estoy seguro"
       }).then(async (result) => {
         if (result.isConfirmed) {
-          Swal.fire({
-            title: "Hecho!",
-            text: "El usuario se ha convertido en admin.",
-            icon: "success",
-            timer: 2000
-          });
           try {
             await UserRepository.makeAdmin(id);
-            let users = await UserRepository.findAll();
-            this.admins = users.filter(user => user.authority === "ADMIN");
-            this.users = users.filter(user => user.authority === "USER");
+            Swal.fire({
+              title: "Hecho",
+              text: "El usuario ha sido convertido en administrador.",
+              icon: "success",
+              timer: 2000
+            });
+            await this.refreshUserList();
           } catch (err) {
             console.error(err);
+            Swal.fire({
+              title: "Error",
+              text: "No se pudo convertir al usuario en administrador.",
+              icon: "error"
+            });
           }
         }
       });
+    },
+    async deleteUser(id) {
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará al usuario y todas sus valoraciones.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Eliminar"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await UserRepository.deleteUser(id);
+            Swal.fire({
+              title: "Eliminado",
+              text: "El usuario ha sido eliminado.",
+              icon: "success",
+              timer: 2000
+            });
+            await this.refreshUserList();
+          } catch (err) {
+            console.error(err);
+            Swal.fire({
+              title: "Error",
+              text: "No se pudo eliminar al usuario.",
+              icon: "error"
+            });
+          }
+        }
+      });
+    },
+    async refreshUserList() {
+      const users = await UserRepository.findAll();
+      this.admins = users.filter(user => user.authority === "ADMIN");
+      this.users = users.filter(user => user.authority === "USER");
     }
   },
   async mounted() {
-    let users = await UserRepository.findAll();
-    this.admins = users.filter(user => user.authority === "ADMIN");
-    this.users = users.filter(user => user.authority === "USER");
+    await this.refreshUserList();
   }
 };
 </script>
@@ -74,24 +114,24 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 20px;
-  overflow-y: auto; /* Permite el desplazamiento si el contenido es demasiado grande */
+  overflow-y: auto;
 }
 
 .listaUsurarios {
-  flex: 1; /* Hace que cada lista ocupe el mismo espacio */
-  margin: 0 10px; /* Espacio entre las listas */
-  background-color: #fff; /* Fondo blanco para cada sección */
+  flex: 1;
+  margin: 0 10px;
+  background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 15px;
-  max-height: 100%; /* Maximo tamaño para que no se desborde */
-  overflow-y: auto; /* Permite scroll si el contenido es largo */
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 .tituloUsers {
   text-align: center;
   margin-bottom: 15px;
-  color: #ff1801; /* Color rojo Ferrari */
+  color: #ff1801;
   font-size: 20px;
 }
 
@@ -101,18 +141,18 @@ export default {
 }
 
 .usuariosList li {
-  background-color: #f1f1f1; /* Fondo suave para cada usuario */
+  background-color: #f1f1f1;
   padding: 10px;
   margin-bottom: 8px;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 button {
-  background-color: #ff1801; /* Rojo Ferrari */
+  background-color: #ff1801;
   color: #ffffff;
   padding: 5px 15px;
   border: none;
@@ -122,11 +162,20 @@ button {
 }
 
 button:hover {
-  background-color: #e60000; /* Rojo más oscuro al pasar el mouse */
+  background-color: #e60000;
 }
 
 button:focus {
   outline: none;
-  box-shadow: 0 0 5px rgba(255, 24, 1, 0.8); /* Sombra cuando se hace clic */
+  box-shadow: 0 0 5px rgba(255, 24, 1, 0.8);
+}
+
+.delete-btn {
+  background-color: #d33;
+  margin-left: 10px;
+}
+
+.delete-btn:hover {
+  background-color: #b30000;
 }
 </style>

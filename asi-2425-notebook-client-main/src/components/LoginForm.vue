@@ -37,7 +37,7 @@ export default {
           login: this.auxLogin,
           password: this.auxPass
         });
-        this.$router.push("/circuitos");
+        this.$router.push("/");
       } catch (e) {
         console.error(e);
         if (e.response?.data?.message) {

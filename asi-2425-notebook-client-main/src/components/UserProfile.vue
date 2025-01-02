@@ -10,13 +10,18 @@
       <p><strong>Apellidos:</strong> {{ user.apellidos || "No especificados" }}</p>
     </div>
     <button class="f1-button" @click="desautenticarme()">Logout</button>
+    <button class="f1-button" @click="$router.push(`/profile/${user.id}/edit`)">Editar Contraseña</button>
+    <!-- Nuevo botón para eliminar cuenta -->
+    <button class="f1-button delete-btn" @click="deleteAccount">Eliminar Cuenta</button>
   </div>
 </template>
+
 
 <script>
 import Swal from 'sweetalert2';
 import AccountRepository from "@/repositories/AccountRepository";
 import auth from "../common/auth";
+import UserRepository from '@/repositories/UserRepository';
 
 export default {
   data() {
@@ -47,6 +52,7 @@ export default {
     }
   },
   methods: {
+    // Función para cerrar sesión
     desautenticarme() {
       Swal.fire({
         title: "¿Estás seguro?",
@@ -63,9 +69,46 @@ export default {
         }
       });
     },
+
+    // Función para eliminar la cuenta
+    async deleteAccount() {
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará permanentemente tu cuenta y todos tus datos.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Eliminar Cuenta",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            // Llamar al repositorio para eliminar la cuenta
+            await UserRepository.deleteUser(this.user.id);
+            Swal.fire({
+              title: "Cuenta eliminada",
+              text: "Tu cuenta ha sido eliminada correctamente.",
+              icon: "success",
+              timer: 2000,
+            });
+            // Redirigir a la página de login después de la eliminación
+            auth.logout();  // Asegura que se cierre la sesión
+            this.$router.push("/login");
+          } catch (error) {
+            console.error("Error al eliminar la cuenta:", error);
+            Swal.fire({
+              title: "Error",
+              text: "Hubo un problema al eliminar tu cuenta.",
+              icon: "error",
+            });
+          }
+        }
+      });
+    },
   },
 };
 </script>
+
 
 <style>
 

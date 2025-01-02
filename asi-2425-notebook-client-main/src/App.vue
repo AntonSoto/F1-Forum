@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-      <router-link class="navbar-brand" to="/circuitos"> F1 FORUM </router-link>
+      <router-link class="navbar-brand" to="/"> F1 FORUM </router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -20,17 +20,18 @@
               Usuarios
             </router-link>
           </li>
-        
         </ul>
 
-        <span v-if="store.state.user.logged"> autenticado como&nbsp; </span>
+        <span v-if="store.state.user.logged"> Autenticado como&nbsp; </span>
         <router-link :to="'/profile/' + user.id" v-if="store.state.user.logged">{{ store.state.user.login }} </router-link>
+        
         <ul class="navbar-nav">
-          <!-- <li class="nav-item" v-if="!store.state.user.logged">
+          <!-- Mostrar el enlace de Login si el usuario no está autenticado -->
+          <li class="nav-item" v-if="!store.state.user.logged">
             <router-link class="nav-link" to="/login" active-class="active">
               Login
             </router-link>
-          </li> -->
+          </li>
           <li class="nav-item" v-if="store.state.user.logged">
             <a class="nav-link" @click="desautenticarme()"> Logout </a>
           </li>
@@ -40,6 +41,7 @@
   </nav>
   <router-view />
 </template>
+
 
 <script>
 import { getStore } from "./common/store";

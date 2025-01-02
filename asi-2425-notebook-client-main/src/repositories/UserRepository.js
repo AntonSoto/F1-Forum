@@ -8,8 +8,12 @@ export default {
   },
 
   async makeAdmin(id) {
-    console.log("Hago la petición")
+    console.log("Hago la petición");
     return (await HTTP.put(`${resource}/${id}/admin`)).data;
-  }
+  },
 
+  async deleteUser(id) {
+    console.log(`Eliminando usuario con ID ${id}`);
+    return await HTTP.delete(`${resource}/${id}`);
+  }
 };

@@ -11,5 +11,9 @@ export default {
 
   async registerAccount(user) {
     return (await HTTP.post(`register`, user)).data;
+  },
+  async updatePassword(data) {
+    return (await HTTP.put(`account/change-password`, data)).data;
   }
+
 };

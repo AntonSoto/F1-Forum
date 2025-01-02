@@ -9,13 +9,26 @@ import UserList from "@/components/UserList.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import CircuitoIndividual from "@/components/CircuitoIndividual.vue";
 import Circuitos from "@/components/Circuitos.vue";
+import EditProfile from "@/components/EditProfile.vue";
 import auth from "@/common/auth";
 import { getStore } from "@/common/store";
 
 
 const routes = [
   {
-    path: "/",
+    path: "/circuitos/:circuitoId",
+    name: "CircuitoId",
+    component: CircuitoIndividual,
+    meta: { public: true } // Ahora es pública
+  },
+  {
+    path: '/',
+    name: 'Circuitos',
+    component: Circuitos,
+    meta: { public: true } // Ahora es pública
+  },
+  {
+    path: "/login",
     name: "Login",
     component: LoginForm,
     meta: { public: true, isLoginPage: true }
@@ -36,6 +49,12 @@ const routes = [
     path: "/profile/:noteId",
     name: "profile",
     component: UserProfile
+  },
+  {
+    path: "/profile/:profileId/edit",
+    name: "EditProfile",
+    component: EditProfile,
+    props: true,
   },
   {
     path: "/notes",
@@ -63,17 +82,6 @@ const routes = [
     name: "NoteEdit",
     component: NoteForm
   },
-  {
-    path: "/circuitos/:circuitoId",
-    name: "CircuitoId",
-    component: CircuitoIndividual
-  },
-  {
-    path: '/circuitos',
-    name: 'Circuitos',
-    component: Circuitos,
-  },
-
   {
     path: "/:catchAll(.*)*",
     component: ErrorNotFoundView,
