@@ -8,7 +8,6 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <!-- El enlace de Pilotos siempre está disponible -->
           <li class="nav-item">
             <router-link class="nav-link" to="/pilotos" active-class="active">
               Pilotos
@@ -72,7 +71,6 @@ export default {
       if (this.store.state.user.logged) {
         try {
           this.user = await AccountRepository.getAccount();
-          console.log(this.user.id);
           // Se eliminó la manipulación con dropdownElement ya que no está presente en el template
         } catch (error) {
           console.error("Error fetching account:", error);
