@@ -10,6 +10,8 @@ import UserProfile from "@/components/UserProfile.vue";
 import CircuitoIndividual from "@/components/CircuitoIndividual.vue";
 import Circuitos from "@/components/Circuitos.vue";
 import EditProfile from "@/components/EditProfile.vue";
+import Pilotos from "@/components/Pilotos.vue";
+import Constructores from "@/components/Constructores.vue";
 import auth from "@/common/auth";
 import { getStore } from "@/common/store";
 
@@ -55,6 +57,18 @@ const routes = [
     name: "EditProfile",
     component: EditProfile,
     props: true,
+  },
+  {
+    path: '/pilotos',
+    name: 'Pilotos',
+    component: Pilotos,
+    meta: { public: true }
+  },
+  {
+    path: '/constructores',
+    name: 'Constructores',
+    component: Constructores,
+    meta: { public: true }
   },
   {
     path: "/notes",
