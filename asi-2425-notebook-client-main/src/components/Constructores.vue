@@ -1,7 +1,7 @@
 <template>
     <div class="driver-standings">
       <div class="year-input">
-        <label for="year">Introduce un año (mínimo 1950):</label>
+        <label for="year">Introduce un año (mínimo 1959):</label>
         <input 
           type="number" 
           v-model="selectedYear" 
@@ -69,7 +69,7 @@
         }
   
         const year = Number(this.selectedYear);
-        if (year < 1950 || year > this.currentYear) {
+        if (year < 1958 || year > this.currentYear) {
           this.invalidYear = true;
           this.constructorStandings = [];
           return;
