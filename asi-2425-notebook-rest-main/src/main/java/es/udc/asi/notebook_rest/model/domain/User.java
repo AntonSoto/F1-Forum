@@ -40,6 +40,9 @@ public class User {
   @OneToMany(mappedBy = "owner")
   private List<Note> notes = new ArrayList<>();
 
+  @OneToMany(mappedBy = "usuario")
+  private List<Valoracion> valoraciones = new ArrayList<>();
+
   private boolean active = true;
 
 

@@ -4,20 +4,21 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class GranPremio {
 
-  @EmbeddedId
-  private GranPremioId id;
+  /*@EmbeddedId
+  private GranPremioId id = new GranPremioId();*/
 
-  @MapsId("GPid")
+  @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(nullable = false)
-  private Long GPid;
+  private Long id;
 
   @MapsId("ano")
   @ManyToOne
+  @JoinColumn(name = "ano", referencedColumnName = "ano")
   private Campeonato campeonato;
 
   @Column
@@ -31,6 +32,9 @@ public class GranPremio {
   private LocalDate fechaHoraClasificacion;
   private LocalDate fechaHoraCarrera;
 
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  private Circuito circuito;
+
   public GranPremio() {
   }
 
@@ -38,29 +42,20 @@ public class GranPremio {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     GranPremio that = (GranPremio) o;
-    return Objects.equals(id, that.id) && Objects.equals(GPid, that.GPid) && Objects.equals(campeonato, that.campeonato) && Objects.equals(numOrden, that.numOrden) && Objects.equals(fechaHoraLibres1, that.fechaHoraLibres1) && Objects.equals(fechaHoraLibres2, that.fechaHoraLibres2) && Objects.equals(fechaHoraLibres3, that.fechaHoraLibres3) && Objects.equals(fechaHoraClasificacion, that.fechaHoraClasificacion) && Objects.equals(fechaHoraCarrera, that.fechaHoraCarrera);
+    return Objects.equals(id, that.id) && Objects.equals(campeonato, that.campeonato) && Objects.equals(numOrden, that.numOrden) && Objects.equals(fechaHoraLibres1, that.fechaHoraLibres1) && Objects.equals(fechaHoraLibres2, that.fechaHoraLibres2) && Objects.equals(fechaHoraLibres3, that.fechaHoraLibres3) && Objects.equals(fechaHoraClasificacion, that.fechaHoraClasificacion) && Objects.equals(fechaHoraCarrera, that.fechaHoraCarrera) && Objects.equals(circuito, that.circuito);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, GPid, campeonato, numOrden, fechaHoraLibres1, fechaHoraLibres2, fechaHoraLibres3, fechaHoraClasificacion, fechaHoraCarrera);
+    return Objects.hash(id, campeonato, numOrden, fechaHoraLibres1, fechaHoraLibres2, fechaHoraLibres3, fechaHoraClasificacion, fechaHoraCarrera, circuito);
   }
 
-
-  public GranPremioId getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(GranPremioId id) {
+  public void setId(Long id) {
     this.id = id;
-  }
-
-  public Long getGPid() {
-    return GPid;
-  }
-
-  public void setGPid(Long GPid) {
-    this.GPid = GPid;
   }
 
   public Campeonato getCampeonato() {
@@ -118,4 +113,21 @@ public class GranPremio {
   public void setFechaHoraCarrera(LocalDate fechaHoraCarrera) {
     this.fechaHoraCarrera = fechaHoraCarrera;
   }
+
+  public Circuito getCircuito() {
+    return circuito;
+  }
+
+  public void setCircuito(Circuito circuito) {
+    this.circuito = circuito;
+  }
+
+  /*
+  @PrePersist
+  private void generateGPid() {
+    if (this.id.getId() == null) {
+      this.id.setId(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
+    }
+  }*/
+
 }

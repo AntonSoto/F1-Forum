@@ -1,4 +1,4 @@
-package es.udc.asi.notebook_rest.model.domain;
+/*package es.udc.asi.notebook_rest.model.domain;
 
 
 import jakarta.persistence.Embeddable;
@@ -40,4 +40,4 @@ public class ValoracionId implements Serializable {
   public int hashCode() {
     return Objects.hash(granPremioId, ValoracionId);
   }
-}
+}*/
