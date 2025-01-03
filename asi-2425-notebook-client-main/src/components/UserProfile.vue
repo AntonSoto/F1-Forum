@@ -5,7 +5,7 @@
       <p><strong>ID:</strong> {{ user.id }}</p>
       <p><strong>Login:</strong> {{ user.login }}</p>
       <p><strong>Rol:</strong> {{ user.authority }}</p>
-      <p><strong>Fecha de nacimiento:</strong> {{ user.fechaNacimiento || "No especificada" }}</p>
+      <p><strong>Fecha de nacimiento:</strong> {{ formatFechaNacimiento(user.fechaNacimiento) || "No especificada" }}</p>
       <p><strong>Nombre:</strong> {{ user.nombrePila || "No especificado" }}</p>
       <p><strong>Apellidos:</strong> {{ user.apellidos || "No especificados" }}</p>
     </div>
@@ -52,60 +52,70 @@ export default {
     }
   },
   methods: {
-    // Función para cerrar sesión
-    desautenticarme() {
-      Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Vas a cerrar sesión en este dispositivo",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Estoy seguro",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          auth.logout();
-          this.$router.push("/");
-        }
-      });
-    },
-
-    // Función para eliminar la cuenta
-    async deleteAccount() {
-      Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Esta acción eliminará permanentemente tu cuenta y todos tus datos.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Eliminar Cuenta",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            // Llamar al repositorio para eliminar la cuenta
-            await UserRepository.deleteUser(this.user.id);
-            Swal.fire({
-              title: "Cuenta eliminada",
-              text: "Tu cuenta ha sido eliminada correctamente.",
-              icon: "success",
-              timer: 2000,
-            });
-            // Redirigir a la página de login después de la eliminación
-            auth.logout();  // Asegura que se cierre la sesión
-            this.$router.push("/login");
-          } catch (error) {
-            console.error("Error al eliminar la cuenta:", error);
-            Swal.fire({
-              title: "Error",
-              text: "Hubo un problema al eliminar tu cuenta.",
-              icon: "error",
-            });
-          }
-        }
-      });
-    },
+  // Formatea la fecha de nacimiento en formato YYYY-MM-DD
+  formatFechaNacimiento(fecha) {
+    if (!fecha) return null;
+    const date = new Date(fecha);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Meses empiezan en 0
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   },
+
+  // Función para cerrar sesión
+  desautenticarme() {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Vas a cerrar sesión en este dispositivo",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Estoy seguro",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        auth.logout();
+        this.$router.push("/");
+      }
+    });
+  },
+
+  // Función para eliminar la cuenta
+  async deleteAccount() {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará permanentemente tu cuenta y todos tus datos.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Eliminar Cuenta",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Llamar al repositorio para eliminar la cuenta
+          await UserRepository.deleteUser(this.user.id);
+          Swal.fire({
+            title: "Cuenta eliminada",
+            text: "Tu cuenta ha sido eliminada correctamente.",
+            icon: "success",
+            timer: 2000,
+          });
+          // Redirigir a la página de login después de la eliminación
+          auth.logout(); // Asegura que se cierre la sesión
+          this.$router.push("/login");
+        } catch (error) {
+          console.error("Error al eliminar la cuenta:", error);
+          Swal.fire({
+            title: "Error",
+            text: "Hubo un problema al eliminar tu cuenta.",
+            icon: "error",
+          });
+        }
+      }
+    });
+  },
+},
 };
 </script>
 
