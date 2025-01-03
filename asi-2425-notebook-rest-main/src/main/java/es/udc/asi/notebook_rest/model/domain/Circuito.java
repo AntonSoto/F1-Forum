@@ -26,8 +26,8 @@ public class Circuito {
   @Column
   private String Pais;
 
-  /*@OneToMany(mappedBy = "Circuito")
-  private List<GranPremio> grandesPremios = new ArrayList<>();*/
+  @OneToMany(mappedBy = "circuito", fetch = FetchType.EAGER)
+  private List<GranPremio> grandesPremios = new ArrayList<>();
 
   public Circuito() {
     super();
@@ -108,12 +108,12 @@ public class Circuito {
     Pais = pais;
   }
 
-  /*public List<GranPremio> getGrandesPremios() {
+  public List<GranPremio> getGrandesPremios() {
     return grandesPremios;
   }
 
   public void setGrandesPremios(List<GranPremio> grandesPremios) {
     this.grandesPremios = grandesPremios;
-  }*/
+  }
 
 }

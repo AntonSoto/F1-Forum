@@ -53,4 +53,27 @@ public class Campeonato {
     this.ano = ano;
   }
 
+  public List<CampeonatoConstructor> getCampeonatoConstructors() {
+    return campeonatoConstructors;
+  }
+
+  public void setCampeonatoConstructors(List<CampeonatoConstructor> campeonatoConstructors) {
+    this.campeonatoConstructors = campeonatoConstructors;
+  }
+
+  public List<CampeonatoPiloto> getCampeonatoPilotos() {
+    return campeonatoPilotos;
+  }
+
+  public void setCampeonatoPilotos(List<CampeonatoPiloto> campeonatoPilotos) {
+    this.campeonatoPilotos = campeonatoPilotos;
+  }
+
+  public List<GranPremio> getGranPremios() {
+    return granPremios;
+  }
+
+  public void setGranPremios(List<GranPremio> granPremios) {
+    this.granPremios = granPremios;
+  }
 }
