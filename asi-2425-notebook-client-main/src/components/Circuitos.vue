@@ -15,7 +15,11 @@
       <button @click="nextImage" class="carousel-button next">›</button>
 
       <div class="indicator">
-        <span v-for="(image, index) in images" :key="index" :class="['dot', { active: index === currentIndex }]"></span>
+        <span
+          v-for="(image, index) in images"
+          :key="index"
+          :class="['dot', { active: index === currentIndex }]"
+        ></span>
       </div>
 
       <!-- Enlace debajo de la imagen -->
@@ -28,76 +32,86 @@
 
     <!-- Lista de todos los circuitos con foto -->
     <div class="circuitos-list">
-      <h3>Todos los Circuitos</h3>
-      <div class="circuitos-list-container">
-        <div class="circuitos-row">
-          <div class="circuito-item" v-for="(image, index) in images" :key="index">
-            <a :href="'/circuitos/' + image.name" class="circuito-link-item">
-              <!-- Imagen del circuito -->
-              <img :src="image.src" :alt="image.name" class="circuito-thumbnail" />
-              <!-- Nombre del circuito -->
-              <span>{{ image.name }}</span>
-            </a>
-          </div>
-        </div>
+  <h3>Todos los Circuitos</h3>
+  <div class="circuitos-list-container">
+    <div class="circuitos-row">
+      <div class="circuito-item" v-for="(image, index) in images" :key="index">
+        <a :href="'/circuitos/' + image.name" class="circuito-link-item">
+          <!-- Imagen del circuito -->
+          <img :src="image.src" :alt="image.name" class="circuito-thumbnail" />
+          <!-- Nombre del circuito -->
+          <span>{{ image.name }}</span>
+        </a>
+
+        <!-- Botón para editar imagen solo si admin() es true -->
+        <router-link
+          v-if="admin()"
+          :to="{ name: 'EditCircuitImage', params: { circuitId: image.name } }"
+          class="edit-button"
+        >
+          Editar Imagen
+        </router-link>
       </div>
     </div>
+  </div>
+</div>
+
   </div>
 </template>
 
 <script>
-import notexist from '@/assets/images/notexist.jpg'
+import notexist from "@/assets/images/notexist.jpg";
+import auth from "@/common/auth";
 
 export default {
   data() {
     return {
       currentIndex: 0,
       images: [
-        { src: notexist, name: 'notexist' },
+        { src: notexist, name: "notexist" },
       ],
-      circuitos: [],  // Aquí almacenaremos los circuitos obtenidos desde la API
+      circuitos: [], // Aquí almacenaremos los circuitos obtenidos desde la API
     };
   },
   mounted() {
-    this.fetchCircuitos();  // Llamamos a la función para obtener los circuitos cuando el componente se monta
+    this.fetchCircuitos(); // Llamamos a la función para obtener los circuitos cuando el componente se monta
   },
   methods: {
+    admin() {
+      return auth.isAdmin();
+    },
     async fetchCircuitos() {
       try {
-        const response = await fetch('http://ergast.com/api/f1/current.json');
+        const response = await fetch("http://ergast.com/api/f1/current.json");
         const data = await response.json();
 
         // Extraemos los nombres de los circuitos de la respuesta
-        this.circuitos = data.MRData.RaceTable.Races.map(race => ({
+        this.circuitos = data.MRData.RaceTable.Races.map((race) => ({
           name: race.Circuit.circuitId,
         }));
-        console.log(this.circuitos)
+        console.log(this.circuitos);
         // Actualizamos el array de imágenes con los nombres de los circuitos
-        this.images = this.circuitos.map((circuito, index) => ({
-          src: this.getImageForCircuit(circuito.name),  // Usamos una función para asignar imágenes
+        this.images = this.circuitos.map((circuito) => ({
+          src: this.getImageForCircuit(circuito.name), // Usamos una función para asignar imágenes
           name: circuito.name,
         }));
       } catch (error) {
-        console.error('Error al obtener los circuitos:', error);
+        console.error("Error al obtener los circuitos:", error);
       }
     },
-
 
     // Método para seleccionar una imagen para cada circuito (puedes mejorar esto con más imágenes)
     getImageForCircuit(circuitId) {
       try {
         // Cargar la imagen del circuito dinámicamente desde la carpeta de imágenes
         const imagePath = require(`@/assets/images/${circuitId}.jpg`);
-        console.log(imagePath)
-        // Retornar un objeto con la ruta de la imagen y el nombre
-        return { src: imagePath, name: circuitId };
+        return imagePath;
       } catch (error) {
         // Si no se encuentra la imagen, retornar la imagen por defecto
         console.log(`Imagen no encontrada para el circuito: ${circuitId}`);
-        return notexist;  // Imagen por defecto
+        return notexist; // Imagen por defecto
       }
     },
-
 
     nextImage() {
       this.currentIndex = (this.currentIndex + 1) % this.images.length;
@@ -119,7 +133,6 @@ export default {
 .circuitos-title {
   font-size: 24px;
   color: #ff1801;
-  /* Color rojo Ferrari */
   margin-bottom: 20px;
 }
 
@@ -186,10 +199,8 @@ export default {
 
 .dot.active {
   background-color: #ff1801;
-  /* Rojo Ferrari */
 }
 
-/* Estilos para el enlace debajo de la imagen */
 .circuito-link {
   margin-top: 15px;
 }
@@ -204,7 +215,6 @@ export default {
   text-decoration: underline;
 }
 
-/* Estilos para la lista de circuitos */
 .circuitos-list {
   margin-top: 30px;
 }
@@ -218,7 +228,6 @@ export default {
 .circuitos-list-container {
   display: flex;
   flex-wrap: wrap;
-  /* Permite que los elementos se ajusten */
   justify-content: center;
   gap: 20px;
   padding: 0 20px;
@@ -237,7 +246,6 @@ export default {
   align-items: center;
   text-align: center;
   width: 30%;
-  /* Tres elementos por fila */
 }
 
 .circuito-link-item {
@@ -254,18 +262,28 @@ export default {
   color: #ff1801;
 }
 
-/* Imagen más grande y centrada */
 .circuito-thumbnail {
   width: 100%;
   height: auto;
   max-width: 150px;
-  /* Tamaño de la imagen */
   border-radius: 10px;
   margin-bottom: 10px;
 }
 
-.circuito-link-item span {
-  font-size: 18px;
+.edit-button {
   margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #ff1801;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.edit-button:hover {
+  background-color: #cc1500;
 }
 </style>
+  

@@ -12,6 +12,7 @@ import Circuitos from "@/components/Circuitos.vue";
 import EditProfile from "@/components/EditProfile.vue";
 import Pilotos from "@/components/Pilotos.vue";
 import Constructores from "@/components/Constructores.vue";
+import EditCircuitImage from "@/components/EditCircuitImage.vue";
 import auth from "@/common/auth";
 import { getStore } from "@/common/store";
 
@@ -28,6 +29,12 @@ const routes = [
     name: 'Circuitos',
     component: Circuitos,
     meta: { public: true } // Ahora es pública
+  },
+  {
+    path: '/edit/:circuitId',
+    name: 'EditCircuitImage',
+    component: EditCircuitImage,
+    props: true, // Habilitamos pasar el parámetro como prop
   },
   {
     path: "/login",
