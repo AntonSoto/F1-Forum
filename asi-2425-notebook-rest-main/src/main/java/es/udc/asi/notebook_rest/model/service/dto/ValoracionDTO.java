@@ -15,6 +15,8 @@ public class ValoracionDTO {
   private Long puntuacion;
   private LocalDateTime fechaValoracion;
   private String comentario;
+  private String user;
+  private Long GranPremio;
 
 
   public ValoracionDTO() {
@@ -26,7 +28,8 @@ public class ValoracionDTO {
     this.puntuacion = valoracion.getPuntuacion();
     this.fechaValoracion = valoracion.getFechaValoracion();
     this.comentario = valoracion.getComentario();
-
+    this.user = valoracion.getUsuario().getLogin();
+    this.GranPremio =valoracion.getGranPremio().getId();
   }
 
   public Long getId() {
@@ -59,5 +62,21 @@ public class ValoracionDTO {
 
   public void setComentario(String comentario) {
     this.comentario = comentario;
+  }
+
+  public String getUser() {
+    return user;
+  }
+
+  public void setUser(String user) {
+    this.user = user;
+  }
+
+  public Long getGranPremio() {
+    return GranPremio;
+  }
+
+  public void setGranPremio(Long granPremio) {
+    GranPremio = granPremio;
   }
 }

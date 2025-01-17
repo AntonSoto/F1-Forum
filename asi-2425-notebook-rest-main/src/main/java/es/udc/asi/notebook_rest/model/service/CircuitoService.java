@@ -6,6 +6,7 @@ import es.udc.asi.notebook_rest.model.domain.GranPremio;
 import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.User;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
+import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
 import es.udc.asi.notebook_rest.model.repository.CircuitoDao;
 import es.udc.asi.notebook_rest.model.repository.UserDao;
 import es.udc.asi.notebook_rest.model.service.dto.CircuitoDTO;
@@ -26,6 +27,9 @@ public class CircuitoService {
 
   @Autowired
   private CircuitoDao circuitoDAO;
+
+  @Autowired
+  private CampeonatoDao campeonatoDAO;
 
 
   /*@Transactional(readOnly = false)
@@ -70,7 +74,7 @@ public class CircuitoService {
         gp.setFechaHoraLibres1(gpDTO.getFechaHoraLibres1());
         gp.setFechaHoraLibres2(gpDTO.getFechaHoraLibres2());
         gp.setFechaHoraLibres3(gpDTO.getFechaHoraLibres3());
-        gp.setNumOrden(gpDTO.getNumOrden());
+        gp.setCampeonato(campeonatoDAO.findById(gpDTO.getAno()));
         gp.setFechaHoraSprint(gpDTO.getFechaHoraSprint());
         gp.setFechaHoraClasificacion(gpDTO.getFechaHoraClasificacion());
         gp.setFechaHoraCarrera(gpDTO.getFechaHoraCarrera());

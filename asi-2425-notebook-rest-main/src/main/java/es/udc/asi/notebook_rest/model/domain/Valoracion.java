@@ -26,6 +26,18 @@ public class Valoracion {
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   private User usuario;
 
+  public Valoracion() {
+    super();
+  }
+
+  public Valoracion(Long puntuacion, LocalDateTime fechaValoracion, String comentario, User usuario) {
+    super();
+    this.puntuacion = puntuacion;
+    this.fechaValoracion = fechaValoracion;
+    this.comentario = comentario;
+    this.usuario = usuario;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;

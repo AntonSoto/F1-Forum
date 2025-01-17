@@ -1,5 +1,6 @@
 package es.udc.asi.notebook_rest.model.service.dto;
 
+import es.udc.asi.notebook_rest.model.domain.Campeonato;
 import es.udc.asi.notebook_rest.model.domain.GranPremio;
 import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.Valoracion;
@@ -19,6 +20,7 @@ public class GranPremioDTO {
   private LocalDateTime  fechaHoraClasificacion;
   private LocalDateTime  fechaHoraSprint;
   private LocalDateTime  fechaHoraCarrera;
+  private Long ano;
 
   private Collection<ValoracionDTO> valoraciones = new ArrayList<>();
 
@@ -35,6 +37,7 @@ public class GranPremioDTO {
     this.fechaHoraClasificacion = granPremio.getFechaHoraClasificacion();
     this.fechaHoraSprint = granPremio.getFechaHoraSprint();
     this.fechaHoraCarrera = granPremio.getFechaHoraCarrera();
+    this.ano = granPremio.getCampeonato().getAno();
 
     granPremio.getValoraciones().forEach(v -> {
       this.valoraciones.add(new ValoracionDTO(v));
@@ -112,4 +115,13 @@ public class GranPremioDTO {
   public void setFechaHoraSprint(LocalDateTime fechaHoraSprint) {
     this.fechaHoraSprint = fechaHoraSprint;
   }
+
+  public Long getAno() {
+    return ano;
+  }
+
+  public void setAno(Long ano) {
+    this.ano = ano;
+  }
+
 }
