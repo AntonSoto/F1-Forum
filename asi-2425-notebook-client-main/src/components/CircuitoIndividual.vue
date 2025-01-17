@@ -30,34 +30,26 @@ export default {
   methods: {
       async fetchCircuitData() {
         const circuitoId = this.$route.params.circuitoId; 
+        console.log(circuitoId)
         try{
           // Intentamos obtener el circuito desde el backend
           const circuitData = await CircuitRepository.findOne(circuitoId);
-          this.circuit = circuitData;
-          this.initializeMap();
-        }catch{
-          console.log("hola")
-            // Si no encontramos el circuito en el backend, obtenemos la información desde la API externa
-            const response = await fetch(
-                  `https://ergast.com/api/f1/circuits/${circuitoId}.json`
-              );
-              const data = await response.json();
-              console.log(data)
-  
-              const circuitData = data.MRData.CircuitTable.Circuits[0];
-              this.circuit = {
-                name: circuitData.circuitName,
-                location: circuitData.Location.locality,
-                country: circuitData.Location.country,
-                latitude: circuitData.Location.lat,
-                longitude: circuitData.Location.long,
-                schedule: "No disponible", // Placeholder
-                rating: null, // Placeholder
+          console.log("aqui")
+          this.circuit = {
+                name: circuitData.nombreCircuito,
+                location: circuitData.localidad,
+                country: circuitData.pais,
+                latitude: circuitData.latitud,
+                longitude: circuitData.longitud,
+                schedule: "No disponible",
+                rating: null, 
               };
-              this.initializeMap();
 
-              // Después de mostrar la información, guardamos el circuito en el backend
-              //await CircuitRepository.save(circuitFromApi);
+              console.log("aqui")
+          this.initializeMap();
+          console.log("aqui2")
+        }catch{
+          
         }
 
       },
