@@ -22,6 +22,7 @@
       <table v-if="constructorStandings.length > 0 && !isLoading">
         <thead>
           <tr>
+            <th>Imagen</th>
             <th>Posición</th>
             <th>Escudería</th>
             <th>Nacionalidad</th>
@@ -31,6 +32,7 @@
         </thead>
         <tbody>
           <tr v-for="(constructor, index) in constructorStandings" :key="constructor.Constructor.constructorId">
+            <td></td>
             <td>{{ index + 1 }}</td>
             <td>{{ constructor.Constructor.name }}</td>
             <td>{{ constructor.Constructor.nationality }}</td>

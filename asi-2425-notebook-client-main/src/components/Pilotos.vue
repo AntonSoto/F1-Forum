@@ -22,6 +22,7 @@
       <table v-if="driverStandings.length > 0 && !isLoading">
         <thead>
           <tr>
+            <th>Imagen</th>
             <th>Posición</th>
             <th>Nombre</th>
             <th>Nacionalidad</th>
@@ -31,7 +32,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(driver, index) in driverStandings" :key="driver.Driver.driverId">
+          <tr v-for="(driver, index, image) in driverStandings" :key="driver.Driver.driverId">
+            <td></td>
             <td>{{ index + 1 }}</td>
             <td>{{ driver.Driver.givenName }} {{ driver.Driver.familyName }}</td>
             <td>{{ driver.Driver.nationality }}</td>
