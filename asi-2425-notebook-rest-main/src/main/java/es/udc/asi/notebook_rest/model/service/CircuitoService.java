@@ -71,6 +71,7 @@ public class CircuitoService {
         gp.setFechaHoraLibres2(gpDTO.getFechaHoraLibres2());
         gp.setFechaHoraLibres3(gpDTO.getFechaHoraLibres3());
         gp.setNumOrden(gpDTO.getNumOrden());
+        gp.setFechaHoraSprint(gpDTO.getFechaHoraSprint());
         gp.setFechaHoraClasificacion(gpDTO.getFechaHoraClasificacion());
         gp.setFechaHoraCarrera(gpDTO.getFechaHoraCarrera());
         gp.setCircuito(bdCircuito);
@@ -87,7 +88,7 @@ public class CircuitoService {
     return new CircuitoDTO(bdCircuito);
   }
 
-  
+
 
   public CircuitoDTO findById(String id) throws NotFoundException {
     Circuito circuito = circuitoDAO.findById(id);

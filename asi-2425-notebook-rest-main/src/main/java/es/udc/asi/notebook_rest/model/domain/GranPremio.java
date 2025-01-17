@@ -4,6 +4,7 @@ import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,12 +25,13 @@ public class GranPremio {
   private Long numOrden;
 
   @Column(unique = true)
-  private LocalDate fechaHoraLibres1;
-  private LocalDate fechaHoraLibres2;
-  private LocalDate fechaHoraLibres3;
+  private LocalDateTime fechaHoraLibres1;
+  private LocalDateTime fechaHoraLibres2;
+  private LocalDateTime fechaHoraLibres3;
 
-  private LocalDate fechaHoraClasificacion;
-  private LocalDate fechaHoraCarrera;
+  private LocalDateTime fechaHoraClasificacion;
+  private LocalDateTime fechaHoraSprint;
+  private LocalDateTime fechaHoraCarrera;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   private Circuito circuito;
@@ -76,43 +78,43 @@ public class GranPremio {
     this.numOrden = numOrden;
   }
 
-  public LocalDate getFechaHoraLibres1() {
+  public LocalDateTime  getFechaHoraLibres1() {
     return fechaHoraLibres1;
   }
 
-  public void setFechaHoraLibres1(LocalDate fechaHoraLibres1) {
+  public void setFechaHoraLibres1(LocalDateTime  fechaHoraLibres1) {
     this.fechaHoraLibres1 = fechaHoraLibres1;
   }
 
-  public LocalDate getFechaHoraLibres2() {
+  public LocalDateTime  getFechaHoraLibres2() {
     return fechaHoraLibres2;
   }
 
-  public void setFechaHoraLibres2(LocalDate fechaHoraLibres2) {
+  public void setFechaHoraLibres2(LocalDateTime  fechaHoraLibres2) {
     this.fechaHoraLibres2 = fechaHoraLibres2;
   }
 
-  public LocalDate getFechaHoraLibres3() {
+  public LocalDateTime  getFechaHoraLibres3() {
     return fechaHoraLibres3;
   }
 
-  public void setFechaHoraLibres3(LocalDate fechaHoraLibres3) {
+  public void setFechaHoraLibres3(LocalDateTime  fechaHoraLibres3) {
     this.fechaHoraLibres3 = fechaHoraLibres3;
   }
 
-  public LocalDate getFechaHoraClasificacion() {
+  public LocalDateTime  getFechaHoraClasificacion() {
     return fechaHoraClasificacion;
   }
 
-  public void setFechaHoraClasificacion(LocalDate fechaHoraClasificacion) {
+  public void setFechaHoraClasificacion(LocalDateTime  fechaHoraClasificacion) {
     this.fechaHoraClasificacion = fechaHoraClasificacion;
   }
 
-  public LocalDate getFechaHoraCarrera() {
+  public LocalDateTime  getFechaHoraCarrera() {
     return fechaHoraCarrera;
   }
 
-  public void setFechaHoraCarrera(LocalDate fechaHoraCarrera) {
+  public void setFechaHoraCarrera(LocalDateTime fechaHoraCarrera) {
     this.fechaHoraCarrera = fechaHoraCarrera;
   }
 
@@ -130,5 +132,13 @@ public class GranPremio {
 
   public void setValoraciones(List<Valoracion> valoraciones) {
     this.valoraciones = valoraciones;
+  }
+
+  public LocalDateTime getFechaHoraSprint() {
+    return fechaHoraSprint;
+  }
+
+  public void setFechaHoraSprint(LocalDateTime fechaHoraSprint) {
+    this.fechaHoraSprint = fechaHoraSprint;
   }
 }

@@ -14,7 +14,7 @@ public class GranPremioDaoJpa extends GenericDaoJpa implements GranPremioDao {
   }
 
   /*@Override
-  public GranPremio findByFechaHoraCarrera(LocalDate date) {
+  public GranPremio findByFechaHoraCarrera(LocalDateTime  date) {
     return entityManager.createQuery("from GranPremio ", Category.class).getResultList();
   }*/
 

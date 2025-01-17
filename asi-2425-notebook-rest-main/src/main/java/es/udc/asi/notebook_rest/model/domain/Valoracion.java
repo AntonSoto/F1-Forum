@@ -4,6 +4,7 @@ package es.udc.asi.notebook_rest.model.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public class Valoracion {
 
   @Column
   private Long puntuacion;
-  private LocalDate fechaValoracion;
+  private LocalDateTime  fechaValoracion;
   private String comentario;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -61,11 +62,11 @@ public class Valoracion {
     this.puntuacion = puntuacion;
   }
 
-  public LocalDate getFechaValoracion() {
+  public LocalDateTime getFechaValoracion() {
     return fechaValoracion;
   }
 
-  public void setFechaValoracion(LocalDate fechaValoracion) {
+  public void setFechaValoracion(LocalDateTime  fechaValoracion) {
     this.fechaValoracion = fechaValoracion;
   }
 
