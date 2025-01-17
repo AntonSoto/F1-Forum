@@ -1,22 +1,21 @@
 package es.udc.asi.notebook_rest.model.domain;
 
+import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 public class GranPremio {
 
-  /*@EmbeddedId
-  private GranPremioId id = new GranPremioId();*/
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @MapsId("ano")
   @ManyToOne
   @JoinColumn(name = "ano", referencedColumnName = "ano")
   private Campeonato campeonato;
@@ -34,6 +33,9 @@ public class GranPremio {
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   private Circuito circuito;
+
+  @OneToMany(fetch = FetchType.EAGER)
+  private List<Valoracion> valoraciones = new ArrayList<>();
 
   public GranPremio() {
   }
@@ -122,12 +124,11 @@ public class GranPremio {
     this.circuito = circuito;
   }
 
-  /*
-  @PrePersist
-  private void generateGPid() {
-    if (this.id.getId() == null) {
-      this.id.setId(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
-    }
-  }*/
+  public List<Valoracion> getValoraciones() {
+    return valoraciones;
+  }
 
+  public void setValoraciones(List<Valoracion> valoraciones) {
+    this.valoraciones = valoraciones;
+  }
 }

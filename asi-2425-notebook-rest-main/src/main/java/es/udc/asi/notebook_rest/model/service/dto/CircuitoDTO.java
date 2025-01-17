@@ -1,11 +1,13 @@
 package es.udc.asi.notebook_rest.model.service.dto;
 
 import es.udc.asi.notebook_rest.model.domain.Circuito;
+import es.udc.asi.notebook_rest.model.domain.GranPremio;
 import es.udc.asi.notebook_rest.model.domain.Note;
 import jakarta.persistence.Column;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class CircuitoDTO {
 
@@ -16,7 +18,15 @@ public class CircuitoDTO {
   private String Localidad;
   private String Pais;
 
-  //private Collection<GranPremioDTO> grandesPremios = new ArrayList<>();
+  public Collection<GranPremioDTO> getGrandesPremios() {
+    return grandesPremios;
+  }
+
+  public void setGrandesPremios(Collection<GranPremioDTO> grandesPremios) {
+    this.grandesPremios = grandesPremios;
+  }
+
+  private Collection<GranPremioDTO> grandesPremios = new ArrayList<>();
 
   public CircuitoDTO() {
     super();
@@ -27,9 +37,9 @@ public class CircuitoDTO {
     this.nombreCircuito = circuito.getNombreCircuito();
     this.Latitud = circuito.getLatitud();
     this.Longitud = circuito.getLongitud();
-    /*circuito.getGrandesPremios().forEach(gp -> {
-      //this.grandesPremios.add(new GranPremioDTO(gp));
-    });*/
+    circuito.getGrandesPremios().forEach(gp -> {
+      this.grandesPremios.add(new GranPremioDTO(gp));
+    });
     this.Localidad = circuito.getLocalidad();
     this.Pais = circuito.getPais();
   }

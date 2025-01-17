@@ -9,20 +9,12 @@ import java.util.UUID;
 
 @Entity
 public class Valoracion {
-
-  /*@EmbeddedId
-  private ValoracionId id;
-
-  @MapsId("ValoracionId")
-  private Long ValoracionId;*/
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @MapsId("granPremioId")
   @ManyToOne
-  @JoinColumn(name = "id", referencedColumnName = "id")
+  @JoinColumn(referencedColumnName = "id")
   private GranPremio granPremio;
 
   @Column
@@ -33,13 +25,25 @@ public class Valoracion {
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   private User usuario;
 
-  /*@PrePersist
-  private void generateGPid() {
-    if (this.id.getValoracionId() == null) {
-      this.id.setValoracionId(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
-    }
-  }*/
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Valoracion that = (Valoracion) o;
+    return Objects.equals(id, that.id) && Objects.equals(granPremio, that.granPremio) && Objects.equals(puntuacion, that.puntuacion) && Objects.equals(fechaValoracion, that.fechaValoracion) && Objects.equals(comentario, that.comentario) && Objects.equals(usuario, that.usuario);
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, granPremio, puntuacion, fechaValoracion, comentario, usuario);
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public GranPremio getGranPremio() {
     return granPremio;
@@ -79,25 +83,5 @@ public class Valoracion {
 
   public void setUsuario(User usuario) {
     this.usuario = usuario;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    Valoracion that = (Valoracion) o;
-    return Objects.equals(id, that.id) && Objects.equals(granPremio, that.granPremio) && Objects.equals(puntuacion, that.puntuacion) && Objects.equals(fechaValoracion, that.fechaValoracion) && Objects.equals(comentario, that.comentario) && Objects.equals(usuario, that.usuario);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, granPremio, puntuacion, fechaValoracion, comentario, usuario);
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 }

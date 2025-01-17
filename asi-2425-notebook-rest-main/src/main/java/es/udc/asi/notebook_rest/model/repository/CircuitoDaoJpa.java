@@ -13,13 +13,13 @@ import java.util.Collection;
 public class CircuitoDaoJpa extends GenericDaoJpa implements CircuitoDao {
 
   @Override
-  public void create(Circuito note) {
-    entityManager.persist(note);
+  public void create(Circuito circuito) {
+    entityManager.persist(circuito);
   }
 
   @Override
-  public void delete(Circuito note) {
-    entityManager.remove(note);
+  public void delete(Circuito circuito) {
+    entityManager.remove(circuito);
   }
 
   @Override

@@ -26,7 +26,7 @@ public class Circuito {
   @Column
   private String Pais;
 
-  @OneToMany(mappedBy = "circuito", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "circuito", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   private List<GranPremio> grandesPremios = new ArrayList<>();
 
   public Circuito() {
