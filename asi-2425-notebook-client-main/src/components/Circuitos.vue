@@ -15,11 +15,7 @@
       <button @click="nextImage" class="carousel-button next">›</button>
 
       <div class="indicator">
-        <span
-          v-for="(image, index) in images"
-          :key="index"
-          :class="['dot', { active: index === currentIndex }]"
-        ></span>
+        <span v-for="(image, index) in images" :key="index" :class="['dot', { active: index === currentIndex }]"></span>
       </div>
 
       <!-- Enlace debajo de la imagen -->
@@ -32,29 +28,26 @@
 
     <!-- Lista de todos los circuitos con foto -->
     <div class="circuitos-list">
-  <h3>Todos los Circuitos</h3>
-  <div class="circuitos-list-container">
-    <div class="circuitos-row">
-      <div class="circuito-item" v-for="(image, index) in images" :key="index">
-        <a :href="'/circuitos/' + image.name" class="circuito-link-item">
-          <!-- Imagen del circuito -->
-          <img :src="image.src" :alt="image.name" class="circuito-thumbnail" />
-          <!-- Nombre del circuito -->
-          <span>{{ image.name }}</span>
-        </a>
+      <h3>Todos los Circuitos</h3>
+      <div class="circuitos-list-container">
+        <div class="circuitos-row">
+          <div class="circuito-item" v-for="(image, index) in images" :key="index">
+            <a :href="'/circuitos/' + image.name" class="circuito-link-item">
+              <!-- Imagen del circuito -->
+              <img :src="image.src" :alt="image.name" class="circuito-thumbnail" />
+              <!-- Nombre del circuito -->
+              <span>{{ image.name }}</span>
+            </a>
 
-        <!-- Botón para editar imagen solo si admin() es true -->
-        <router-link
-          v-if="admin()"
-          :to="{ name: 'EditCircuitImage', params: { circuitId: image.name } }"
-          class="edit-button"
-        >
-          Editar Imagen
-        </router-link>
+            <!-- Botón para editar imagen solo si admin() es true -->
+            <router-link v-if="admin()" :to="{ name: 'EditCircuitImage', params: { circuitId: image.name } }"
+              class="edit-button">
+              Editar Imagen
+            </router-link>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
   </div>
 </template>
@@ -62,6 +55,7 @@
 <script>
 import notexist from "@/assets/images/notexist.jpg";
 import auth from "@/common/auth";
+import CircuitRepository from "@/repositories/CircuitRepository";
 
 export default {
   data() {
@@ -73,32 +67,80 @@ export default {
       circuitos: [], // Aquí almacenaremos los circuitos obtenidos desde la API
     };
   },
-  mounted() {
-    this.fetchCircuitos(); // Llamamos a la función para obtener los circuitos cuando el componente se monta
+  async mounted() {
+    await this.fetchCircuitos(); // Llamamos a la función para obtener los circuitos cuando el componente se monta
   },
   methods: {
     admin() {
       return auth.isAdmin();
     },
-    async fetchCircuitos() {
-      try {
-        const response = await fetch("http://ergast.com/api/f1/current.json");
-        const data = await response.json();
 
-        // Extraemos los nombres de los circuitos de la respuesta
-        this.circuitos = data.MRData.RaceTable.Races.map((race) => ({
-          name: race.Circuit.circuitId,
-        }));
-        console.log(this.circuitos);
-        // Actualizamos el array de imágenes con los nombres de los circuitos
-        this.images = this.circuitos.map((circuito) => ({
-          src: this.getImageForCircuit(circuito.name), // Usamos una función para asignar imágenes
-          name: circuito.name,
-        }));
-      } catch (error) {
-        console.error("Error al obtener los circuitos:", error);
-      }
-    },
+    async fetchCircuitos() {
+  try {
+    // Paso 1: Consultar los circuitos desde el backend
+    let circuitosFromBackend = [];
+    try {
+      circuitosFromBackend = await CircuitRepository.findAll();
+      console.log("Circuitos desde el backend:", circuitosFromBackend.length);
+    } catch (error) {
+      console.error("Error al obtener los circuitos del backend:", error);
+    }
+
+    if (circuitosFromBackend.length > 0) {
+      // Si hay circuitos en el backend, usamos esos datos
+      this.circuitos = circuitosFromBackend.map((circuito) => ({
+        name: circuito.id,
+       
+      }));
+      console.log("Circuitos obtenidos del backend:", this.circuitos);
+    } else {
+      // Paso 2: Consultar los circuitos desde la API externa
+      const response = await fetch("http://ergast.com/api/f1/current.json");
+      const data = await response.json();
+
+      // Extraer datos relevantes de los circuitos
+      const circuitosFromAPI = data.MRData.RaceTable.Races.map((race) => ({
+        id: race.Circuit.circuitId,
+        nombreCircuito: race.Circuit.circuitName,
+        latitud: race.Circuit.Location.lat,
+        longitud: race.Circuit.Location.long,
+        localidad: race.Circuit.Location.locality,
+        pais: race.Circuit.Location.country,
+        
+      }));
+
+      console.log("Circuitos obtenidos de la API:", circuitosFromAPI);
+
+      // Guardar cada circuito en el backend
+      const savePromises = circuitosFromAPI.map(async (circuito) => {
+        try {
+          await CircuitRepository.save(circuito);
+        } catch (error) {
+          console.error(`Error al guardar el circuito ${circuito.id}:`, error);
+        }
+      });
+
+      // Esperar a que todos los circuitos se guarden
+      await Promise.all(savePromises);
+
+      // Mostrar inmediatamente los datos obtenidos de la API
+      this.circuitos = circuitosFromAPI.map((circuito) => ({
+        name: circuito.id,
+      }));
+      console.log("Circuito desde api")
+    }
+
+    // Actualizar las imágenes basadas en los circuitos
+    this.images = this.circuitos.map((circuito) => ({
+      src: this.getImageForCircuit(circuito.name), // Usamos una función para asignar imágenes
+      name: circuito.name,
+    }));
+
+    console.log("Imágenes actualizadas:", this.images);
+  } catch (error) {
+    console.error("Error al obtener y procesar los circuitos:", error);
+  }
+},
 
     // Método para seleccionar una imagen para cada circuito (puedes mejorar esto con más imágenes)
     getImageForCircuit(circuitId) {
@@ -108,7 +150,7 @@ export default {
         return imagePath;
       } catch (error) {
         // Si no se encuentra la imagen, retornar la imagen por defecto
-        console.log(`Imagen no encontrada para el circuito: ${circuitId}`);
+        //console.log(`Imagen no encontrada para el circuito: ${circuitId}`);
         return notexist; // Imagen por defecto
       }
     },
@@ -286,4 +328,3 @@ export default {
   background-color: #cc1500;
 }
 </style>
-  

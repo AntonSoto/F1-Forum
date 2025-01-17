@@ -12,7 +12,7 @@ export default {
   async findOne(circuitoId) {
     try {
       const response = await HTTP.get(`${resource}/${circuitoId}`);
-      
+      console.log(response.data)
       // Si la respuesta es exitosa, devolver los datos del circuito
       return response.data;
     } catch (error) {
@@ -26,11 +26,12 @@ export default {
   },
 
   async save(circuit) {
-    if (circuit.circuitoId) {
+    /*if (circuit.circuitoId) {
       return (await HTTP.put(`${resource}/${circuit.circuitoId}`, circuit)).data;
     } else {
-      return (await HTTP.post(`${resource}`, circuit)).data;
-    }
+      */
+    return (await HTTP.post(`${resource}`, circuit)).data;
+    //}
   },
 
   async delete(circuitoId) {
