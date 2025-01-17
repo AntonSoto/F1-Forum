@@ -19,7 +19,7 @@ public class CampeonatoResource {
   @Autowired
   private CampeonatoService campeonatoService;
 
-  @GetMapping("/{id}")
+  @GetMapping("/{ano}")
   public CampeonatoDTO findOne(@PathVariable Long ano) throws NotFoundException {
     return campeonatoService.findById(ano);
   }
