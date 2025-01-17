@@ -6,6 +6,8 @@ const resource = "/circuitos";
 export default {
   async findAll() {
     const response = await HTTP.get(`${resource}`);
+    console.log(response.data)
+    console.log("AQUIIIIIIII")
     return response.data;
   },
 
@@ -30,6 +32,8 @@ export default {
       return (await HTTP.put(`${resource}/${circuit.circuitoId}`, circuit)).data;
     } else {
       */
+     //console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+    console.log(circuit)
     return (await HTTP.post(`${resource}`, circuit)).data;
     //}
   },

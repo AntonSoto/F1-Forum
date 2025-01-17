@@ -52,6 +52,8 @@
   </template>
   
   <script>
+  import CampeonatoRepository from '@/repositories/CampeonatoRepository';
+
   export default {
     data() {
       return {
@@ -71,8 +73,9 @@
           this.invalidYear = false;
           return this.loadData('current');
         }
-  
+        
         const year = Number(this.selectedYear);
+        console.log(year)
         if (year < 1950 || year > this.currentYear) {
           this.invalidYear = true;
           this.driverStandings = [];
@@ -80,10 +83,20 @@
         }
   
         this.invalidYear = false;
+        
+        try{
+          console.log("Post antes del FINDONE",year)
+          await CampeonatoRepository.findOne(year);
+        }catch(error){
+          console.log("No se ha podido encontrar el año especificado");
+          await CampeonatoRepository.save({ ano: year });
+        }
+    
         this.loadData(year);
       },
       async loadData(year) {
         this.isLoading = true;
+        
         try {
           const url = `http://ergast.com/api/f1/${year}/driverStandings.json`;
           const response = await fetch(url);

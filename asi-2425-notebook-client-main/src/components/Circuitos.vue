@@ -55,6 +55,7 @@
 <script>
 import notexist from "@/assets/images/notexist.jpg";
 import auth from "@/common/auth";
+import CampeonatoRepository from "@/repositories/CampeonatoRepository";
 import CircuitRepository from "@/repositories/CircuitRepository";
 
 export default {
@@ -74,74 +75,123 @@ export default {
     admin() {
       return auth.isAdmin();
     },
+    formatToLocalDateTime(date, time) {
+      if (!date || !time) return ''; // Validación para evitar errores
+      const dateTime = `${date}T${time}`; // Formato ISO 8601
+      return dateTime;
+    },
 
     async fetchCircuitos() {
-  try {
-    // Paso 1: Consultar los circuitos desde el backend
-    let circuitosFromBackend = [];
-    try {
-      circuitosFromBackend = await CircuitRepository.findAll();
-      console.log("Circuitos desde el backend:", circuitosFromBackend.length);
-    } catch (error) {
-      console.error("Error al obtener los circuitos del backend:", error);
-    }
-
-    if (circuitosFromBackend.length > 0) {
-      // Si hay circuitos en el backend, usamos esos datos
-      this.circuitos = circuitosFromBackend.map((circuito) => ({
-        name: circuito.id,
-       
-      }));
-      console.log("Circuitos obtenidos del backend:", this.circuitos);
-    } else {
-      // Paso 2: Consultar los circuitos desde la API externa
-      const response = await fetch("http://ergast.com/api/f1/current.json");
-      const data = await response.json();
-
-      // Extraer datos relevantes de los circuitos
-      const circuitosFromAPI = data.MRData.RaceTable.Races.map((race) => ({
-        id: race.Circuit.circuitId,
-        nombreCircuito: race.Circuit.circuitName,
-        latitud: race.Circuit.Location.lat,
-        longitud: race.Circuit.Location.long,
-        localidad: race.Circuit.Location.locality,
-        pais: race.Circuit.Location.country,
+      try {
+        // Paso 1: Consultar los circuitos desde el backend
+        let circuitosFromBackend = [];
         
-      }));
-
-      console.log("Circuitos obtenidos de la API:", circuitosFromAPI);
-
-      // Guardar cada circuito en el backend
-      const savePromises = circuitosFromAPI.map(async (circuito) => {
         try {
-          await CircuitRepository.save(circuito);
+          circuitosFromBackend = await CircuitRepository.findAll();
+          console.log("Circuitos desde el backend:", circuitosFromBackend.length);
         } catch (error) {
-          console.error(`Error al guardar el circuito ${circuito.id}:`, error);
+          console.error("Error al obtener los circuitos del backend:", error);
         }
-      });
 
-      // Esperar a que todos los circuitos se guarden
-      await Promise.all(savePromises);
+        if (circuitosFromBackend.length > 0) {
+          // Si hay circuitos en el backend, usamos esos datos
+          this.circuitos = circuitosFromBackend;
+          console.log("Circuitos obtenidos del backend:", this.circuitos);
+        } else {
+          
+          // Paso 2: Consultar los circuitos desde la API externa
+          const response = await fetch("http://ergast.com/api/f1/current.json");
+          const data = await response.json();
+          console.log("Oteniendo circuitos desde la API");
 
-      // Mostrar inmediatamente los datos obtenidos de la API
-      this.circuitos = circuitosFromAPI.map((circuito) => ({
-        name: circuito.id,
-      }));
-      console.log("Circuito desde api")
+          const anoCampeonatoStr = data.MRData.RaceTable.season;
+          const anoCampeonato = parseInt(anoCampeonatoStr, 10);
+
+          try{
+          console.log("Post antes del FINDONE",year)
+          await CampeonatoRepository.findOne(anoCampeonato);
+        }catch(error){
+          console.log("No se ha podido encontrar el año especificado");
+          await CampeonatoRepository.save({ ano: anoCampeonato });
+        }
+
+          // Extraer datos relevantes de los circuitos
+          const circuitosFromAPI = data.MRData.RaceTable.Races.map((race) => ({
+            id: race.Circuit.circuitId,
+            nombreCircuito: race.Circuit.circuitName,
+            latitud: race.Circuit.Location.lat,
+            longitud: race.Circuit.Location.long,
+            localidad: race.Circuit.Location.locality,
+            pais: race.Circuit.Location.country,
+            grandesPremios: [
+              {
+                numOrden: race.round,
+                
+                fechaHoraSprint: race.Sprint
+                  ? this.formatToLocalDateTime(race.Sprint.date, race.Sprint.time)
+                  : '',
+               
+                fechaHoraLibres1: race.FirstPractice
+                  ? this.formatToLocalDateTime(race.FirstPractice.date, race.FirstPractice.time)
+                  : '',
+
+                fechaHoraLibres2: race.SecondPractice
+                  ? this.formatToLocalDateTime(race.SecondPractice.date, race.SecondPractice.time)
+                  : '',
+
+                fechaHoraLibres3: race.ThirdPractice
+                  ? this.formatToLocalDateTime(race.ThirdPractice.date, race.ThirdPractice.time)
+                  : '',
+
+                ano: anoCampeonato,
+
+                fechaHoraClasificacion: race.Qualifying
+                  ? this.formatToLocalDateTime(race.Qualifying.date, race.Qualifying.time)
+                  : '',
+
+                fechaHoraCarrera: this.formatToLocalDateTime(race.date, race.time),
+
+              },
+            ],
+          }));
+          console.log(circuitosFromAPI.data)
+          // Guardar cada circuito en el backend con la nueva estructura
+          const savePromises = circuitosFromAPI.map(async (circuito) => {
+            try {
+              
+              await CircuitRepository.save({
+                id: circuito.id,
+                nombreCircuito: circuito.nombreCircuito,
+                latitud: circuito.latitud,
+                longitud: circuito.longitud,
+                localidad: circuito.localidad,
+                pais: circuito.pais,
+                grandesPremios: circuito.grandesPremios,
+              });
+            } catch (error) {
+              console.error(`Error al guardar el circuito ${circuito.id}:`);
+            }
+          });
+
+          // Esperar a que todos los circuitos se guarden
+          await Promise.all(savePromises);
+
+          // Mostrar inmediatamente los datos obtenidos de la API
+          this.circuitos = circuitosFromAPI;
+          console.log("Circuitos desde API con estructura:", this.circuitos);
+        }
+
+        // Actualizar las imágenes basadas en los circuitos
+        this.images = this.circuitos.map((circuito) => ({
+          src: this.getImageForCircuit(circuito.id), // Usamos una función para asignar imágenes
+          name: circuito.id,
+        }));
+
+      } catch (error) {
+        console.error("Error al obtener y procesar los circuitos:", error);
+      }
     }
-
-    // Actualizar las imágenes basadas en los circuitos
-    this.images = this.circuitos.map((circuito) => ({
-      src: this.getImageForCircuit(circuito.name), // Usamos una función para asignar imágenes
-      name: circuito.name,
-    }));
-
-    console.log("Imágenes actualizadas:", this.images);
-  } catch (error) {
-    console.error("Error al obtener y procesar los circuitos:", error);
-  }
-},
-
+    ,
     // Método para seleccionar una imagen para cada circuito (puedes mejorar esto con más imágenes)
     getImageForCircuit(circuitId) {
       try {
