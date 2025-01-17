@@ -50,6 +50,8 @@
   </template>
   
   <script>
+  import CampeonatoRepository from '@/repositories/CampeonatoRepository';
+
   export default {
     data() {
       return {
@@ -78,6 +80,15 @@
         }
   
         this.invalidYear = false;
+
+        try{
+          console.log("Post antes del FINDONE",year)
+          await CampeonatoRepository.findOne(year);
+        }catch(error){
+          console.log("No se ha podido encontrar el año especificado");
+          await CampeonatoRepository.save({ ano: year });
+        }
+
         this.loadData(year);
       },
       async loadData(year) {
