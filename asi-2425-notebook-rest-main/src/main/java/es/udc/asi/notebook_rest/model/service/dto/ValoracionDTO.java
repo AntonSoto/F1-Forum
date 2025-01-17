@@ -13,7 +13,7 @@ public class ValoracionDTO {
 
   private Long id;
   private Long puntuacion;
-  private LocalDate fechaValoracion;
+  private LocalDateTime fechaValoracion;
   private String comentario;
 
 
@@ -45,11 +45,11 @@ public class ValoracionDTO {
     this.puntuacion = puntuacion;
   }
 
-  public LocalDate getFechaValoracion() {
+  public LocalDateTime getFechaValoracion() {
     return fechaValoracion;
   }
 
-  public void setFechaValoracion(LocalDate fechaValoracion) {
+  public void setFechaValoracion(LocalDateTime fechaValoracion) {
     this.fechaValoracion = fechaValoracion;
   }
 
