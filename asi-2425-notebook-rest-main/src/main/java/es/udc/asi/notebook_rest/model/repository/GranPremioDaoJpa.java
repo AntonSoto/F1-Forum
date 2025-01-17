@@ -3,9 +3,11 @@ package es.udc.asi.notebook_rest.model.repository;
 import es.udc.asi.notebook_rest.model.domain.Category;
 import es.udc.asi.notebook_rest.model.domain.GranPremio;
 import es.udc.asi.notebook_rest.model.repository.util.GenericDaoJpa;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 
+@Repository
 public class GranPremioDaoJpa extends GenericDaoJpa implements GranPremioDao {
 
   @Override
