@@ -116,10 +116,10 @@ public class UserService {
     }
     UserDTOPrivate currentUser = getCurrentUserWithAuthority();
 
-    if (currentUser.getId().equals(theUser.getId()) || currentUser.getAuthority().equals(UserAuthority.ADMIN)) {
+    if (currentUser.getId().equals(theUser.getId()) || currentUser.getAuthority().equals("ADMIN")/*.equals(UserAuthority.ADMIN)*/) {
       userDAO.delete(theUser);
     }else{
-      throw new OperationNotAllowed("The user cannot remove itself");
+      throw new OperationNotAllowed("The user cannot remove others if he isn't admin");
 
     }
 
