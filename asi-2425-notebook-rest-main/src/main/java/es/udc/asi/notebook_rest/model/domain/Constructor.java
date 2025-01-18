@@ -17,8 +17,8 @@ public class Constructor {
   private String nombre;
   private String nacionalidad;
 
-  @OneToMany(mappedBy = "constructor", fetch = FetchType.EAGER)
-  private List<CampeonatoConstructor> campeonatoPConstructores = new ArrayList<>();
+  @OneToMany(mappedBy = "constructor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<CampeonatoConstructor> campeonatoConstructores = new ArrayList<>();
 
   @OneToMany(mappedBy = "constructor", fetch = FetchType.EAGER)
   private List<PilotoConstructor> constructorPiloto = new ArrayList<>();
@@ -27,12 +27,12 @@ public class Constructor {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     Constructor that = (Constructor) o;
-    return Objects.equals(id, that.id) && Objects.equals(nombre, that.nombre) && Objects.equals(nacionalidad, that.nacionalidad) && Objects.equals(campeonatoPConstructores, that.campeonatoPConstructores) && Objects.equals(constructorPiloto, that.constructorPiloto);
+    return Objects.equals(id, that.id) && Objects.equals(nombre, that.nombre) && Objects.equals(nacionalidad, that.nacionalidad) && Objects.equals(campeonatoConstructores, that.campeonatoConstructores) && Objects.equals(constructorPiloto, that.constructorPiloto);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nombre, nacionalidad, campeonatoPConstructores, constructorPiloto);
+    return Objects.hash(id, nombre, nacionalidad, campeonatoConstructores, constructorPiloto);
   }
 
   public String getId() {
@@ -60,11 +60,11 @@ public class Constructor {
   }
 
   public List<CampeonatoConstructor> getCampeonatoPConstructores() {
-    return campeonatoPConstructores;
+    return campeonatoConstructores;
   }
 
   public void setCampeonatoPConstructores(List<CampeonatoConstructor> campeonatoPConstructores) {
-    this.campeonatoPConstructores = campeonatoPConstructores;
+    this.campeonatoConstructores = campeonatoPConstructores;
   }
 
   public List<PilotoConstructor> getConstructorPiloto() {

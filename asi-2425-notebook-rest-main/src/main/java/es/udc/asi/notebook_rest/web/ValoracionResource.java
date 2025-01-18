@@ -54,7 +54,7 @@ public class ValoracionResource {
   }
 
   @GetMapping("granPremio/{id}")
-  public Collection<ValoracionDTO> findAllByGranPremio(Long id) {
+  public Collection<ValoracionDTO> findAllByGranPremio(@PathVariable Long id) {
     return valoracionService.findAllByGranPremio(id);
   }
 

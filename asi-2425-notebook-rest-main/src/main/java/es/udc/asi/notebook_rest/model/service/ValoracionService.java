@@ -1,5 +1,6 @@
 package es.udc.asi.notebook_rest.model.service;
 
+import es.udc.asi.notebook_rest.model.domain.GranPremio;
 import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.User;
 import es.udc.asi.notebook_rest.model.domain.Valoracion;
@@ -44,7 +45,14 @@ public class ValoracionService {
     User currentUser = userDAO.findById(userService.getCurrentUserWithAuthority().getId());
     Valoracion bdValoracion = new Valoracion(valoracion.getPuntuacion(), ahora, valoracion.getComentario(), currentUser);
 
-    bdValoracion.setGranPremio(granPremioDAO.findById(valoracion.getGranPremio()));
+    //bdValoracion.setGranPremio(granPremioDAO.findById(valoracion.getGranPremio()));
+
+    GranPremio granPremio = granPremioDAO.findById(valoracion.getGranPremio());
+    if (granPremio == null) {
+      throw new IllegalArgumentException("El GranPremio con el ID proporcionado no existe");
+    }
+
+    bdValoracion.setGranPremio(granPremio);
 
     valoracionDAO.create(bdValoracion);
     return new ValoracionDTO(bdValoracion);

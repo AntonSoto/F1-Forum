@@ -8,10 +8,10 @@ public interface PilotoDao {
 
   void create(Piloto note);
 
-  void delete(Piloto note);
-
   Collection<Piloto> findAll();
 
   Piloto findById(String id);
-
+/*
+  Piloto findByCampeonato(Long ano);
+*/
 }

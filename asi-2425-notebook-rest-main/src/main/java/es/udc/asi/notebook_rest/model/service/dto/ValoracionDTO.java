@@ -29,7 +29,7 @@ public class ValoracionDTO {
     this.fechaValoracion = valoracion.getFechaValoracion();
     this.comentario = valoracion.getComentario();
     this.user = valoracion.getUsuario().getLogin();
-    this.GranPremio =valoracion.getGranPremio().getId();
+    this.GranPremio = valoracion.getGranPremio().getId();
   }
 
   public Long getId() {
