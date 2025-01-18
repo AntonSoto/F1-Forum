@@ -2,6 +2,7 @@ package es.udc.asi.notebook_rest.model.service;
 
 
 import es.udc.asi.notebook_rest.model.domain.*;
+import es.udc.asi.notebook_rest.model.repository.CampeonatoConstructorDao;
 import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
 import es.udc.asi.notebook_rest.model.repository.ConstructorDao;
 import es.udc.asi.notebook_rest.model.service.dto.ConstructorDTO;
@@ -27,6 +28,9 @@ public class ConstructorService {
   @Autowired
   private CampeonatoDao campeonatoDao;
 
+  @Autowired
+  private CampeonatoConstructorDao campeonatoConstructorDao;
+
   public Collection<ConstructorDTO> findByCampeonatoAno(Long ano) {
     List<Object[]> resultados;
 
@@ -49,23 +53,37 @@ public class ConstructorService {
     }else{
        constructor = constructorDao.findById(constructorDTO.getId());
     }
-
-
-    CampeonatoConstructor campeonatoConstructor = new CampeonatoConstructor(
-      constructorDTO.getPuntos(),
-      constructorDTO.getVictorias()
-    );
-
     Campeonato campeonato = campeonatoDao.findById(constructorDTO.getAno());
 
-    constructor.getCampeonatoConstructores().add(campeonatoConstructor);
-    campeonato.getCampeonatoConstructors().add(campeonatoConstructor);
+    Collection<CampeonatoConstructor> campeonatosPorAno = campeonatoConstructorDao.findAllByAno(campeonato.getAno());
 
-    campeonatoConstructor.setConstructor(constructor);
-    campeonatoConstructor.setCampeonato(campeonato);
+    boolean checkIfExists = false;
 
-    constructorDao.create(constructor);
-    return new ConstructorDTO(constructor);
+    for (CampeonatoConstructor campeonatoConstructor : campeonatosPorAno) {
+      if(campeonatoConstructor.getConstructor().getId().equals(constructorDTO.getId())) {
+        checkIfExists = true;
+      }
+    }
+
+    if(!checkIfExists) {
+
+      CampeonatoConstructor campeonatoConstructor = new CampeonatoConstructor(
+        constructorDTO.getPuntos(),
+        constructorDTO.getVictorias()
+      );
+
+      constructor.getCampeonatoConstructores().add(campeonatoConstructor);
+      campeonato.getCampeonatoConstructors().add(campeonatoConstructor);
+
+      campeonatoConstructor.setConstructor(constructor);
+      campeonatoConstructor.setCampeonato(campeonato);
+
+      constructorDao.create(constructor);
+      return new ConstructorDTO(constructor);
+    }else{
+      throw new IllegalArgumentException("Constructor ya existente");
+    }
+
   }
 
 }
