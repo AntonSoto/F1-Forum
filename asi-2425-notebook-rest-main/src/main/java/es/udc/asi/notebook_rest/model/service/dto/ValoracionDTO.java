@@ -17,6 +17,7 @@ public class ValoracionDTO {
   private LocalDateTime fechaValoracion;
   private String comentario;
   private String user;
+  private Long idUser;
   private Long GranPremioId;
   private String granPremioNombre;
 
@@ -31,6 +32,7 @@ public class ValoracionDTO {
     this.fechaValoracion = valoracion.getFechaValoracion();
     this.comentario = valoracion.getComentario();
     this.user = valoracion.getUsuario().getLogin();
+    this.idUser = valoracion.getUsuario().getId();
     this.GranPremioId = valoracion.getGranPremio().getId();
   }
 
@@ -40,6 +42,7 @@ public class ValoracionDTO {
     this.fechaValoracion = valoracion.getFechaValoracion();
     this.comentario = valoracion.getComentario();
     this.user = valoracion.getUsuario().getLogin();
+    this.idUser = valoracion.getUsuario().getId();
     this.GranPremioId = granPremio.getId();
     this.granPremioNombre = granPremio.getCircuito().getId();
   }
@@ -98,5 +101,14 @@ public class ValoracionDTO {
 
   public void setGranPremioNombre(String granPremioNombre) {
     this.granPremioNombre = granPremioNombre;
+  }
+
+
+  public Long getIdUser() {
+    return idUser;
+  }
+
+  public void setIdUser(Long idUser) {
+    this.idUser = idUser;
   }
 }
