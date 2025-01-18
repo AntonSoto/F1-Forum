@@ -18,6 +18,7 @@ public class ValoracionDTO {
   private String comentario;
   private String user;
   private Long idUser;
+  private String authority;
   private Long GranPremioId;
   private String granPremioNombre;
 
@@ -32,7 +33,6 @@ public class ValoracionDTO {
     this.fechaValoracion = valoracion.getFechaValoracion();
     this.comentario = valoracion.getComentario();
     this.user = valoracion.getUsuario().getLogin();
-    this.idUser = valoracion.getUsuario().getId();
     this.GranPremioId = valoracion.getGranPremio().getId();
   }
 
@@ -43,6 +43,7 @@ public class ValoracionDTO {
     this.comentario = valoracion.getComentario();
     this.user = valoracion.getUsuario().getLogin();
     this.idUser = valoracion.getUsuario().getId();
+    this.authority = valoracion.getUsuario().getAuthority().toString();
     this.GranPremioId = granPremio.getId();
     this.granPremioNombre = granPremio.getCircuito().getId();
   }
@@ -111,4 +112,14 @@ public class ValoracionDTO {
   public void setIdUser(Long idUser) {
     this.idUser = idUser;
   }
+
+  public String getAuthority() {
+    return authority;
+  }
+
+  public void setAuthority(String authority) {
+    this.authority = authority;
+  }
+
+
 }
