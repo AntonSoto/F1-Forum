@@ -73,7 +73,6 @@ public class ValoracionService {
 
     bdValoracion.setComentario(valoracion.getComentario());
     bdValoracion.setPuntuacion(valoracion.getPuntuacion());
-    bdValoracion.setGranPremio(granPremioDAO.findById(valoracion.getGranPremio()));
 
     valoracionDAO.update(bdValoracion);
     return new ValoracionDTO(bdValoracion);
