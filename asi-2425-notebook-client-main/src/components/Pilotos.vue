@@ -29,9 +29,9 @@
         <tr v-for="(driver, index, image) in driverStandings" :key="driver.id">
           <td></td>
           <td>{{ index + 1 }}</td>
-          <td>{{ driver.nombreCompleto}}</td>
+          <td>{{ driver.nombreCompleto }}</td>
           <td>{{ driver.nacionalidad }}</td>
-          <td>{{ driver.constructorNombre}}</td>
+          <td>{{ driver.constructorNombre }}</td>
           <td>{{ driver.puntos }}</td>
           <td>{{ driver.victorias }}</td>
         </tr>
@@ -48,6 +48,7 @@
 <script>
 import CampeonatoRepository from '@/repositories/CampeonatoRepository';
 import PilotoRepository from '@/repositories/PilotoRepository';
+import ConstructorRepository from '@/repositories/ConstructorRepository';
 
 export default {
   data() {
@@ -67,11 +68,12 @@ export default {
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;
+        this.loadDataConstructor('current');
         return this.loadData('current');
       }
 
       const year = Number(this.selectedYear);
-      console.log(year)
+      
       if (year < 1950 || year > this.currentYear) {
         this.invalidYear = true;
         this.driverStandings = [];
@@ -81,55 +83,55 @@ export default {
       this.invalidYear = false;
 
       try {
-        console.log("Post antes del FINDONE", year)
+        
         await CampeonatoRepository.findOne(year);
       } catch (error) {
-        console.log("No se ha podido encontrar el año especificado");
+        
         await CampeonatoRepository.save({ ano: year });
       }
-
+      await this.loadDataConstructor(year);
       this.loadData(year);
     },
     async loadData(year) {
-      console.log(year);
-        if(year =="current") year = 2024;
-        console.log(year);
-        let driversFromBackend = [];
-        try {
-          driversFromBackend = await PilotoRepository.findByAnoPiloto(year);
-          console.log("Pilotos desde el backend:", driversFromBackend.length);
-          console.log(driversFromBackend);
-        } catch (error) {
-          console.error("Error al obtener los pilotos del backend:", error);
-        }
-        if (driversFromBackend.length > 0) {
-          // Si hay circuitos en el backend, usamos esos datos
-          this.driverStandings = driversFromBackend;
-          
-        } else {
-        this.isLoading = true; // Activar el indicador de carga
-        
-
+      
+      if (year == "current") year = 2024;
+      
+      let driversFromBackend = [];
       try {
-        const url = `http://ergast.com/api/f1/${year}/driverStandings.json`;
-        const response = await fetch(url);
-        const data = await response.json();
-        this.driverStandings = data.MRData.StandingsTable.StandingsLists?.[0]?.DriverStandings || [];
-        const driver = data.MRData.StandingsTable.StandingsLists?.[0]?.DriverStandings || [];
+        driversFromBackend = await PilotoRepository.findByAnoPiloto(year);
+        console.log("Pilotos desde el backend:", driversFromBackend.length);
+        //console.log(driversFromBackend);
+      } catch (error) {
+        console.error("Error al obtener los pilotos del backend:", error);
+      }
+      if (driversFromBackend.length > 0) {
+        // Si hay circuitos en el backend, usamos esos datos
+        this.driverStandings = driversFromBackend;
 
-        const transformedData = driver.map(driver => ({
-          id: driver.Driver.driverId,
-          nombreCompleto: `${driver.Driver.givenName} ${driver.Driver.familyName}`,
-          nacionalidad: driver.Driver.nationality,
-          victorias: driver.wins,
-          puntos: driver.points,
-          constructorId: driver.Constructors[0].constructorId,
-          constructorNombre: driver.Constructors[0].name,
-          ano: data.MRData.StandingsTable.season,
+      } else {
+        this.isLoading = true; // Activar el indicador de carga
 
-        }));
-        this.driverStandings = transformedData;
-        const savePromises = [];
+
+        try {
+          const url = `http://ergast.com/api/f1/${year}/driverStandings.json`;
+          const response = await fetch(url);
+          const data = await response.json();
+          this.driverStandings = data.MRData.StandingsTable.StandingsLists?.[0]?.DriverStandings || [];
+          const driver = data.MRData.StandingsTable.StandingsLists?.[0]?.DriverStandings || [];
+
+          const transformedData = driver.map(driver => ({
+            id: driver.Driver.driverId,
+            nombreCompleto: `${driver.Driver.givenName} ${driver.Driver.familyName}`,
+            nacionalidad: driver.Driver.nationality,
+            victorias: driver.wins,
+            puntos: driver.points,
+            constructorId: driver.Constructors[0].constructorId,
+            constructorNombre: driver.Constructors[0].name,
+            ano: data.MRData.StandingsTable.season,
+
+          }));
+          this.driverStandings = transformedData;
+          const savePromises = [];
           for (const piloto of transformedData) {
             const savePromise = (async () => {
               try {
@@ -144,7 +146,7 @@ export default {
                   //constructorNombre: piloto.constructorNombre,
                 });
               } catch (error) {
-                console.error(`Error al guardar el Piloto ${piloto.id}:`, error);
+                //console.error(`Error al guardar el Piloto ${piloto.id}:`, error);
               }
             })();
             savePromises.push(savePromise);
@@ -153,15 +155,84 @@ export default {
           // Esperar a que todos los circuitos se guarden
           await Promise.all(savePromises);
 
-        console.log(transformedData); // Aquí puedes ver el resultado transformado
+          console.log(transformedData); // Aquí puedes ver el resultado transformado
 
+        } catch (error) {
+          console.error("Error al obtener la clasificación:", error);
+        } finally {
+          this.isLoading = false;
+        }
+      }
+    },
+    
+    async loadDataConstructor(year) {
+      
+      if (year == "current") year = 2024;
+      
+      let constructoresFromBackend = [];
+      try {
+        constructoresFromBackend = await ConstructorRepository.findByAno(year);
+        console.log("Constructores desde el backend:", constructoresFromBackend.length);
+        //console.log(constructoresFromBackend);
       } catch (error) {
-        console.error("Error al obtener la clasificación:", error);
-      } finally {
-        this.isLoading = false;
+        console.error("Error al obtener los constructores del backend:", error);
+      }
+      if (constructoresFromBackend.length > 0) {
+        // Si hay circuitos en el backend, usamos esos datos
+        this.constructorStandings = constructoresFromBackend;
+
+      } else {
+        this.isLoading = true; // Activar el indicador de carga
+
+        try {
+          const url = `http://ergast.com/api/f1/${year}/constructorStandings.json`; // URL de la API
+          const response = await fetch(url); // Realizar la petición
+          const data = await response.json(); // Convertir la respuesta en formato JSON
+          this.constructorStandings = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || []; // Obtener los standings de las escuderías
+          const constructor = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || [];
+
+          const transformedData = constructor.map(constructor => ({
+            id: constructor.Constructor.constructorId,
+            nombre: constructor.Constructor.name,
+            nacionalidad: constructor.Constructor.nationality,
+            victorias: constructor.wins,
+            puntos: constructor.points,
+            ano: data.MRData.StandingsTable.season,
+
+          }));
+          this.constructorStandings = transformedData;
+          const savePromises = [];
+          for (const constructor of transformedData) {
+            const savePromise = (async () => {
+              try {
+                await ConstructorRepository.save({
+                  id: constructor.id,
+                  nombre: constructor.nombre,
+                  nacionalidad: constructor.nacionalidad,
+                  victorias: constructor.victorias,
+                  puntos: constructor.puntos,
+                  ano: constructor.ano,
+                });
+              } catch (error) {
+                console.error(`Error al guardar el Constructor ${constructor.id}:`, error);
+              }
+            })();
+            savePromises.push(savePromise);
+          }
+
+          // Esperar a que todos los circuitos se guarden
+          await Promise.all(savePromises);
+
+          //console.log(transformedData); // Aquí puedes ver el resultado transformado
+
+        } catch (error) {
+          console.error("Error al obtener la clasificación:", error);
+        } finally {
+          this.isLoading = false; // Desactivar el indicador de carga
+        }
       }
     }
-  }
+
   },
 };
 </script>

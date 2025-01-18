@@ -7,6 +7,7 @@ export default {
 
   async findOne(ano) {
     try {
+      console.log("BUSCANDO AÑO")
       const response = await HTTP.get(`${resource}/${ano}`);
       
       // Si la respuesta es exitosa, devolver los datos del circuito
@@ -22,7 +23,7 @@ export default {
   },
 
   async save(ano) {
-    
+    console.log("GUARDANDO AÑO")
     return (await HTTP.post(`${resource}`, ano));
     
   },
