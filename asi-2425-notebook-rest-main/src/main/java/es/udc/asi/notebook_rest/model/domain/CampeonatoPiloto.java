@@ -22,6 +22,15 @@ public class CampeonatoPiloto {
   @ManyToOne
   private Piloto piloto;
 
+  public CampeonatoPiloto(Long puntos, Long victorias, Campeonato campeonato, Piloto piloto) {
+
+    this.puntos = puntos;
+    this.victorias = victorias;
+    this.campeonato = campeonato;
+    this.piloto = piloto;
+
+  }
+
 
   @Override
   public boolean equals(Object o) {

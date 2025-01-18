@@ -17,15 +17,6 @@ public class CircuitoDTO {
   private String Longitud;
   private String Localidad;
   private String Pais;
-
-  public Collection<GranPremioDTO> getGrandesPremios() {
-    return grandesPremios;
-  }
-
-  public void setGrandesPremios(Collection<GranPremioDTO> grandesPremios) {
-    this.grandesPremios = grandesPremios;
-  }
-
   private Collection<GranPremioDTO> grandesPremios = new ArrayList<>();
 
   public CircuitoDTO() {
@@ -90,5 +81,13 @@ public class CircuitoDTO {
 
   public void setPais(String pais) {
     Pais = pais;
+  }
+
+  public Collection<GranPremioDTO> getGrandesPremios() {
+    return grandesPremios;
+  }
+
+  public void setGrandesPremios(Collection<GranPremioDTO> grandesPremios) {
+    this.grandesPremios = grandesPremios;
   }
 }

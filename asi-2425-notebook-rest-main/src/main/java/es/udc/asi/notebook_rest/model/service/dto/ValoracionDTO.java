@@ -33,6 +33,8 @@ public class ValoracionDTO {
     this.fechaValoracion = valoracion.getFechaValoracion();
     this.comentario = valoracion.getComentario();
     this.user = valoracion.getUsuario().getLogin();
+    this.idUser = valoracion.getUsuario().getId();
+    this.authority = valoracion.getUsuario().getAuthority().toString();
     this.GranPremioId = valoracion.getGranPremio().getId();
   }
 
