@@ -22,6 +22,8 @@ public class CampeonatoPiloto {
   @ManyToOne
   private Piloto piloto;
 
+  public CampeonatoPiloto() {}
+
   public CampeonatoPiloto(Long puntos, Long victorias, Campeonato campeonato, Piloto piloto) {
 
     this.puntos = puntos;
