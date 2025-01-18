@@ -7,8 +7,9 @@ export default {
 
   async findByAno(ano) {
     try {
+    console.log("BUSCANDO CONSTRUCTOR POR AÑO")
       const response = await HTTP.get(`${resource}/${ano}`);
-      
+      console.log("RECUPERADOS CONSTRUCTOR POR AÑO")
       // Si la respuesta es exitosa, devolver los datos del circuito
       return response.data;
     } catch (error) {
@@ -22,7 +23,7 @@ export default {
   },
 
   async save(constructor) {
-    console.log("AQUI CABRON", constructor)
+    console.log("GUARDANDO CONSTRUCTOR")
       return (await HTTP.post(`${resource}`, constructor)).data;
   },
 }; 
