@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public class PilotoDaoJpa extends GenericDaoJpa implements PilotoDao {
@@ -28,13 +29,17 @@ public class PilotoDaoJpa extends GenericDaoJpa implements PilotoDao {
   public Piloto findById(String id) {
     return entityManager.find(Piloto.class, id);
   }
-/*
+
   @Override
-  public Piloto findByCampeonato(Long ano) {
+  public List<Object[]> findByCampeonatoAno(Long ano) {
     return entityManager.createQuery(
-        "select p from Piloto p join p. gp where gp.id = :gran_premio_id", Valoracion.class)
-      .setParameter("gran_premio_id", id).getResultList();
+        "SELECT p, cp " +
+          "FROM Piloto p " +
+          "JOIN p.campeonatoPilotos cp " +
+          "JOIN cp.campeonato c " +
+          "WHERE c.ano = :ano", Object[].class)
+      .setParameter("ano", ano)
+      .getResultList();
   }
-  }
-*/
+
 }

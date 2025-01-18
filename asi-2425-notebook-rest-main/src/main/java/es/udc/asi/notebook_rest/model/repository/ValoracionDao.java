@@ -4,6 +4,7 @@ import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.Valoracion;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface ValoracionDao {
 
@@ -15,7 +16,7 @@ public interface ValoracionDao {
 
   Collection<Valoracion> findAllByGranPremio(Long id);
 
-  Collection<Valoracion> findAllByUser(String login);
+  public List<Object[]> findAllByUserWithGranPremio(String login);
 
 
 

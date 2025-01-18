@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -101,10 +102,13 @@ public class ValoracionService {
   }
 
   public Collection<ValoracionDTO> findAllByUser() {
-    Stream<Valoracion> valoraciones;
-    valoraciones = valoracionDAO.findAllByUser(SecurityUtils.getCurrentUserLogin()).stream();
+    List<Object[]> resultados = valoracionDAO.findAllByUserWithGranPremio(SecurityUtils.getCurrentUserLogin());
 
-    return valoraciones.map(valoracion -> new ValoracionDTO(valoracion)).collect(Collectors.toList());
+    return resultados.stream().map(resultado -> {
+      Valoracion valoracion = (Valoracion) resultado[0];
+      GranPremio granPremio = (GranPremio) resultado[1];
+      return new ValoracionDTO(valoracion, granPremio);
+    }).collect(Collectors.toList());
   }
 
 }

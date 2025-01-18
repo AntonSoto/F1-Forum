@@ -7,6 +7,7 @@ import es.udc.asi.notebook_rest.model.repository.util.GenericDaoJpa;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public class ValoracionDaoJpa extends GenericDaoJpa implements ValoracionDao{
@@ -34,10 +35,15 @@ public class ValoracionDaoJpa extends GenericDaoJpa implements ValoracionDao{
   }
 
   @Override
-  public Collection<Valoracion> findAllByUser(String login){
+  public List<Object[]> findAllByUserWithGranPremio(String login) {
     return entityManager.createQuery(
-        "select v from Valoracion v join v.usuario user where user.login = :user_login", Valoracion.class)
-      .setParameter("user_login", login).getResultList();
+        "SELECT v, gp " +
+          "FROM Valoracion v " +
+          "JOIN v.usuario user " +
+          "JOIN v.granPremio gp " +
+          "WHERE user.login = :user_login", Object[].class)
+      .setParameter("user_login", login)
+      .getResultList();
   }
 
   @Override

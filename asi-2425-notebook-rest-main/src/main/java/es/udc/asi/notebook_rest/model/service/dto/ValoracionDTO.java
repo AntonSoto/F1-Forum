@@ -1,5 +1,6 @@
 package es.udc.asi.notebook_rest.model.service.dto;
 
+import es.udc.asi.notebook_rest.model.domain.GranPremio;
 import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.Valoracion;
 import jakarta.validation.constraints.Size;
@@ -16,7 +17,8 @@ public class ValoracionDTO {
   private LocalDateTime fechaValoracion;
   private String comentario;
   private String user;
-  private Long GranPremio;
+  private Long GranPremioId;
+  private String granPremioNombre;
 
 
   public ValoracionDTO() {
@@ -29,7 +31,17 @@ public class ValoracionDTO {
     this.fechaValoracion = valoracion.getFechaValoracion();
     this.comentario = valoracion.getComentario();
     this.user = valoracion.getUsuario().getLogin();
-    this.GranPremio = valoracion.getGranPremio().getId();
+    this.GranPremioId = valoracion.getGranPremio().getId();
+  }
+
+  public ValoracionDTO(Valoracion valoracion, GranPremio granPremio) {
+    this.id = valoracion.getId();
+    this.puntuacion = valoracion.getPuntuacion();
+    this.fechaValoracion = valoracion.getFechaValoracion();
+    this.comentario = valoracion.getComentario();
+    this.user = valoracion.getUsuario().getLogin();
+    this.GranPremioId = granPremio.getId();
+    this.granPremioNombre = granPremio.getCircuito().getId();
   }
 
   public Long getId() {
@@ -73,10 +85,18 @@ public class ValoracionDTO {
   }
 
   public Long getGranPremio() {
-    return GranPremio;
+    return GranPremioId;
   }
 
   public void setGranPremio(Long granPremio) {
-    GranPremio = granPremio;
+    GranPremioId = granPremio;
+  }
+
+  public String getGranPremioNombre() {
+    return granPremioNombre;
+  }
+
+  public void setGranPremioNombre(String granPremioNombre) {
+    this.granPremioNombre = granPremioNombre;
   }
 }
