@@ -154,8 +154,7 @@ export default {
               },
             ],
           }));
-          console.log(circuitosFromAPI.data)
-          // Guardar cada circuito en el backend con la nueva estructura
+          
           const savePromises = circuitosFromAPI.map(async (circuito) => {
             try {
               
