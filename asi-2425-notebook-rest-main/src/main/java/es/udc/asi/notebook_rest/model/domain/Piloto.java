@@ -22,6 +22,17 @@ public class Piloto {
   @OneToMany(mappedBy = "piloto", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   private List<PilotoConstructor> pilotoConstructor = new ArrayList<>();
 
+  public Piloto() {
+    super();
+  }
+
+  public Piloto(String id, String nombreCompleto, String nacionalidad) {
+    super();
+    this.id = id;
+    this.nombreCompleto = nombreCompleto;
+    this.nacionalidad = nacionalidad;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;

@@ -23,6 +23,14 @@ public class Constructor {
   @OneToMany(mappedBy = "constructor", fetch = FetchType.EAGER)
   private List<PilotoConstructor> constructorPiloto = new ArrayList<>();
 
+  public Constructor(String id, String nombre, String nacionalidad) {
+
+    this.id = id;
+    this.nombre = nombre;
+    this.nacionalidad = nacionalidad;
+
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;

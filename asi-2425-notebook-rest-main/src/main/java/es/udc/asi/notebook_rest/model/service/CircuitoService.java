@@ -56,7 +56,7 @@ public class CircuitoService {
 
   @Transactional(readOnly = false)
   public CircuitoDTO create(CircuitoDTO circuitoDTO) {
-    // Crear el objeto Circuito desde el DTO
+
     Circuito bdCircuito = new Circuito(
       circuitoDTO.getId(),
       circuitoDTO.getNombreCircuito(),

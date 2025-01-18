@@ -20,8 +20,18 @@ public class PilotoConstructor {
   @ManyToOne(optional = false)
   private Piloto piloto;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, cascade = CascadeType.ALL)
   private Constructor constructor;
+
+  public PilotoConstructor() {
+    super();
+  }
+
+  public PilotoConstructor(Piloto piloto, Constructor constructor) {
+    super();
+    this.piloto = piloto;
+    this.constructor = constructor;
+  }
 
   @Override
   public boolean equals(Object o) {

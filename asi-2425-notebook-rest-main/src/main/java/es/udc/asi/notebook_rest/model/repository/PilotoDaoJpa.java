@@ -16,8 +16,8 @@ import java.util.List;
 public class PilotoDaoJpa extends GenericDaoJpa implements PilotoDao {
 
   @Override
-  public void create(Piloto note) {
-    entityManager.persist(note);
+  public void create(Piloto piloto) {
+    entityManager.persist(piloto);
   }
 
   @Override
@@ -33,10 +33,11 @@ public class PilotoDaoJpa extends GenericDaoJpa implements PilotoDao {
   @Override
   public List<Object[]> findByCampeonatoAno(Long ano) {
     return entityManager.createQuery(
-        "SELECT p, cp " +
+        "SELECT p, cp, pc " +
           "FROM Piloto p " +
           "JOIN p.campeonatoPilotos cp " +
           "JOIN cp.campeonato c " +
+          "JOIN p.pilotoConstructor pc " +
           "WHERE c.ano = :ano", Object[].class)
       .setParameter("ano", ano)
       .getResultList();
