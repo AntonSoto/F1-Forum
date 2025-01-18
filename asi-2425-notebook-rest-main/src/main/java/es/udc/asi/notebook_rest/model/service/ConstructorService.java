@@ -34,6 +34,7 @@ public class ConstructorService {
     }).collect(Collectors.toList());
   }
 
+  @Transactional(readOnly = false)
   public ConstructorDTO create(ConstructorDTO constructorDTO) {
     Constructor constructor = new Constructor(
       constructorDTO.getId(),

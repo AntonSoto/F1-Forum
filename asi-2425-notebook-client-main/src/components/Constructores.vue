@@ -51,6 +51,7 @@
   
   <script>
   import CampeonatoRepository from '@/repositories/CampeonatoRepository';
+import ConstructorRepository from '@/repositories/ConstructorRepository';
 
   export default {
     data() {
@@ -98,9 +99,45 @@
           const response = await fetch(url); // Realizar la petición
           const data = await response.json(); // Convertir la respuesta en formato JSON
           this.constructorStandings = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || []; // Obtener los standings de las escuderías
-        } catch (error) {
-          console.error("Error al obtener la clasificación:", error);
-        } finally {
+          const constructor = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || [];
+
+          const transformedData = constructor.map(constructor => ({
+          id: constructor.Constructor.constructorId,
+          nombre: constructor.Constructor.name,
+          nacionalidad: constructor.Constructor.nationality,
+          victorias: constructor.wins,
+          puntos: constructor.points,
+          ano: data.MRData.StandingsTable.season,
+
+        }));
+
+        const savePromises = [];
+          for (const constructor of transformedData) {
+            const savePromise = (async () => {
+              try {
+                await ConstructorRepository.save({
+                  id: constructor.id,
+                  nombre: constructor.nombre,
+                  nacionalidad: constructor.nacionalidad,
+                  victorias: constructor.victorias,
+                  puntos: constructor.puntos,
+                  ano: constructor.ano,
+                });
+              } catch (error) {
+                console.error(`Error al guardar el Constructor ${constructor.id}:`, error);
+              }
+            })();
+            savePromises.push(savePromise);
+          }
+
+          // Esperar a que todos los circuitos se guarden
+          await Promise.all(savePromises);
+
+        console.log(transformedData); // Aquí puedes ver el resultado transformado
+
+      } catch (error) {
+        console.error("Error al obtener la clasificación:", error);
+      } finally {
           this.isLoading = false; // Desactivar el indicador de carga
         }
       }
