@@ -31,13 +31,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(constructor, index) in constructorStandings" :key="constructor.Constructor.constructorId">
+          <tr v-for="(constructor, index) in constructorStandings" :key="constructor.id">
             <td></td>
             <td>{{ index + 1 }}</td>
-            <td>{{ constructor.Constructor.name }}</td>
-            <td>{{ constructor.Constructor.nationality }}</td>
-            <td>{{ constructor.points }}</td>
-            <td>{{ constructor.wins }}</td>
+            <td>{{ constructor.nombre }}</td>
+            <td>{{ constructor.nacionalidad }}</td>
+            <td>{{ constructor.puntos }}</td>
+            <td>{{ constructor.victorias }}</td>
           </tr>
         </tbody>
       </table>
@@ -91,9 +91,29 @@ import ConstructorRepository from '@/repositories/ConstructorRepository';
         }
 
         this.loadData(year);
+        
+
+
       },
       async loadData(year) {
+        console.log(year);
+        if(year =="current") year = 2024;
+        console.log(year);
+        let constructoresFromBackend = [];
+        try {
+          constructoresFromBackend = await ConstructorRepository.findByAno(year);
+          console.log("Constructores desde el backend:", constructoresFromBackend.length);
+          console.log(constructoresFromBackend);
+        } catch (error) {
+          console.error("Error al obtener los constructores del backend:", error);
+        }
+        if (constructoresFromBackend.length > 0) {
+          // Si hay circuitos en el backend, usamos esos datos
+          this.constructorStandings = constructoresFromBackend;
+          
+        } else {
         this.isLoading = true; // Activar el indicador de carga
+        
         try {
           const url = `http://ergast.com/api/f1/${year}/constructorStandings.json`; // URL de la API
           const response = await fetch(url); // Realizar la petición
@@ -108,9 +128,9 @@ import ConstructorRepository from '@/repositories/ConstructorRepository';
           victorias: constructor.wins,
           puntos: constructor.points,
           ano: data.MRData.StandingsTable.season,
-
+          
         }));
-
+        this.constructorStandings = transformedData;
         const savePromises = [];
           for (const constructor of transformedData) {
             const savePromise = (async () => {
@@ -140,6 +160,7 @@ import ConstructorRepository from '@/repositories/ConstructorRepository';
       } finally {
           this.isLoading = false; // Desactivar el indicador de carga
         }
+      }
       }
     },
   };
