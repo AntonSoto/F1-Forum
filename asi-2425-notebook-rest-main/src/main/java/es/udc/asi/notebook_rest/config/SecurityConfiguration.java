@@ -66,6 +66,12 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/circuitos").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/circuitos").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/campeonato").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/campeonato").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/pilotos").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/pilotos").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/constructores").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/constructores").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/notes/**").authenticated()
         .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority(UserAuthority.ADMIN.toString())
         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll() // Debería ser authenticated, pero para poder tener un GET abierto para las pruebas lo dejamos en permitAllﬁ

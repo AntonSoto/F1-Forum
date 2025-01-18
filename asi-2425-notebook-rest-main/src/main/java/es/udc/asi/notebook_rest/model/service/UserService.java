@@ -119,7 +119,7 @@ public class UserService {
       if (currentUser.getId().equals(theUser.getId()) || (currentUser.getAuthority().equals("ADMIN") && theUser.getAuthority().equals(UserAuthority.USER))) {
         userDAO.delete(theUser);
       }else{
-        throw new OperationNotAllowed("The user cannot remove others if he isn't admin");
+        throw new OperationNotAllowed("The user cannot remove others if he isn't admin or other admins");
 
       }
 
