@@ -32,7 +32,7 @@ public class User {
   @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Note> notes = new ArrayList<>();
 
-  @OneToMany(mappedBy = "usuario")
+  @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Valoracion> valoraciones = new ArrayList<>();
 
   private boolean active = true;
