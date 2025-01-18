@@ -19,6 +19,9 @@ public class PilotoDTO {
   private String constructorNacionalidad;
 
 
+  public PilotoDTO() {
+  }
+
   public PilotoDTO(Piloto piloto, CampeonatoPiloto campeonatoPiloto, Constructor constructor) {
     this.id = piloto.getId();
     this.nombreCompleto = piloto.getNombreCompleto();
@@ -33,6 +36,20 @@ public class PilotoDTO {
     this.id = piloto.getId();
     this.nombreCompleto = piloto.getNombreCompleto();
     this.nacionalidad = piloto.getNacionalidad();
+  }
+
+  public PilotoDTO(
+    String id, String nombreCompleto, String nacionalidad, Long victorias,
+    Long puntos, Long ano, String constructorId, String constructorNombre, String constructorNacionalidad) {
+    this.id = id;
+    this.nombreCompleto = nombreCompleto;
+    this.nacionalidad = nacionalidad;
+    this.victorias = victorias;
+    this.puntos = puntos;
+    this.ano = ano;
+    this.constructorId = constructorId;
+    this.constructorNombre = constructorNombre;
+    this.constructorNacionalidad = constructorNacionalidad;
   }
 
 

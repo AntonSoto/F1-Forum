@@ -67,11 +67,11 @@ public class Constructor {
     this.nacionalidad = nacionalidad;
   }
 
-  public List<CampeonatoConstructor> getCampeonatoPConstructores() {
+  public List<CampeonatoConstructor> getCampeonatoConstructores() {
     return campeonatoConstructores;
   }
 
-  public void setCampeonatoPConstructores(List<CampeonatoConstructor> campeonatoPConstructores) {
+  public void setCampeonatoConstructores(List<CampeonatoConstructor> campeonatoPConstructores) {
     this.campeonatoConstructores = campeonatoPConstructores;
   }
 

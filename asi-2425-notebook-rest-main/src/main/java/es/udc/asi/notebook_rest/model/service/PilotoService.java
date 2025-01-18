@@ -57,11 +57,20 @@ public class PilotoService {
       piloto
     );
 
+    campeonato.getCampeonatoConstructors().add(campeonatoConstructor);
+    constructor.getCampeonatoConstructores().add(campeonatoConstructor);
+
+    piloto.getPilotoConstructor().add(pilotoConstructor);
+    constructor.getConstructorPiloto().add(pilotoConstructor);
+
+    campeonato.getCampeonatoPilotos().add(campeonatoPiloto);
+    piloto.getCampeonatoPilotos().add(campeonatoPiloto);
+
     pilotoDao.create(piloto);
     return new PilotoDTO(piloto);
   }
 
-  @Transactional(readOnly = false)
+  @Transactional(readOnly = true)
   public List<PilotoDTO> findByCampeonatoAno(Long ano) {
 
     List<Object[]> resultados = pilotoDao.findByCampeonatoAno(ano);

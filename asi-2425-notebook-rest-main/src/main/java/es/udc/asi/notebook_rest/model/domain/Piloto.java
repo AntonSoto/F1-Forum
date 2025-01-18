@@ -16,10 +16,10 @@ public class Piloto {
   private String nombreCompleto;
   private String nacionalidad;
 
-  @OneToMany(mappedBy = "piloto", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  @OneToMany(mappedBy = "piloto", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<CampeonatoPiloto> campeonatoPilotos = new ArrayList<>();
 
-  @OneToMany(mappedBy = "piloto", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  @OneToMany(mappedBy = "piloto", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<PilotoConstructor> pilotoConstructor = new ArrayList<>();
 
   public Piloto() {
