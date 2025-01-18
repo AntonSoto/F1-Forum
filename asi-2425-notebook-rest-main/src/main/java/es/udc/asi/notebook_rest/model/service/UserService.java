@@ -108,7 +108,6 @@ public class UserService {
     return null;
   }
 
-  @PreAuthorize("hasAuthority('ADMIN')")
   @Transactional(readOnly = false)
   public void deleteById(Long id) throws NotFoundException, OperationNotAllowed {
     User theUser = userDAO.findById(id);
@@ -116,12 +115,15 @@ public class UserService {
       throw new NotFoundException(id.toString(), User.class);
     }
     UserDTOPrivate currentUser = getCurrentUserWithAuthority();
-    if (currentUser.getId().equals(theUser.getId())) {
+
+    if (currentUser.getId().equals(theUser.getId()) || currentUser.getAuthority().equals(UserAuthority.ADMIN)) {
+      userDAO.delete(theUser);
+    }else{
       throw new OperationNotAllowed("The user cannot remove itself");
+
     }
 
-    theUser.getNotes().forEach(n -> noteDAO.delete(n));
-    userDAO.delete(theUser);
+
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
