@@ -20,10 +20,19 @@ public class CampeonatoConstructor {
   @ManyToOne
   private Constructor constructor;
 
+  public CampeonatoConstructor() {}
+
   public CampeonatoConstructor(Campeonato campeonato, Constructor constructor) {
 
     this.campeonato = campeonato;
     this.constructor = constructor;
+
+  }
+
+  public CampeonatoConstructor(Long puntos, Long victorias) {
+
+    this.puntos = puntos;
+    this.victorias = victorias;
 
   }
 

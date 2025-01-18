@@ -23,6 +23,8 @@ public class Constructor {
   @OneToMany(mappedBy = "constructor", fetch = FetchType.EAGER)
   private List<PilotoConstructor> constructorPiloto = new ArrayList<>();
 
+  public Constructor() {}
+
   public Constructor(String id, String nombre, String nacionalidad) {
 
     this.id = id;

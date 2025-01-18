@@ -13,14 +13,10 @@ public class PilotoConstructor {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
-  private Date fechaEntrada;
-  private Date fechaSalida;
-
   @ManyToOne(optional = false)
   private Piloto piloto;
 
-  @ManyToOne(optional = false, cascade = CascadeType.ALL)
+  @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
   private Constructor constructor;
 
   public PilotoConstructor() {
@@ -37,12 +33,12 @@ public class PilotoConstructor {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     PilotoConstructor that = (PilotoConstructor) o;
-    return Objects.equals(id, that.id) && Objects.equals(fechaEntrada, that.fechaEntrada) && Objects.equals(fechaSalida, that.fechaSalida) && Objects.equals(piloto, that.piloto) && Objects.equals(constructor, that.constructor);
+    return Objects.equals(id, that.id) && Objects.equals(piloto, that.piloto) && Objects.equals(constructor, that.constructor);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, fechaEntrada, fechaSalida, piloto, constructor);
+    return Objects.hash(id, piloto, constructor);
   }
 
   public Long getId() {
@@ -51,22 +47,6 @@ public class PilotoConstructor {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public Date getFechaEntrada() {
-    return fechaEntrada;
-  }
-
-  public void setFechaEntrada(Date fechaEntrada) {
-    this.fechaEntrada = fechaEntrada;
-  }
-
-  public Date getFechaSalida() {
-    return fechaSalida;
-  }
-
-  public void setFechaSalida(Date fechaSalida) {
-    this.fechaSalida = fechaSalida;
   }
 
   public Piloto getPiloto() {

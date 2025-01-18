@@ -112,24 +112,27 @@ export default {
           ano: data.MRData.StandingsTable.season,
 
         }));
-        const savePromises = transformedData.map(async (piloto) => {
-            try {
-              
-              await PilotoRepository.save({
-                id : piloto.id, 
-                nombreCompleto : piloto.nombreCompleto,
-                nacionalidad : piloto.nacionalidad,
-                victorias : piloto.victorias,
-                puntos : piloto.puntos,
-                ano : piloto.ano,
-                constructorId : piloto.constructorId,
-                constructorNombre : piloto.constructorNombre,
-                constructorNacionalidad : piloto.constructorNacionalidad,
-              });
-            } catch (error) {
-              console.error(`Error al guardar el Piloto ${piloto.id}:`);
-            }
-          });
+        const savePromises = [];
+          for (const piloto of transformedData) {
+            const savePromise = (async () => {
+              try {
+                await PilotoRepository.save({
+                  id: piloto.id,
+                  nombreCompleto: piloto.nombreCompleto,
+                  nacionalidad: piloto.nacionalidad,
+                  victorias: piloto.victorias,
+                  puntos: piloto.puntos,
+                  ano: piloto.ano,
+                  constructorId: piloto.constructorId,
+                  constructorNombre: piloto.constructorNombre,
+                  constructorNacionalidad: piloto.constructorNacionalidad,
+                });
+              } catch (error) {
+                console.error(`Error al guardar el Piloto ${piloto.id}:`, error);
+              }
+            })();
+            savePromises.push(savePromise);
+          }
 
           // Esperar a que todos los circuitos se guarden
           await Promise.all(savePromises);

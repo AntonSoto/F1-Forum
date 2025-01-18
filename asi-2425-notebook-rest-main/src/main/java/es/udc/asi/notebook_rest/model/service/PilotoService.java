@@ -3,6 +3,7 @@ package es.udc.asi.notebook_rest.model.service;
 import es.udc.asi.notebook_rest.model.domain.*;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
+import es.udc.asi.notebook_rest.model.repository.ConstructorDao;
 import es.udc.asi.notebook_rest.model.repository.PilotoDao;
 import es.udc.asi.notebook_rest.model.service.dto.CircuitoDTO;
 import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
@@ -27,6 +28,9 @@ public class PilotoService {
   @Autowired
   private CampeonatoDao campeonatoDao;
 
+  @Autowired
+  private ConstructorDao constructorDao;
+
   @Transactional(readOnly = false)
   public PilotoDTO create(PilotoDTO pilotoDTO) {
 
@@ -38,11 +42,24 @@ public class PilotoService {
 
     Campeonato campeonato = campeonatoDao.findById(pilotoDTO.getAno());
 
-    Constructor constructor = new Constructor(
-      pilotoDTO.getConstructorId(),
-      pilotoDTO.getConstructorNombre(),
-      pilotoDTO.getConstructorNacionalidad()
-    );
+    Constructor constructor;
+
+    String xdddd = pilotoDTO.getConstructorId();
+
+    Constructor constructorprueba = constructorDao.findById(xdddd);
+
+    if(constructorprueba == null) {
+
+       constructor = new Constructor(
+         pilotoDTO.getConstructorId(),
+         pilotoDTO.getConstructorNacionalidad(),
+         pilotoDTO.getConstructorNombre()
+      );
+       constructorDao.create(constructor);
+
+    }else{
+        constructor = constructorDao.findById(pilotoDTO.getConstructorId());
+    }
 
     CampeonatoConstructor campeonatoConstructor = new CampeonatoConstructor(
       campeonato, constructor
@@ -61,6 +78,7 @@ public class PilotoService {
     constructor.getCampeonatoConstructores().add(campeonatoConstructor);
 
     piloto.getPilotoConstructor().add(pilotoConstructor);
+
     constructor.getConstructorPiloto().add(pilotoConstructor);
 
     campeonato.getCampeonatoPilotos().add(campeonatoPiloto);
