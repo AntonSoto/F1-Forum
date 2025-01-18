@@ -26,14 +26,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(driver, index, image) in driverStandings" :key="driver.Driver.driverId">
+        <tr v-for="(driver, index, image) in driverStandings" :key="driver.id">
           <td></td>
           <td>{{ index + 1 }}</td>
-          <td>{{ driver.Driver.givenName }} {{ driver.Driver.familyName }}</td>
-          <td>{{ driver.Driver.nationality }}</td>
-          <td>{{ driver.Constructors[0].name }}</td>
-          <td>{{ driver.points }}</td>
-          <td>{{ driver.wins }}</td>
+          <td>{{ driver.nombreCompleto}}</td>
+          <td>{{ driver.nacionalidad }}</td>
+          <td>{{ driver.constructorNombre}}</td>
+          <td>{{ driver.puntos }}</td>
+          <td>{{ driver.victorias }}</td>
         </tr>
       </tbody>
     </table>
@@ -91,7 +91,24 @@ export default {
       this.loadData(year);
     },
     async loadData(year) {
-      this.isLoading = true;
+      console.log(year);
+        if(year =="current") year = 2024;
+        console.log(year);
+        let driversFromBackend = [];
+        try {
+          driversFromBackend = await PilotoRepository.findByAnoPiloto(year);
+          console.log("Pilotos desde el backend:", driversFromBackend.length);
+          console.log(driversFromBackend);
+        } catch (error) {
+          console.error("Error al obtener los pilotos del backend:", error);
+        }
+        if (driversFromBackend.length > 0) {
+          // Si hay circuitos en el backend, usamos esos datos
+          this.driverStandings = driversFromBackend;
+          
+        } else {
+        this.isLoading = true; // Activar el indicador de carga
+        
 
       try {
         const url = `http://ergast.com/api/f1/${year}/driverStandings.json`;
@@ -108,10 +125,10 @@ export default {
           puntos: driver.points,
           constructorId: driver.Constructors[0].constructorId,
           constructorNombre: driver.Constructors[0].name,
-          constructorNacionalidad: driver.Constructors[0].nationality,
           ano: data.MRData.StandingsTable.season,
 
         }));
+        this.driverStandings = transformedData;
         const savePromises = [];
           for (const piloto of transformedData) {
             const savePromise = (async () => {
@@ -124,8 +141,7 @@ export default {
                   puntos: piloto.puntos,
                   ano: piloto.ano,
                   constructorId: piloto.constructorId,
-                  constructorNombre: piloto.constructorNombre,
-                  constructorNacionalidad: piloto.constructorNacionalidad,
+                  //constructorNombre: piloto.constructorNombre,
                 });
               } catch (error) {
                 console.error(`Error al guardar el Piloto ${piloto.id}:`, error);
@@ -145,6 +161,7 @@ export default {
         this.isLoading = false;
       }
     }
+  }
   },
 };
 </script>

@@ -9,24 +9,27 @@ export default {
     return response.data;
   },
 
-  async findOne(pilotoId) {
+  async findByAnoPiloto(ano) {
     try {
-      const response = await HTTP.get(`${resource}/${pilotoId}`);
-      
+    console.log("BUSCANDO PILOTO POR AÑO")
+      const response = await HTTP.get(`${resource}/${ano}`);
+      console.log("RECUPERADOS PILOTO POR AÑO")
       // Si la respuesta es exitosa, devolver los datos del circuito
-      return response.data;
+      const pilotos = response.data;
+      pilotos.sort((a, b) => b.puntos - a.puntos);
+      return pilotos;
     } catch (error) {
       // Verificar si el error es un 404 (circuito no encontrado)
       if (error.response && error.response.status === 404) {
-        throw new Error(`Piloto con ID ${pilotoId} no encontrado`);
+        throw new Error(`Ano con ID ${ano} no encontrado`);
       }
       // Si es otro tipo de error (por ejemplo, error en la red), lanzar el error
-      throw new Error("Error al obtener los datos del circuito");
+      throw new Error("Error al obtener los datos del constructor");
     }
   },
 
   async save(piloto) {
-    console.log("AQUI CABRON", piloto)
+    console.log("GUARDANDO LOS PILOTOS ", piloto)
       return (await HTTP.post(`${resource}`, piloto)).data;
   },
 
