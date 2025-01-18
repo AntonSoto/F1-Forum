@@ -30,7 +30,7 @@ public class ConstructorDaoJpa extends GenericDaoJpa implements ConstructorDao {
         "SELECT cst, cc " +
           "FROM Constructor cst " +
           "JOIN cst.campeonatoConstructores cc " +
-          "WHERE cc.campeonato = :ano", Object[].class)
+          "WHERE cc.campeonato.ano = :ano", Object[].class)
       .setParameter("ano", ano)
       .getResultList();
   }
