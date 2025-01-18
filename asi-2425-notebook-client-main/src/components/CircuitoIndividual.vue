@@ -38,12 +38,25 @@
     <div class="lista-valoraciones" v-if="valoraciones.length > 0">
       <h3>Valoraciones del circuito</h3>
       <ul>
-        <li v-for="valoracion in valoraciones" :key="valoracion.id">
+        <li v-for="(valoracion, index) in valoraciones" :key="valoracion.id">
           <strong>{{ valoracion.user }}</strong>
           <strong>{{ formatFecha(valoracion.fechaValoracion) }}</strong>
           <span class="puntuacion">Puntuación: {{ valoracion.puntuacion }}</span>
           <p>{{ valoracion.comentario }}</p>
+          <button @click="editarValoracion(valoracion)" v-if="valoracion.user === user.login">Editar</button>
           <button @click="eliminarValoracion(valoracion.id)" v-if="valoracion.user === user.login">Eliminar</button>
+          <button @click="eliminarUsuario(valoracion.userId)" v-if="admin()">Eliminar</button>
+          <!-- Muestra el formulario de edición sobre el comentario si esEditing es verdadero para este comentario -->
+          <div v-if="isEditing === valoracion.id">
+            <textarea v-model="editarValoracionForm.comentario" placeholder="Escribe tu valoración aquí..." rows="4"></textarea>
+            <select v-model="editarValoracionForm.puntuacion">
+              <option disabled value="">Selecciona una puntuación</option>
+              <option v-for="puntuacion in [1, 2, 3, 4, 5]" :key="puntuacion" :value="puntuacion">
+                {{ puntuacion }}
+              </option>
+            </select>
+            <button @click="actualizarValoracion(valoracion.id)">Actualizar Valoración</button>
+          </div>
         </li>
       </ul>
     </div>
@@ -51,12 +64,14 @@
   </div>
 </template>
 
+
 <script>
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import CircuitRepository from "@/repositories/CircuitRepository";
 import ValoracionRepository from "@/repositories/ValoracionRepository";
 import AccountRepository from "@/repositories/AccountRepository";
+import auth from "@/common/auth";
 
 export default {
   data() {
@@ -87,18 +102,53 @@ export default {
         puntuacion: "",
         granPremio: "", // Nueva propiedad para la puntuación
       },
+      isEditing: false, // Control para mostrar el formulario de edición
+      editarValoracionForm: {
+        id: null,
+        comentario: "",
+        puntuacion: "",
+      },
     };
   },
   async mounted() {
     // Obtiene los datos del usuario actual
     const fetchedUser = await AccountRepository.getAccount();
     this.user = {
-      id: fetchedUser.id,
+      userId: fetchedUser.id,
       login: fetchedUser.login,
     };
     await this.fetchCircuitData();
   },
   methods: {
+    admin() {
+      return auth.isAdmin();
+    },
+    async editarValoracion(valoracion) {
+    this.isEditing = valoracion.id; // Mostrar el formulario de edición para este comentario
+    this.editarValoracionForm.id = valoracion.id;
+    this.editarValoracionForm.comentario = valoracion.comentario;
+    this.editarValoracionForm.puntuacion = valoracion.puntuacion;
+  },
+  async actualizarValoracion(valoracionId) {
+    try {
+      if (!this.editarValoracionForm.comentario.trim()) {
+        alert("El texto de la valoración no puede estar vacío.");
+        return;
+      }
+      if (!this.editarValoracionForm.puntuacion) {
+        alert("Debe seleccionar una puntuación.");
+        return;
+      }
+
+      const circuitoId = this.$route.params.circuitoId;
+      await ValoracionRepository.update(valoracionId, this.editarValoracionForm);
+
+      this.isEditing = false; // Cerrar el formulario
+      this.fetchValoraciones(circuitoId); // Recargar las valoraciones
+    } catch (error) {
+      console.error("Error al actualizar la valoración:", error.message);
+    }
+  },
     async eliminarValoracion(valoracionId) {
       try {
         const confirm = window.confirm("¿Estás seguro de que deseas eliminar esta valoración?");
@@ -303,5 +353,38 @@ export default {
 .lista-valoraciones .puntuacion {
   font-weight: bold;
   color: #ee5151;
+}
+.edit-valoracion {
+  padding: 20px;
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.edit-valoracion textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.edit-valoracion select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.edit-valoracion button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ee5151;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.edit-valoracion button:hover {
+  background-color: #b3272e;
 }
 </style>

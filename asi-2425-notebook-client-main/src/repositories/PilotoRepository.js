@@ -26,11 +26,12 @@ export default {
   },
 
   async save(piloto) {
-    if (piloto.pilotoId) {
-      return (await HTTP.put(`${resource}/${piloto.pilotoId}`, piloto)).data;
-    } else {
-      return (await HTTP.post(`${resource}`, circuit)).data;
-    }
+    console.log("AQUI CABRON", piloto)
+      return (await HTTP.post(`${resource}`, piloto)).data;
+  },
+
+  async update(pilotoId, piloto){
+    return (await HTTP.put(`${resource}/${pilotoId}`, piloto)).data;
   },
 
   async delete(pilotoId) {
