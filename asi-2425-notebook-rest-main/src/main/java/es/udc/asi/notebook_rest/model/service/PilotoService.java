@@ -44,6 +44,10 @@ public class PilotoService {
       pilotoDTO.getConstructorNacionalidad()
     );
 
+    CampeonatoConstructor campeonatoConstructor = new CampeonatoConstructor(
+      campeonato, constructor
+    );
+
     PilotoConstructor pilotoConstructor = new PilotoConstructor(piloto, constructor);
 
     CampeonatoPiloto campeonatoPiloto = new CampeonatoPiloto(
