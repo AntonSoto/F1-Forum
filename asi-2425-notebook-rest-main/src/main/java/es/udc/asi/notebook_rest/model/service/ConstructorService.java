@@ -2,6 +2,7 @@ package es.udc.asi.notebook_rest.model.service;
 
 
 import es.udc.asi.notebook_rest.model.domain.*;
+import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
 import es.udc.asi.notebook_rest.model.repository.ConstructorDao;
 import es.udc.asi.notebook_rest.model.service.dto.ConstructorDTO;
 import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
@@ -22,6 +23,9 @@ public class ConstructorService {
 
   @Autowired
   private ConstructorDao constructorDao;
+
+  @Autowired
+  private CampeonatoDao campeonatoDao;
 
   public Collection<ConstructorDTO> findByCampeonatoAno(Long ano) {
     List<Object[]> resultados;
@@ -46,7 +50,13 @@ public class ConstructorService {
       constructorDTO.getVictorias()
     );
 
+    Campeonato campeonato = campeonatoDao.findById(constructorDTO.getAno());
+
     constructor.getCampeonatoConstructores().add(campeonatoConstructor);
+    campeonato.getCampeonatoConstructors().add(campeonatoConstructor);
+
+    campeonatoConstructor.setConstructor(constructor);
+    campeonatoConstructor.setCampeonato(campeonato);
 
     constructorDao.create(constructor);
     return new ConstructorDTO(constructor);

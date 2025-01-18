@@ -10,7 +10,7 @@ public class ConstructorDTO {
 
   private String nombre;
   private String nacionalidad;
-
+  private Long ano;
   private Long victorias;
   private Long puntos;
 
@@ -23,6 +23,7 @@ public class ConstructorDTO {
     this.nacionalidad = constructor.getNacionalidad();
     this.victorias = campeonatoConstructor.getVictorias();
     this.puntos = campeonatoConstructor.getPuntos();
+    this.ano = campeonatoConstructor.getCampeonato().getAno();
 
   }
 
@@ -72,5 +73,13 @@ public class ConstructorDTO {
 
   public void setPuntos(Long puntos) {
     this.puntos = puntos;
+  }
+
+  public Long getAno() {
+    return ano;
+  }
+
+  public void setAno(Long ano) {
+    this.ano = ano;
   }
 }
