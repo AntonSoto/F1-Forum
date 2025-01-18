@@ -33,6 +33,13 @@ public class CampeonatoPiloto {
 
   }
 
+  public CampeonatoPiloto(Long puntos, Long victorias) {
+
+    this.puntos = puntos;
+    this.victorias = victorias;
+
+  }
+
 
   @Override
   public boolean equals(Object o) {

@@ -3,17 +3,16 @@ package es.udc.asi.notebook_rest.model.service;
 import es.udc.asi.notebook_rest.model.domain.*;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
+import es.udc.asi.notebook_rest.model.repository.CampeonatoPilotoDao;
 import es.udc.asi.notebook_rest.model.repository.ConstructorDao;
 import es.udc.asi.notebook_rest.model.repository.PilotoDao;
-import es.udc.asi.notebook_rest.model.service.dto.CircuitoDTO;
-import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
-import es.udc.asi.notebook_rest.model.service.dto.PilotoDTO;
-import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
+import es.udc.asi.notebook_rest.model.service.dto.*;
 import es.udc.asi.notebook_rest.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,61 +30,70 @@ public class PilotoService {
   @Autowired
   private ConstructorDao constructorDao;
 
+  @Autowired
+  private CampeonatoPilotoDao cameponatoPilotoDao;
+
   @Transactional(readOnly = false)
   public PilotoDTO create(PilotoDTO pilotoDTO) {
-
-    Piloto piloto = new Piloto(
-      pilotoDTO.getId(),
-      pilotoDTO.getNacionalidad(),
-      pilotoDTO.getNombreCompleto()
-    );
+    Piloto piloto;
+    if(pilotoDao.findById(pilotoDTO.getId()) == null) {
+      piloto = new Piloto(
+        pilotoDTO.getId(),
+        pilotoDTO.getNacionalidad(),
+        pilotoDTO.getNombreCompleto()
+      );
+    }else{
+      piloto = pilotoDao.findById(pilotoDTO.getId());
+    }
 
     Campeonato campeonato = campeonatoDao.findById(pilotoDTO.getAno());
 
-    Constructor constructor;
+    Collection<CampeonatoPiloto> campeonatosPorAno = cameponatoPilotoDao.findAllByAno(campeonato.getAno());
 
-    String xdddd = pilotoDTO.getConstructorId();
+    boolean checkIfExists = false;
 
-    Constructor constructorprueba = constructorDao.findById(xdddd);
-
-    if(constructorprueba == null) {
-
-       constructor = new Constructor(
-         pilotoDTO.getConstructorId(),
-         pilotoDTO.getConstructorNacionalidad(),
-         pilotoDTO.getConstructorNombre()
-      );
-       constructorDao.create(constructor);
-
-    }else{
-        constructor = constructorDao.findById(pilotoDTO.getConstructorId());
+    for (CampeonatoPiloto campeonatoPiloto : campeonatosPorAno) {
+      if(campeonatoPiloto.getPiloto().getId().equals(pilotoDTO.getId())) {
+        checkIfExists = true;
+      }
     }
 
-    CampeonatoConstructor campeonatoConstructor = new CampeonatoConstructor(
-      campeonato, constructor
-    );
+    if(!checkIfExists) {
 
-    PilotoConstructor pilotoConstructor = new PilotoConstructor(piloto, constructor);
+      CampeonatoPiloto campeonatoPiloto = new CampeonatoPiloto(
+        pilotoDTO.getPuntos(),
+        pilotoDTO.getVictorias()
+      );
 
-    CampeonatoPiloto campeonatoPiloto = new CampeonatoPiloto(
-      pilotoDTO.getPuntos(),
-      pilotoDTO.getVictorias(),
-      campeonato,
-      piloto
-    );
+      piloto.getCampeonatoPilotos().add(campeonatoPiloto);
+      campeonato.getCampeonatoPilotos().add(campeonatoPiloto);
 
-    campeonato.getCampeonatoConstructors().add(campeonatoConstructor);
-    constructor.getCampeonatoConstructores().add(campeonatoConstructor);
+      campeonatoPiloto.setPiloto(piloto);
+      campeonatoPiloto.setCampeonato(campeonato);
 
-    piloto.getPilotoConstructor().add(pilotoConstructor);
+    }else{
+      throw new IllegalArgumentException("Constructor ya existente");
+    }
 
-    constructor.getConstructorPiloto().add(pilotoConstructor);
+    Constructor constructor = constructorDao.findById(pilotoDTO.getConstructorId());
 
-    campeonato.getCampeonatoPilotos().add(campeonatoPiloto);
-    piloto.getCampeonatoPilotos().add(campeonatoPiloto);
+    if(constructor == null) {
+      throw new IllegalArgumentException("Constructor ya existente");
+    }else{
 
-    pilotoDao.create(piloto);
-    return new PilotoDTO(piloto);
+      PilotoConstructor pilotoConstructor = new PilotoConstructor();
+
+      piloto.getPilotoConstructor().add(pilotoConstructor);
+
+      constructor.getConstructorPiloto().add(pilotoConstructor);
+
+      pilotoConstructor.setPiloto(piloto);
+      pilotoConstructor.setConstructor(constructor);
+      
+      pilotoDao.create(piloto);
+      return new PilotoDTO(piloto);
+    }
+
   }
 
   @Transactional(readOnly = true)
