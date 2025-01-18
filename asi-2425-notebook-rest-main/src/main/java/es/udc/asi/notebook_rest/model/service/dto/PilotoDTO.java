@@ -12,7 +12,7 @@ public class PilotoDTO {
   private String nombreCompleto;
   private String nacionalidad;
   private Long victorias;
-  private Long puntos;
+  private Float puntos;
   private Long ano;
   private String constructorId;
   private String constructorNombre;
@@ -40,7 +40,7 @@ public class PilotoDTO {
 
   public PilotoDTO(
     String id, String nombreCompleto, String nacionalidad, Long victorias,
-    Long puntos, Long ano, String constructorId, String constructorNombre, String constructorNacionalidad) {
+    Float puntos, Long ano, String constructorId, String constructorNombre, String constructorNacionalidad) {
     this.id = id;
     this.nombreCompleto = nombreCompleto;
     this.nacionalidad = nacionalidad;
@@ -109,11 +109,11 @@ public class PilotoDTO {
     this.victorias = victorias;
   }
 
-  public Long getPuntos() {
+  public Float getPuntos() {
     return puntos;
   }
 
-  public void setPuntos(Long puntos) {
+  public void setPuntos(Float puntos) {
     this.puntos = puntos;
   }
 

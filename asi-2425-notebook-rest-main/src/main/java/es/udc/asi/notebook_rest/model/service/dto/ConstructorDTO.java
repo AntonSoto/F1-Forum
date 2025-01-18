@@ -12,7 +12,7 @@ public class ConstructorDTO {
   private String nacionalidad;
   private Long ano;
   private Long victorias;
-  private Long puntos;
+  private Float puntos;
 
   public ConstructorDTO() {}
 
@@ -67,11 +67,11 @@ public class ConstructorDTO {
     this.nacionalidad = nacionalidad;
   }
 
-  public Long getPuntos() {
+  public Float getPuntos() {
     return puntos;
   }
 
-  public void setPuntos(Long puntos) {
+  public void setPuntos(Float puntos) {
     this.puntos = puntos;
   }
 

@@ -13,7 +13,7 @@ public class CampeonatoPiloto {
   private Long id;
 
   @Column
-  private Long puntos;
+  private Float puntos;
   private Long victorias;
 
   @ManyToOne
@@ -24,7 +24,7 @@ public class CampeonatoPiloto {
 
   public CampeonatoPiloto() {}
 
-  public CampeonatoPiloto(Long puntos, Long victorias, Campeonato campeonato, Piloto piloto) {
+  public CampeonatoPiloto(Float puntos, Long victorias, Campeonato campeonato, Piloto piloto) {
 
     this.puntos = puntos;
     this.victorias = victorias;
@@ -33,7 +33,7 @@ public class CampeonatoPiloto {
 
   }
 
-  public CampeonatoPiloto(Long puntos, Long victorias) {
+  public CampeonatoPiloto(Float puntos, Long victorias) {
 
     this.puntos = puntos;
     this.victorias = victorias;
@@ -61,11 +61,11 @@ public class CampeonatoPiloto {
     this.id = id;
   }
 
-  public Long getPuntos() {
+  public Float getPuntos() {
     return puntos;
   }
 
-  public void setPuntos(Long puntos) {
+  public void setPuntos(Float puntos) {
     this.puntos = puntos;
   }
 
