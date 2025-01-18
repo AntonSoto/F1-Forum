@@ -40,10 +40,16 @@ public class ConstructorService {
 
   @Transactional(readOnly = false)
   public ConstructorDTO create(ConstructorDTO constructorDTO) {
-    Constructor constructor = new Constructor(
-      constructorDTO.getId(),
-      constructorDTO.getNombre(),
-      constructorDTO.getNacionalidad());
+    Constructor constructor;
+    if(constructorDao.findById(constructorDTO.getId()) == null) {
+        constructor = new Constructor(
+        constructorDTO.getId(),
+        constructorDTO.getNombre(),
+        constructorDTO.getNacionalidad());
+    }else{
+       constructor = constructorDao.findById(constructorDTO.getId());
+    }
+
 
     CampeonatoConstructor campeonatoConstructor = new CampeonatoConstructor(
       constructorDTO.getPuntos(),
