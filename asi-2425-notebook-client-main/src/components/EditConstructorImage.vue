@@ -63,7 +63,6 @@ export default {
     };
   },  
   async mounted() {
-
     this.constructor = await ConstructorRepository.findById(this.constructorId);
   },
   methods: {

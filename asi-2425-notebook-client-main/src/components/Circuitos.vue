@@ -111,7 +111,7 @@ export default {
           const anoCampeonato = parseInt(anoCampeonatoStr, 10);
 
           try{
-          console.log("Post antes del FINDONE",year)
+          console.log("Post antes del FINDONE",anoCampeonato)
           await CampeonatoRepository.findOne(anoCampeonato);
         }catch(error){
           console.log("No se ha podido encontrar el año especificado");

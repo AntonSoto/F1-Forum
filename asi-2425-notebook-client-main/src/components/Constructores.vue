@@ -83,6 +83,7 @@ export default {
     }
   },
   mounted() {
+    console.log("Mounteo")
     this.fetchDriverStandings(); // Cargar los standings de la escudería al cargar el componente
   },
   methods: {
@@ -92,8 +93,7 @@ export default {
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;
-
-        return this.loadDataConstructor('current'); // Si no se ha seleccionado un año, cargar la temporada actual
+        return this.loadDataConstructor(); // Si no se ha seleccionado un año, cargar la temporada actual
       }
 
       const year = Number(this.selectedYear);
@@ -112,20 +112,35 @@ export default {
         await CampeonatoRepository.save({ ano: year });
       }
 
-      this.loadDataConstructor(year);
-
-
+      this.loadDataConstructor();
 
     },
-    async loadDataConstructor(year) {
-      if (year == "current") {
-        year = 2024;
+    async loadDataConstructor() {
+      console.log("Año seleccionado", this.selectedYear)
+      let year = null
+      let url
+      if(this.selectedYear == null){
+        url = `http://ergast.com/api/f1/current/constructorStandings.json`; 
+      }else{
+        url = `http://ergast.com/api/f1/${this.selectedYear}/constructorStandings.json`; 
+      }
+      console.log(url)
+      // URL de la API
+      const response = await fetch(url); // Realizar la petición
+      const data = await response.json(); // Convertir la respuesta en formato JSON
+      if (this.selectedYear == null) {
+          console.log(data)
+          const anoCampeonatoStr = data.MRData.StandingsTable.season;
+          year = parseInt(anoCampeonatoStr, 10);
+          console.log("Entro en guardar año", year)
         try {
           await CampeonatoRepository.findOne(year);
         } catch (error) {
           console.log("No se ha podido encontrar el año especificado");
           await CampeonatoRepository.save({ ano: year });
         }
+      }else{
+        year = this.selectedYear
       }
       let constructoresFromBackend = [];
       try {
@@ -143,9 +158,7 @@ export default {
         this.isLoading = true; // Activar el indicador de carga
 
         try {
-          const url = `http://ergast.com/api/f1/${year}/constructorStandings.json`; // URL de la API
-          const response = await fetch(url); // Realizar la petición
-          const data = await response.json(); // Convertir la respuesta en formato JSON
+
           this.constructorStandings = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || []; // Obtener los standings de las escuderías
           const constructor = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || [];
 
