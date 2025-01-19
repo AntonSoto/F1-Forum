@@ -5,10 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -98,6 +95,29 @@ public class ImageServiceFileSystem implements ImageService {
       case ".jpeg":
       default:
         return MediaType.IMAGE_JPEG_VALUE;
+    }
+  }
+
+  @Override
+  public void deleteImage(String id, String folderName) throws ModelException {
+    try {
+      Path folderPath = getRootLocation().resolve(folderName);
+
+      try (DirectoryStream<Path> stream = Files.newDirectoryStream(folderPath, id + "*")) {
+        for (Path entry : stream) {
+          Files.deleteIfExists(entry);
+          break;
+        }
+      }
+
+      if (Files.exists(folderPath) && Files.isDirectory(folderPath)) {
+        if (Files.list(folderPath).count() == 0) {
+          Files.delete(folderPath);
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new ModelException("Se ha producido un error al intentar eliminar la imagen: " + e.getMessage());
     }
   }
 

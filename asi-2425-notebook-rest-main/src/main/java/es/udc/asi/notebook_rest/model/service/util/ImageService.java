@@ -11,5 +11,7 @@ public interface ImageService {
 
   ImageDTO getImage(String id, String nombreImagen) throws ModelException;
 
+  void deleteImage(String id, String folderName) throws ModelException;
+
 }
 
