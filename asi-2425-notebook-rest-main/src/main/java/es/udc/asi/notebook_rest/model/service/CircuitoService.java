@@ -116,13 +116,16 @@ public class CircuitoService {
     return imageService.getImage(circuito.getClass().getSimpleName(), id);
   }
 
+  @Transactional(readOnly = false)
   public void eliminarImagenDeCircuito(String id) throws ModelException {
     Circuito circuito = circuitoDAO.findById(id);
     if (circuito == null) {
       throw new NotFoundException(id, Circuito.class);
     }
 
-    imageService.getImage(id, circuito.getClass().getName());
+    imageService.deleteImage(id, circuito.getClass().getSimpleName());
+    circuito.setNombreImagen(null);
+    circuitoDAO.update(circuito);
   }
 
 }

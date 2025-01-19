@@ -125,13 +125,16 @@ public class ConstructorService {
     return imageService.getImage(constructor.getClass().getSimpleName(), id );
   }
 
+  @Transactional(readOnly = false)
   public void eliminarImagenDeConstructor(String id) throws ModelException {
     Constructor constructor = constructorDao.findById(id);
     if (constructor == null) {
       throw new NotFoundException(id, Constructor.class);
     }
 
-     imageService.getImage(id, constructor.getClass().getName());
+     imageService.deleteImage(id, constructor.getClass().getSimpleName());
+     constructor.setNombreImagen(null);
+     constructorDao.update(constructor);
   }
 
 

@@ -141,13 +141,16 @@ public class PilotoService {
     return imageService.getImage(piloto.getClass().getSimpleName(), id);
   }
 
+  @Transactional(readOnly = false)
   public void eliminarImagenDePiloto(String id) throws ModelException {
     Piloto piloto = pilotoDao.findById(id);
     if (piloto == null) {
       throw new NotFoundException(id, Constructor.class);
     }
 
-    imageService.getImage(id, piloto.getClass().getName());
+    imageService.deleteImage(id, piloto.getClass().getSimpleName());
+    piloto.setNombreImagen(null);
+    pilotoDao.update(piloto);
   }
 
 }
