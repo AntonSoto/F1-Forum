@@ -52,20 +52,28 @@
           <strong>{{ formatFecha(valoracion.fechaValoracion) }}</strong>
           <span class="puntuacion">Puntuación: {{ valoracion.puntuacion }}</span>
           <p>{{ valoracion.comentario }}</p>
-          <div v-if="isEditing">
-  <h3>Editar Valoración</h3>
-  <textarea v-model="editarValoracionForm.comentario" placeholder="Editar comentario" rows="4"></textarea>
-  <select v-model="editarValoracionForm.puntuacion">
-    <option disabled value="">Selecciona una puntuación</option>
-    <option v-for="puntuacion in [1, 2, 3, 4, 5]" :key="puntuacion" :value="puntuacion">
-      {{ puntuacion }}
-    </option>
-  </select>
-  <button @click="actualizarValoracion(editarValoracionForm.id)">Actualizar Valoración</button>
+          <div  v-if="this.editando">
+            <h3>Editar Valoración</h3>
+            <div class="mb-3">
+              <textarea v-model="editarValoracionForm.comentario" placeholder="Editar comentario" rows="4"></textarea>
+            </div>
+            <div class="mb-3">
+              <select v-model="editarValoracionForm.puntuacion">
+              <option disabled value="">Selecciona una puntuación</option>
+              <option v-for="puntuacion in [1, 2, 3, 4, 5]" :key="puntuacion" :value="puntuacion">
+                {{ puntuacion }}
+              </option>
+            </select>
+            </div>
+            <div class="mb-3">
+              <button @click="actualizarValoracion(editarValoracionForm.id)">Actualizar Valoración</button>
+              <button @click="cambioEdicion()">Cancelar edición</button>
+            </div>
+
 </div>
-          <button @click="editarValoracion(valoracion)" v-if="valoracion.user === user.login">Editar</button>
-          <button @click="eliminarValoracion(valoracion.id)" v-if="valoracion.user === user.login">Eliminar</button>
-          <button @click="deleteUser(valoracion.idUser)" v-if="admin()">Eliminar Usuario</button>
+          <button @click="editarValoracion(valoracion)" v-if="valoracion.user === user.login && !this.editando">Editar</button>
+          <button @click="eliminarValoracion(valoracion.id)" v-if="valoracion.user === user.login && !this.editando">Eliminar</button>
+          <button @click="deleteUser(valoracion.idUser)" v-if="admin() && !this.editando">Eliminar Usuario</button>
         </li>
       </ul>
     </div>
@@ -90,6 +98,7 @@ import VisualizaRepository from '@/repositories/VisualizaRepository';
 export default {
   data() {
     return {
+      editando: false,
       user: {
         id: null,
         login: "",
@@ -228,10 +237,11 @@ export default {
 
     },
     async editarValoracion(valoracion) {
-    this.isEditing = valoracion.id; // Mostrar el formulario de edición para este comentario
-    this.editarValoracionForm.id = valoracion.id;
-    this.editarValoracionForm.comentario = valoracion.comentario;
-    this.editarValoracionForm.puntuacion = valoracion.puntuacion;
+      this.cambioEdicion()
+      this.isEditing = valoracion.id; // Mostrar el formulario de edición para este comentario
+      this.editarValoracionForm.id = valoracion.id;
+      this.editarValoracionForm.comentario = valoracion.comentario;
+      this.editarValoracionForm.puntuacion = valoracion.puntuacion;
   },
   async actualizarValoracion(valoracionId) {
     try {
@@ -246,7 +256,7 @@ export default {
 
       const circuitoId = this.$route.params.circuitoId;
       await ValoracionRepository.update(valoracionId, this.editarValoracionForm);
-
+      this.cambioEdicion()
       this.isEditing = false; // Cerrar el formulario
       this.fetchValoraciones(circuitoId); // Recargar las valoraciones
     } catch (error) {
@@ -353,6 +363,11 @@ export default {
         // Cambia el formato a '22 de enero de 2025, 14:30'
       }
       return "No disponible";
+    },
+    cambioEdicion(){
+      console.log(this.editando)
+      this.editando = !this.editando
+      console.log(this.editando)
     }
   },
 };
