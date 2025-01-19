@@ -24,7 +24,7 @@ public class ConstructorResource {
   @Autowired
   private ConstructorService constructorService;
 
-  @GetMapping("ano/{ano}")
+  @GetMapping("/ano/{ano}")
   public Collection<ConstructorDTO> findByCampeonatoAno(@PathVariable Long ano) throws NotFoundException {
     return constructorService.findByCampeonatoAno(ano);
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="edit-circuit-container">
-    <h2>Gestionando Imagen del Constructor: {{ constructorId }}</h2>
+    <h2>Gestionando Imagen del Constructor: {{ this.constructor.nombre }}</h2>
 
     <div class="columns">
       <!-- Columna para Editar Imagen -->
@@ -56,8 +56,11 @@ export default {
       constructor: {},
       auxName: null,
     };
-  },
+  },  
+  async mounted() {
 
+    this.constructor = await ConstructorRepository.findById(this.constructorId);
+  },
   methods: {
     editImage() {
       console.log(`Editando imagen para el constructor: ${this.constructorId}`);

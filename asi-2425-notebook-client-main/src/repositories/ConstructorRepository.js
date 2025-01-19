@@ -44,6 +44,11 @@ export default {
   async deleteImage(id) {
     const response = await HTTP.delete(`${resource}/${id}/imagen`);
     return response.data;
+  },
+
+  async findById(id) {
+    const response = await HTTP.get(`${resource}/${id}`);
+    return response.data;
   }
 
 
