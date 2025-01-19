@@ -1,23 +1,45 @@
 <template>
   <div class="circuitos-container">
     <h2 class="circuitos-title">Circuitos</h2>
-    
-    <!-- Lista de todos los circuitos por ID -->
+    <!-- Carrusel de imágenes -->
+    <div class="carousel-container">
+      <button class="carousel-button prev" @click="prevImage">‹</button>
+      <div v-if=" this.circuitos.length>0" class="carousel">
+        
+        <img class="carousel-image" :src="currentCircuitoImage"
+          :alt="`Imagen de ${circuitos[currentIndex]?.nombreCircuito || 'circuito'}`"
+        />
+      </div>
+      <button class="carousel-button next" @click="nextImage">›</button>
+    </div>
+    <!-- Indicadores del carrusel -->
+    <div class="indicator">
+      <span
+        v-for="(circuito, index) in circuitos"
+        :key="circuito.id"
+        class="dot"
+        :class="{ active: index === currentIndex }"
+        @click="goToImage(index)"
+      ></span>
+    </div>
+    <!-- Lista de circuitos -->
     <div class="circuitos-list">
       <h3>Todos los Circuitos</h3>
       <div class="circuitos-list-container">
         <div class="circuitos-row">
-          <!-- Iterar sobre circuitos en función del ID -->
+          <!-- Iterar sobre circuitos -->
           <div class="circuito-item" v-for="(circuito) in circuitos" :key="circuito.id">
             <a :href="'/circuitos/' + circuito.id" class="circuito-link-item">
-              <!-- Nombre del circuito -->
-              <span>{{ circuito.nombreCircuito }}</span>
-              <img class="card-img-top"
-              :src="circuito.tieneImagen ? `http://localhost:8080/api/circuitos/${circuito.id}/imagen` : '/placeholder.png'"
-              alt="Imagen del piloto" />
+              <span class="circuito-name">{{ circuito.nombreCircuito }}</span>
+              <img
+                class="card-img-top circuito-thumbnail"
+                :src="circuito.tieneImagen
+                  ? `http://localhost:8080/api/circuitos/${circuito.id}/imagen`
+                  : '/placeholder.png'"
+                :alt="`Imagen de ${circuito.nombreCircuito}`"
+              />
             </a>
-
-            <!-- Botón para editar imagen solo si admin() es true -->
+            <!-- Botón para editar imagen -->
             <router-link
               v-if="admin()"
               :to="{ name: 'EditCircuitImage', params: { circuitoId: circuito.id } }"
@@ -33,6 +55,7 @@
 </template>
 
 
+
 <script>
 
 import auth from "@/common/auth";
@@ -45,6 +68,15 @@ export default {
       currentIndex: 0,
       circuitos: [], // Aquí almacenaremos los circuitos obtenidos desde la API
     };
+  },
+  computed: {
+    currentCircuitoImage() {
+      const currentCircuito = this.circuitos[this.currentIndex];
+      console.log("ESTOY EN CURRENTCIRCUITO",currentCircuito)
+      return currentCircuito?.tieneImagen
+        ? `http://localhost:8080/api/circuitos/${currentCircuito.id}/imagen`
+        : "/placeholder.png";
+    }
   },
   async mounted() {
     await this.fetchCircuitos(); // Llamamos a la función para obtener los circuitos cuando el componente se monta
@@ -164,6 +196,23 @@ export default {
       }
     }
   },
+  nextImage() {
+      if (this.circuitos.length > 0) {
+        this.currentIndex = (this.currentIndex + 1) % this.circuitos.length;
+      }
+    },
+    prevImage() {
+      if (this.circuitos.length > 0) {
+        this.currentIndex =
+          (this.currentIndex - 1 + this.circuitos.length) % this.circuitos.length;
+      }
+    },
+    goToImage(index) {
+      if (index >= 0 && index < this.circuitos.length) {
+        this.currentIndex = index;
+      }
+    },
+
 };
 </script>
 
@@ -197,9 +246,9 @@ export default {
 }
 
 .carousel-image {
-  width: 100%;
-  max-width: 375px;
-  object-fit: cover;
+  width: 375px; /* Ancho fijo */
+  height: 250px; /* Alto fijo */
+  object-fit: cover; /* Asegura que la imagen se recorte para ajustarse al contenedor */
   border-radius: 10px;
 }
 
@@ -306,9 +355,9 @@ export default {
 }
 
 .circuito-thumbnail {
-  width: 100%;
-  height: auto;
-  max-width: 150px;
+  width: 150px; /* Ancho fijo */
+  height: 100px; /* Alto fijo */
+  object-fit: cover; /* Asegura que la imagen no se deforme */
   border-radius: 10px;
   margin-bottom: 10px;
 }
