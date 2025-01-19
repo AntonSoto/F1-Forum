@@ -84,8 +84,8 @@ export default {
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;
-        await this.loadDataConstructor('current');
-        return this.loadData('current');
+        await this.loadDataConstructor();
+        return this.loadData(this.selectedYear);
       }
 
       const year = Number(this.selectedYear);
@@ -110,7 +110,6 @@ export default {
     },
     async loadData(year) {
       
-      if (year == "current") year = 2024;
       
       let driversFromBackend = [];
       try {
@@ -181,10 +180,37 @@ export default {
       }
     },
     
-    async loadDataConstructor(year) {
-      
-      if (year == "current") year = 2024;
-      
+    async loadDataConstructor() {
+
+      let year = null
+      let url
+      if(this.selectedYear == null){
+        url = `http://ergast.com/api/f1/current/constructorStandings.json`; 
+      }else{
+        url = `http://ergast.com/api/f1/${this.selectedYear}/constructorStandings.json`; 
+      }
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (this.selectedYear == null) {
+          console.log(data)
+          const anoCampeonatoStr = data.MRData.StandingsTable.season;
+          year = parseInt(anoCampeonatoStr, 10);
+          console.log("Entro en guardar año", year)
+        try {
+          await CampeonatoRepository.findOne(year);
+        } catch (error) {
+          console.log("No se ha podido encontrar el año especificado");
+          await CampeonatoRepository.save({ ano: year });
+        }
+
+        this.selectedYear = year
+
+      }else{
+        year = this.selectedYear
+      }
+
       let constructoresFromBackend = [];
       try {
         constructoresFromBackend = await ConstructorRepository.findByAno(year);
@@ -201,9 +227,6 @@ export default {
         this.isLoading = true; // Activar el indicador de carga
 
         try {
-          const url = `http://ergast.com/api/f1/${year}/constructorStandings.json`; // URL de la API
-          const response = await fetch(url); // Realizar la petición
-          const data = await response.json(); // Convertir la respuesta en formato JSON
           this.constructorStandings = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || []; // Obtener los standings de las escuderías
           const constructor = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || [];
 

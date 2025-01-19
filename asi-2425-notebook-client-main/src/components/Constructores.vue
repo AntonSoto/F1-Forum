@@ -83,8 +83,7 @@ export default {
     }
   },
   mounted() {
-    console.log("Mounteo")
-    this.fetchDriverStandings(); // Cargar los standings de la escudería al cargar el componente
+    this.fetchDriverStandings();
   },
   methods: {
     admin() {
@@ -93,7 +92,7 @@ export default {
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;
-        return this.loadDataConstructor(); // Si no se ha seleccionado un año, cargar la temporada actual
+        return this.loadDataConstructor(); 
       }
 
       const year = Number(this.selectedYear);
@@ -116,7 +115,7 @@ export default {
 
     },
     async loadDataConstructor() {
-      console.log("Año seleccionado", this.selectedYear)
+
       let year = null
       let url
       if(this.selectedYear == null){
@@ -124,10 +123,9 @@ export default {
       }else{
         url = `http://ergast.com/api/f1/${this.selectedYear}/constructorStandings.json`; 
       }
-      console.log(url)
-      // URL de la API
-      const response = await fetch(url); // Realizar la petición
-      const data = await response.json(); // Convertir la respuesta en formato JSON
+
+      const response = await fetch(url);
+      const data = await response.json(); 
       if (this.selectedYear == null) {
           console.log(data)
           const anoCampeonatoStr = data.MRData.StandingsTable.season;
@@ -139,6 +137,9 @@ export default {
           console.log("No se ha podido encontrar el año especificado");
           await CampeonatoRepository.save({ ano: year });
         }
+
+        this.selectedYear = year
+
       }else{
         year = this.selectedYear
       }

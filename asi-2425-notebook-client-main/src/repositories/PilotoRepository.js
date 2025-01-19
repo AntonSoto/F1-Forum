@@ -41,6 +41,11 @@ export default {
     return await HTTP.delete(`${resource}/${pilotoId}`);
   },
 
+  async findById(pilotoId) {
+    const response = await HTTP.get(`${resource}/${pilotoId}`);
+    return response.data;
+  },
+
   async saveImage(id, file) {
     const formData = new FormData();
     formData.append("file", file);
