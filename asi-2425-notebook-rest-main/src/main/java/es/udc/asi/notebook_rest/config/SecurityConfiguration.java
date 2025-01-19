@@ -70,6 +70,7 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.POST, "/api/campeonato").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/pilotos/**").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/pilotos").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/valoraciones/granPremio/**").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/constructores/**").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/constructores").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/constructores/**").hasAnyAuthority(UserAuthority.ADMIN.toString())
