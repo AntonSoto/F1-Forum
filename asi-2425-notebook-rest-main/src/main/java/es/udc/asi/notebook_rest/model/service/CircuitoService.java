@@ -3,18 +3,17 @@ package es.udc.asi.notebook_rest.model.service;
 
 import es.udc.asi.notebook_rest.model.domain.Circuito;
 import es.udc.asi.notebook_rest.model.domain.GranPremio;
-import es.udc.asi.notebook_rest.model.domain.Note;
-import es.udc.asi.notebook_rest.model.domain.User;
+import es.udc.asi.notebook_rest.model.exception.ModelException;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
 import es.udc.asi.notebook_rest.model.repository.CircuitoDao;
-import es.udc.asi.notebook_rest.model.repository.UserDao;
 import es.udc.asi.notebook_rest.model.service.dto.CircuitoDTO;
-import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
-import es.udc.asi.notebook_rest.security.SecurityUtils;
+import es.udc.asi.notebook_rest.model.service.dto.ImageDTO;
+import es.udc.asi.notebook_rest.model.service.util.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,28 +30,9 @@ public class CircuitoService {
   @Autowired
   private CampeonatoDao campeonatoDAO;
 
+  @Autowired
+  private ImageService imageService;
 
-  /*@Transactional(readOnly = false)
-  public CircuitoDTO create(CircuitoDTO circuito) {
-
-    Circuito bdCircuito = new Circuito(
-      circuito.getId(),
-      circuito.getNombreCircuito(),
-      circuito.getLatitud(),
-      circuito.getLongitud(),
-      circuito.getLocalidad(),
-      circuito.getPais()
-    );
-
-    if (circuito.getGrandesPremios() != null) {
-      circuito.getGrandesPremios().forEach(gp -> {
-        bdCircuito.getGrandesPremios().add(granPremioDao.findByFechaHoraCarrera(gp.getFechaHoraCarrera()));
-      });
-    }
-
-    circuitoDAO.create(bdCircuito);
-    return new CircuitoDTO(bdCircuito);
-  }*/
 
   @Transactional(readOnly = false)
   public CircuitoDTO create(CircuitoDTO circuitoDTO) {
@@ -109,4 +89,30 @@ public class CircuitoService {
 
     return circuitos.map(circuito -> new CircuitoDTO(circuito)).collect(Collectors.toList());
   }
+
+  @Transactional(readOnly = false)
+  public void guardarImagenDeNota(String id, MultipartFile file) throws ModelException {
+    Circuito circuito = circuitoDAO.findById(id);
+    if (circuito == null) {
+      throw new NotFoundException(id, Circuito.class);
+    }
+
+    if (file.isEmpty()) {
+      throw new ModelException("No se ha enviado ninguna imagen");
+    }
+
+    String nombreFichero = imageService.saveImage(file, id, circuito.getClass().getName());
+    circuito.setNombreImagen(nombreFichero);
+    circuitoDAO.update(circuito);
+  }
+
+  public ImageDTO recuperarImagenDeNota(String id) throws ModelException {
+    Circuito circuito = circuitoDAO.findById(id);
+    if (circuito == null) {
+      throw new NotFoundException(id, Circuito.class);
+    }
+
+    return imageService.getImage(id, circuito.getNombreImagen());
+  }
+
 }

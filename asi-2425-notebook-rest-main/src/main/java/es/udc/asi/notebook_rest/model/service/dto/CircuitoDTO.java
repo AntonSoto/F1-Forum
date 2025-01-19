@@ -18,6 +18,7 @@ public class CircuitoDTO {
   private String Localidad;
   private String Pais;
   private Collection<GranPremioDTO> grandesPremios = new ArrayList<>();
+  private Boolean tieneImagen = false;
 
   public CircuitoDTO() {
     super();
@@ -33,6 +34,10 @@ public class CircuitoDTO {
     });
     this.Localidad = circuito.getLocalidad();
     this.Pais = circuito.getPais();
+    if (circuito.getNombreImagen() != null) {
+      this.tieneImagen = true;
+    }
+
   }
 
   public String getNombreCircuito() {
@@ -90,4 +95,9 @@ public class CircuitoDTO {
   public void setGrandesPremios(Collection<GranPremioDTO> grandesPremios) {
     this.grandesPremios = grandesPremios;
   }
+
+  public Boolean getTieneImagen() {
+    return tieneImagen;
+  }
+
 }

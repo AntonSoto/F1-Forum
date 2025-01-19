@@ -26,6 +26,8 @@ public class Circuito {
   @Column
   private String Pais;
 
+  private String nombreImagen;
+
   @OneToMany(mappedBy = "circuito", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   private List<GranPremio> grandesPremios = new ArrayList<>();
 
@@ -114,6 +116,14 @@ public class Circuito {
 
   public void setGrandesPremios(List<GranPremio> grandesPremios) {
     this.grandesPremios = grandesPremios;
+  }
+
+  public String getNombreImagen() {
+    return nombreImagen;
+  }
+
+  public void setNombreImagen(String nombreImagen) {
+    this.nombreImagen = nombreImagen;
   }
 
 }

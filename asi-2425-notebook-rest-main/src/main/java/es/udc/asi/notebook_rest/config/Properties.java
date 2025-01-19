@@ -13,6 +13,8 @@ public class Properties {
   private String jwtSecretKey;
   private Long jwtValidity;
 
+  private String rutaImagenes;
+
   public String getClientHost() {
     return clientHost;
   }
@@ -37,5 +39,14 @@ public class Properties {
   public void setJwtValidity(Long jwtValidity) {
     this.jwtValidity = jwtValidity;
   }
+
+  public String getRutaImagenes() {
+    return rutaImagenes;
+  }
+
+  public void setRutaImagenes(String rutaImagenes) {
+    this.rutaImagenes = rutaImagenes;
+  }
+
 
 }

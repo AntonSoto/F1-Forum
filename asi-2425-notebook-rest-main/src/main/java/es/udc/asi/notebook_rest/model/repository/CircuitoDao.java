@@ -6,9 +6,11 @@ import java.util.Collection;
 
 public interface CircuitoDao {
 
-  void create(Circuito note);
+  void create(Circuito circuito);
 
-  void delete(Circuito note);
+  void update(Circuito circuito);
+
+  void delete(Circuito circuito);
 
   Collection<Circuito> findAll();
 
