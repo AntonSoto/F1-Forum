@@ -1,13 +1,9 @@
 package es.udc.asi.notebook_rest.model.service.dto;
 
 import es.udc.asi.notebook_rest.model.domain.Circuito;
-import es.udc.asi.notebook_rest.model.domain.GranPremio;
-import es.udc.asi.notebook_rest.model.domain.Note;
-import jakarta.persistence.Column;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class CircuitoDTO {
 

@@ -1,7 +1,6 @@
 package es.udc.asi.notebook_rest.model.service;
 
 import es.udc.asi.notebook_rest.model.domain.GranPremio;
-import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.User;
 import es.udc.asi.notebook_rest.model.domain.Valoracion;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
@@ -9,7 +8,6 @@ import es.udc.asi.notebook_rest.model.exception.OperationNotAllowed;
 import es.udc.asi.notebook_rest.model.repository.GranPremioDao;
 import es.udc.asi.notebook_rest.model.repository.UserDao;
 import es.udc.asi.notebook_rest.model.repository.ValoracionDao;
-import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
 import es.udc.asi.notebook_rest.model.service.dto.UserDTOPrivate;
 import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
 import es.udc.asi.notebook_rest.security.SecurityUtils;
@@ -82,7 +80,7 @@ public class ValoracionService {
   public void deleteById(Long id) throws NotFoundException, OperationNotAllowed {
     Valoracion valoracion = valoracionDAO.findById(id);
     if (valoracion == null) {
-      throw new NotFoundException(id.toString(), Note.class);
+      throw new NotFoundException(id.toString(), Valoracion.class);
     }
 
     UserDTOPrivate currentUser = userService.getCurrentUserWithAuthority();

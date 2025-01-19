@@ -1,13 +1,10 @@
 package es.udc.asi.notebook_rest.web;
 
 
-import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.Valoracion;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.exception.OperationNotAllowed;
-import es.udc.asi.notebook_rest.model.service.NoteService;
 import es.udc.asi.notebook_rest.model.service.ValoracionService;
-import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
 import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
 import es.udc.asi.notebook_rest.web.exceptions.IdAndBodyNotMatchingOnUpdateException;
 import es.udc.asi.notebook_rest.web.exceptions.RequestBodyNotValidException;

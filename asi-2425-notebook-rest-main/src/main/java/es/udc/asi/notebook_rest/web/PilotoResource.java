@@ -3,7 +3,6 @@ package es.udc.asi.notebook_rest.web;
 
 import es.udc.asi.notebook_rest.model.exception.ModelException;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
-import es.udc.asi.notebook_rest.model.service.NoteService;
 import es.udc.asi.notebook_rest.model.service.PilotoService;
 import es.udc.asi.notebook_rest.model.service.dto.*;
 import es.udc.asi.notebook_rest.web.exceptions.RequestBodyNotValidException;

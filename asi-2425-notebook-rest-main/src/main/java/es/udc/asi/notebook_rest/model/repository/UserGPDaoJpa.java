@@ -1,9 +1,7 @@
 package es.udc.asi.notebook_rest.model.repository;
 
 
-import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.UserGP;
-import es.udc.asi.notebook_rest.model.domain.Valoracion;
 import es.udc.asi.notebook_rest.model.repository.util.GenericDaoJpa;
 import org.springframework.stereotype.Repository;
 

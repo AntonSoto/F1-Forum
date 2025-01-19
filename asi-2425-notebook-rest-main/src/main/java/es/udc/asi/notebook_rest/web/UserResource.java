@@ -14,7 +14,6 @@ import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.exception.OperationNotAllowed;
 import es.udc.asi.notebook_rest.model.service.UserService;
 import es.udc.asi.notebook_rest.model.service.dto.UserDTOPublic;
-import es.udc.asi.notebook_rest.model.service.dto.UserWithNotesDTO;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,11 +25,6 @@ public class UserResource {
   @GetMapping
   public List<UserDTOPublic> findAll() {
     return userService.findAll();
-  }
-
-  @GetMapping("/{id}")
-  public UserWithNotesDTO findOne(@PathVariable Long id) throws NotFoundException {
-    return userService.findOne(id);
   }
 
   @PutMapping("/{id}/admin")

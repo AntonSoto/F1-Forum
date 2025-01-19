@@ -3,9 +3,7 @@ package es.udc.asi.notebook_rest.web;
 
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.service.CampeonatoService;
-import es.udc.asi.notebook_rest.model.service.CategoryService;
 import es.udc.asi.notebook_rest.model.service.dto.CampeonatoDTO;
-import es.udc.asi.notebook_rest.model.service.dto.CategoryDTO;
 import es.udc.asi.notebook_rest.web.exceptions.RequestBodyNotValidException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

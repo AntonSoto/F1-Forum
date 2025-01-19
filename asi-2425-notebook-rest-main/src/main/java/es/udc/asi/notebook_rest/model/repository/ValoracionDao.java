@@ -1,6 +1,5 @@
 package es.udc.asi.notebook_rest.model.repository;
 
-import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.Valoracion;
 
 import java.util.Collection;

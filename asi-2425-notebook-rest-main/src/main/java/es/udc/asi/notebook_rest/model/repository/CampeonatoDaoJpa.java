@@ -1,7 +1,6 @@
 package es.udc.asi.notebook_rest.model.repository;
 
 import es.udc.asi.notebook_rest.model.domain.Campeonato;
-import es.udc.asi.notebook_rest.model.domain.Category;
 import es.udc.asi.notebook_rest.model.repository.util.GenericDaoJpa;
 import org.springframework.stereotype.Repository;
 

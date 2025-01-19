@@ -16,11 +16,9 @@ import es.udc.asi.notebook_rest.model.domain.UserAuthority;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.exception.OperationNotAllowed;
 import es.udc.asi.notebook_rest.model.exception.UserLoginExistsException;
-import es.udc.asi.notebook_rest.model.repository.NoteDao;
 import es.udc.asi.notebook_rest.model.repository.UserDao;
 import es.udc.asi.notebook_rest.model.service.dto.UserDTOPrivate;
 import es.udc.asi.notebook_rest.model.service.dto.UserDTOPublic;
-import es.udc.asi.notebook_rest.model.service.dto.UserWithNotesDTO;
 import es.udc.asi.notebook_rest.security.SecurityUtils;
 
 @Service
@@ -29,9 +27,6 @@ public class UserService {
 
   @Autowired
   private UserDao userDAO;
-
-  @Autowired
-  private NoteDao noteDAO;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -43,15 +38,6 @@ public class UserService {
       return users.collect(Collectors.toList());
     }
     return users.filter(user -> user.isActive()).collect(Collectors.toList());
-  }
-
-  @PreAuthorize("hasAuthority('ADMIN')")
-  public UserWithNotesDTO findOne(Long id) throws NotFoundException {
-    User user = userDAO.findById(id);
-    if (user == null) {
-      throw new NotFoundException(id.toString(), User.class);
-    }
-    return new UserWithNotesDTO(user);
   }
 
   @Transactional(readOnly = false)

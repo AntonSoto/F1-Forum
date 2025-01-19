@@ -29,9 +29,6 @@ public class User {
   @Enumerated(EnumType.STRING)
   private UserAuthority authority;
 
-  @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Note> notes = new ArrayList<>();
-
   @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Valoracion> valoraciones = new ArrayList<>();
 
@@ -75,14 +72,6 @@ public class User {
 
   public void setAuthority(UserAuthority authority) {
     this.authority = authority;
-  }
-
-  public List<Note> getNotes() {
-    return notes;
-  }
-
-  public void setNotes(List<Note> notes) {
-    this.notes = notes;
   }
 
   public boolean isActive() {
