@@ -102,7 +102,7 @@ public class CircuitoService {
       throw new ModelException("No se ha enviado ninguna imagen");
     }
 
-    String nombreFichero = imageService.saveImage(file, id, circuito.getClass().getName());
+    String nombreFichero = imageService.saveImage(file, id, circuito.getClass().getSimpleName());
     circuito.setNombreImagen(nombreFichero);
     circuitoDAO.update(circuito);
   }

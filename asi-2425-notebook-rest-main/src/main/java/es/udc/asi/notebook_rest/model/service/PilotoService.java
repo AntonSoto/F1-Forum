@@ -127,7 +127,7 @@ public class PilotoService {
       throw new ModelException("No se ha enviado ninguna imagen");
     }
 
-    String nombreFichero = imageService.saveImage(file, id, piloto.getClass().getName());
+    String nombreFichero = imageService.saveImage(file, id, piloto.getClass().getSimpleName());
     piloto.setNombreImagen(nombreFichero);
     pilotoDao.update(piloto);
   }

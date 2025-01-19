@@ -106,7 +106,7 @@ public class ConstructorService {
       throw new ModelException("No se ha enviado ninguna imagen");
     }
 
-    String nombreFichero = imageService.saveImage(file, id, constructor.getClass().getName());
+    String nombreFichero = imageService.saveImage(file, id, constructor.getClass().getSimpleName());
     constructor.setNombreImagen(nombreFichero);
     constructorDao.update(constructor);
   }
