@@ -39,7 +39,7 @@ public class PilotoResource {
     return pilotoService.findById(id);
   }
 
-  @GetMapping("/{ano}")
+  @GetMapping("/ano/{ano}")
   public Collection<PilotoDTO> findOne(@PathVariable Long ano) throws NotFoundException {
     return pilotoService.findByCampeonatoAno(ano);
   }
