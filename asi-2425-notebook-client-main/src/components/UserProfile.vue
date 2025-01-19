@@ -7,7 +7,8 @@
         <p><strong>ID:</strong> {{ user.id }}</p>
         <p><strong>Login:</strong> {{ user.login }}</p>
         <p><strong>Rol:</strong> {{ user.authority }}</p>
-        <p><strong>Fecha de nacimiento:</strong> {{ formatFechaNacimiento(user.fechaNacimiento) || "No especificada" }}</p>
+        <p><strong>Fecha de nacimiento:</strong> {{ formatFechaNacimiento(user.fechaNacimiento) || "No especificada" }}
+        </p>
         <p><strong>Nombre:</strong> {{ user.nombrePila || "No especificado" }}</p>
         <p><strong>Apellidos:</strong> {{ user.apellidos || "No especificados" }}</p>
       </div>
@@ -19,18 +20,18 @@
     <!-- Columna derecha: Valoraciones -->
     <div>
       <div class="user-comments">
-  <h2>Mis Valoraciones</h2>
-  <div v-if="comentarios.length > 0">
-    <ul>
-      <li v-for="comentario in comentarios" :key="comentario.id">
-        <p><strong>Id del Gran Premio:</strong> {{ comentario.granPremio }}</p>
-        <p>{{ comentario.comentario }}</p>
-        <button class="delete-comment-btn" @click="deleteComentario(comentario.id)">Eliminar</button>
-      </li>
-    </ul>
-  </div>
-  <p v-else>No has realizado comentarios aún.</p>
-</div>
+        <h2>Mis Valoraciones</h2>
+        <div v-if="comentarios.length > 0">
+          <ul>
+            <li v-for="comentario in comentarios" :key="comentario.id">
+              <p><strong>Id del Gran Premio:</strong> {{ comentario.granPremio }}</p>
+              <p>{{ comentario.comentario }}</p>
+              <button class="delete-comment-btn" @click="deleteComentario(comentario.id)">Eliminar</button>
+            </li>
+          </ul>
+        </div>
+        <p v-else>No has realizado comentarios aún.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -60,63 +61,63 @@ export default {
     };
   },
   async mounted() {
-  try {
-    // Obtiene los datos del usuario actual
-    const fetchedUser = await AccountRepository.getAccount();
-    this.user = {
-      id: fetchedUser.id,
-      login: fetchedUser.login,
-      authority: fetchedUser.authority,
-      fechaNacimiento: fetchedUser.fechaNacimiento,
-      nombrePila: fetchedUser.nombrePila,
-      apellidos: fetchedUser.apellidos,
-    };
-    // Obtiene los comentarios del usuario
-    await this.fetchComentarios();
-  } catch (error) {
-    console.error("Error al obtener los datos del usuario o sus comentarios:", error);
-  }
-},
-  methods: {
-    async deleteComentario(id) {
     try {
-      const confirm = await Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Esta acción eliminará el comentario permanentemente.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Eliminar",
-      });
-      
-      if (confirm.isConfirmed) {
-        await ValoracionRepository.delete(id);
-        Swal.fire({
-          title: "Comentario eliminado",
-          text: "El comentario ha sido eliminado correctamente.",
-          icon: "success",
-          timer: 2000,
-        });
-        // Recarga los comentarios después de eliminar uno
-        await this.fetchComentarios();
-      }
+      // Obtiene los datos del usuario actual
+      const fetchedUser = await AccountRepository.getAccount();
+      this.user = {
+        id: fetchedUser.id,
+        login: fetchedUser.login,
+        authority: fetchedUser.authority,
+        fechaNacimiento: fetchedUser.fechaNacimiento,
+        nombrePila: fetchedUser.nombrePila,
+        apellidos: fetchedUser.apellidos,
+      };
+      // Obtiene los comentarios del usuario
+      await this.fetchComentarios();
     } catch (error) {
-      console.error("Error al eliminar el comentario:", error);
-      Swal.fire({
-        title: "Error",
-        text: "Hubo un problema al eliminar el comentario.",
-        icon: "error",
-      });
+      console.error("Error al obtener los datos del usuario o sus comentarios:", error);
     }
   },
+  methods: {
+    async deleteComentario(id) {
+      try {
+        const confirm = await Swal.fire({
+          title: "¿Estás seguro?",
+          text: "Esta acción eliminará el comentario permanentemente.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Eliminar",
+        });
+
+        if (confirm.isConfirmed) {
+          await ValoracionRepository.delete(id);
+          Swal.fire({
+            title: "Comentario eliminado",
+            text: "El comentario ha sido eliminado correctamente.",
+            icon: "success",
+            timer: 2000,
+          });
+          // Recarga los comentarios después de eliminar uno
+          await this.fetchComentarios();
+        }
+      } catch (error) {
+        console.error("Error al eliminar el comentario:", error);
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un problema al eliminar el comentario.",
+          icon: "error",
+        });
+      }
+    },
     async fetchComentarios() {
-  try {
-    this.comentarios = await ValoracionRepository.findAllByUser();
-  } catch (error) {
-    console.error("Error al obtener los comentarios del usuario:", error);
-  }
-},
+      try {
+        this.comentarios = await ValoracionRepository.findAllByUser();
+      } catch (error) {
+        console.error("Error al obtener los comentarios del usuario:", error);
+      }
+    },
     formatFechaNacimiento(fecha) {
       if (!fecha) return null;
       const date = new Date(fecha);
@@ -180,7 +181,6 @@ export default {
 
 
 <style>
-
 .profile-title {
   text-align: center;
   color: #ff1801;
@@ -194,6 +194,7 @@ export default {
   font-size: 16px;
   line-height: 1.8;
 }
+
 .user-comments {
   margin-top: 20px;
   border-top: 1px solid #ddd;
