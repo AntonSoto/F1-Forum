@@ -62,7 +62,6 @@ export default {
   },
   async mounted() {
     const response = await PilotoRepository.findById(this.pilotoId);
-    console.log("Monto", response)
     this.piloto = response
   },
 

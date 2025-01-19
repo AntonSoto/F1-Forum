@@ -5,12 +5,13 @@ const resource = "/circuitos";
 
 export default {
   async findAll() {
-    const response = await HTTP.get(`${resource}`);
-    const circuitos = response.data;
-     
-    return circuitos;
- 
+    /*const response = (await HTTP.get(resource));
+    console.log(response)
+    return response.data*/
+
+    return await HTTP.get(resource)
   },
+
   async findOne(circuitoId) {
     try {
       const response = await HTTP.get(`${resource}/${circuitoId}`);

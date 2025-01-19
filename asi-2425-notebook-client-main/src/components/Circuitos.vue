@@ -3,12 +3,13 @@
     <h2 class="circuitos-title">Circuitos</h2>
     <!-- Carrusel de imágenes -->
     <div class="carousel-container">
-      <button class="carousel-button prev" @click="prevImage">‹</button>
-      <div v-if=" this.circuitos.length>0" class="carousel">
-        
+      <button class="carousel-button prev" @click="prevImage()">‹</button>
+      <div v-if=" this.circuitos != null" class="carousel">
+        <a class="carousel" :href="'/circuitos/' + circuitos[currentIndex]?.id">
         <img class="carousel-image" :src="currentCircuitoImage"
-          :alt="`Imagen de ${circuitos[currentIndex]?.nombreCircuito || 'circuito'}`"
+          :alt="`Imagen de ${circuitos[currentIndex]?.id || 'circuito'}`"
         />
+        </a>
       </div>
       <button class="carousel-button next" @click="nextImage">›</button>
     </div>
@@ -66,7 +67,7 @@ export default {
   data() {
     return {
       currentIndex: 0,
-      circuitos: [], // Aquí almacenaremos los circuitos obtenidos desde la API
+      circuitos: null,
     };
   },
   computed: {
@@ -94,19 +95,23 @@ export default {
     async fetchCircuitos() {
       try {
         // Paso 1: Consultar los circuitos desde el backend
-        let circuitosFromBackend = [];
+        let circuitosFromBackend;
         
         try {
-          circuitosFromBackend = await CircuitRepository.findAll();
-          console.log("Circuitos desde el backend:", circuitosFromBackend.length);
+          const response  = await CircuitRepository.findAll();
+          circuitosFromBackend = response.data
         } catch (error) {
           console.error("Error al obtener los circuitos del backend:", error);
         }
 
         if (circuitosFromBackend.length > 0) {
-          // Si hay circuitos en el backend, usamos esos datos
-          this.circuitos = circuitosFromBackend;
-          console.log("Circuitos obtenidos del backend:", this.circuitos);
+          const circuitosOrdenados = circuitosFromBackend.sort((a, b) => {
+              const numOrdenA = a.grandesPremios[0].numOrden;
+              const numOrdenB = b.grandesPremios[0].numOrden;
+              return numOrdenA - numOrdenB;
+          });
+
+          this.circuitos = circuitosOrdenados;
         } else {
           
           // Paso 2: Consultar los circuitos desde la API externa
@@ -194,11 +199,12 @@ export default {
       } catch (error) {
         console.error("Error al obtener y procesar los circuitos:", error);
       }
-    }
-  },
-  nextImage() {
+    },
+    nextImage() {
+      console.log("siguiente")
       if (this.circuitos.length > 0) {
         this.currentIndex = (this.currentIndex + 1) % this.circuitos.length;
+        console.log(this.currentIndex)
       }
     },
     prevImage() {
@@ -212,6 +218,8 @@ export default {
         this.currentIndex = index;
       }
     },
+  },
+
 
 };
 </script>
