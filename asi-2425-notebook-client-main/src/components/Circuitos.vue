@@ -111,9 +111,7 @@ export default {
           await CampeonatoRepository.save({ ano: this.year });
         }
 
-
-         
-          const response  = await CircuitRepository.findAllByAno(this.year);
+        const response  = await CircuitRepository.findAllByAno(this.year);
 
         if(response.data.length >0){ 
           circuitosFromBackend = response.data

@@ -52,7 +52,7 @@
 
     <!-- No hay datos disponibles -->
     <div v-else class="no-data">
-      <p>No hay datos disponibles para el año seleccionado.</p>
+      <p>Buscando datos para el año seleccionado...</p>
     </div>
   </div>
 </template>
@@ -66,7 +66,8 @@ import auth from '@/common/auth';
 export default {
   data() {
     return {
-      selectedYear: null, // Año predeterminado (null para la temporada actual)
+      selectedYear: null,
+      lastyear: null,
       driverStandings: [],
       invalidYear: false,
       isLoading: false,
@@ -74,7 +75,19 @@ export default {
 
     };
   },
-  mounted() {
+  async mounted() {
+
+    const responseSeasons = await fetch("http://ergast.com/api/f1/seasons.json?limit=1000");
+    let seasons = await responseSeasons.json();
+    let mockYear = seasons.MRData.SeasonTable.Seasons[seasons.MRData.SeasonTable.Seasons.length -1].season
+    this.lastyear = mockYear
+
+    try{
+      await CampeonatoRepository.findOne(this.lastyear);
+    }catch{
+      await CampeonatoRepository.save({ ano: this.lastyear });
+    }
+
     this.fetchDriverStandings();
   },
   methods: {
@@ -82,40 +95,46 @@ export default {
       return auth.isAdmin();
     },
     async fetchDriverStandings() {
+      this.driverStandings = []
       if (!this.selectedYear) {
         this.invalidYear = false;
-        await this.loadDataConstructor();
-        return this.loadData(this.selectedYear);
+        await this.loadDataConstructor(this.lastyear);
+        return this.loadData(this.lastyear);
+      }else{
+        const year = Number(this.selectedYear);
+        if (year < 1958 || year > this.currentYear) {
+          this.invalidYear = true;
+          this.constructorStandings = [];
+          return;
+        }
+
+        this.invalidYear = false;
+        try{
+          await CampeonatoRepository.findOne(this.selectedYear);
+        }catch{
+          await CampeonatoRepository.save({ ano: this.selectedYear });
+        }
+        this.loadDataConstructor(this.selectedYear);
+        this.loadData(this.selectedYear);
       }
 
-      const year = Number(this.selectedYear);
-      
-      if (year < 1958 || year > this.currentYear) {
-        this.invalidYear = true;
-        this.driverStandings = [];
-        return;
-      }
 
-      this.invalidYear = false;
-
-      try {
-        
-        await CampeonatoRepository.findOne(year);
-      } catch (error) {
-        
-        await CampeonatoRepository.save({ ano: year });
-      }
-      await this.loadDataConstructor(year);
-      this.loadData(year);
     },
     async loadData(year) {
       
-      
+      let url
+      if(this.selectedYear == year){
+        url = `http://ergast.com/api/f1/${this.selectedYear}/driverStandings.json`; 
+      }else{
+        url = `http://ergast.com/api/f1/current/driverStandings.json`; 
+      }
+
+      const response = await fetch(url);
+      const data = await response.json(); 
       let driversFromBackend = [];
       try {
         driversFromBackend = await PilotoRepository.findByAnoPiloto(year);
         console.log("Pilotos desde el backend:", driversFromBackend.length);
-        //console.log(driversFromBackend);
       } catch (error) {
         console.error("Error al obtener los pilotos del backend:", error);
       }
@@ -128,9 +147,6 @@ export default {
 
 
         try {
-          const url = `http://ergast.com/api/f1/${year}/driverStandings.json`;
-          const response = await fetch(url);
-          const data = await response.json();
           this.driverStandings = data.MRData.StandingsTable.StandingsLists?.[0]?.DriverStandings || [];
           const driver = data.MRData.StandingsTable.StandingsLists?.[0]?.DriverStandings || [];
 
@@ -180,42 +196,22 @@ export default {
       }
     },
     
-    async loadDataConstructor() {
+    async loadDataConstructor(year) {
 
-      let year = null
       let url
-      if(this.selectedYear == null){
-        url = `http://ergast.com/api/f1/current/constructorStandings.json`; 
-      }else{
+      if(this.selectedYear == year){
         url = `http://ergast.com/api/f1/${this.selectedYear}/constructorStandings.json`; 
+      }else{
+        url = `http://ergast.com/api/f1/current/constructorStandings.json`; 
       }
 
       const response = await fetch(url);
-      const data = await response.json();
-
-      if (this.selectedYear == null) {
-          console.log(data)
-          const anoCampeonatoStr = data.MRData.StandingsTable.season;
-          year = parseInt(anoCampeonatoStr, 10);
-          console.log("Entro en guardar año", year)
-        try {
-          await CampeonatoRepository.findOne(year);
-        } catch (error) {
-          console.log("No se ha podido encontrar el año especificado");
-          await CampeonatoRepository.save({ ano: year });
-        }
-
-        this.selectedYear = year
-
-      }else{
-        year = this.selectedYear
-      }
-
+      const data = await response.json(); 
       let constructoresFromBackend = [];
       try {
         constructoresFromBackend = await ConstructorRepository.findByAno(year);
         console.log("Constructores desde el backend:", constructoresFromBackend.length);
-        //console.log(constructoresFromBackend);
+        console.log(constructoresFromBackend);
       } catch (error) {
         console.error("Error al obtener los constructores del backend:", error);
       }
@@ -227,6 +223,7 @@ export default {
         this.isLoading = true; // Activar el indicador de carga
 
         try {
+
           this.constructorStandings = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || []; // Obtener los standings de las escuderías
           const constructor = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings || [];
 
@@ -239,6 +236,7 @@ export default {
             ano: data.MRData.StandingsTable.season,
 
           }));
+
           this.constructorStandings = transformedData;
           const savePromises = [];
           for (const constructor of transformedData) {
@@ -262,7 +260,7 @@ export default {
           // Esperar a que todos los circuitos se guarden
           await Promise.all(savePromises);
 
-          //console.log(transformedData); // Aquí puedes ver el resultado transformado
+          console.log(transformedData); // Aquí puedes ver el resultado transformado
 
         } catch (error) {
           console.error("Error al obtener la clasificación:", error);

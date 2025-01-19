@@ -31,25 +31,25 @@ const routes = [
     path: '/',
     name: 'Circuitos',
     component: Circuitos,
-    meta: { public: true } // Ahora es pública
+    meta: { public: true }
   },
   {
     path: '/edit/circuit/:circuitoId',
     name: 'EditCircuitImage',
     component: EditCircuitImage,
-    props: true, // Habilitamos pasar el parámetro como prop
+    props: true,
   },
   {
     path: '/edit/pilotos/:pilotoId',
     name: 'EditPilotImage',
     component: EditPilotImage,
-    props: true, // Habilitamos pasar el parámetro como prop
+    props: true,
   },
   {
     path: '/edit/constructor/:constructorId',
     name: 'EditConstructorImage',
     component: EditConstructorImage,
-    props: true, // Habilitamos pasar el parámetro como prop
+    props: true,
   },
   {
     path: "/login",

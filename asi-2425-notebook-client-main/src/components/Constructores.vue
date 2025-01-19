@@ -65,6 +65,7 @@ export default {
   data() {
     return {
       selectedYear: null, // Año predeterminado (null para la temporada actual)
+      lastyear: null,
       constructorStandings: [], // Lista de los standings de las escuderías
       invalidYear: false,
       isLoading: false,
@@ -82,8 +83,18 @@ export default {
       }) || [];
     }
   },
-  mounted() {
-    console.log("año seleccionado", this.selectedYear)
+  async mounted() {
+    const responseSeasons = await fetch("http://ergast.com/api/f1/seasons.json?limit=1000");
+    let seasons = await responseSeasons.json();
+    let mockYear = seasons.MRData.SeasonTable.Seasons[seasons.MRData.SeasonTable.Seasons.length -1].season
+    this.lastyear = mockYear
+
+    try{
+      await CampeonatoRepository.findOne(this.lastyear);
+    }catch{
+      await CampeonatoRepository.save({ ano: this.lastyear });
+    }
+
     this.fetchDriverStandings();
   },
   methods: {
@@ -93,57 +104,36 @@ export default {
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;
-        return this.loadDataConstructor(); 
+        return this.loadDataConstructor(this.lastyear);
+      }else{
+        const year = Number(this.selectedYear);
+        if (year < 1958 || year > this.currentYear) {
+          this.invalidYear = true;
+          this.constructorStandings = [];
+          return;
+        }
+
+        this.invalidYear = false;
+        try{
+          await CampeonatoRepository.findOne(this.selectedYear);
+        }catch{
+          await CampeonatoRepository.save({ ano: this.selectedYear });
+        }
+        this.loadDataConstructor(this.selectedYear);
       }
-
-      const year = Number(this.selectedYear);
-      if (year < 1958 || year > this.currentYear) {
-        this.invalidYear = true;
-        this.constructorStandings = [];
-        return;
-      }
-
-      this.invalidYear = false;
-
-      try {
-        await CampeonatoRepository.findOne(year);
-      } catch (error) {
-        console.log("No se ha podido encontrar el año especificado");
-        await CampeonatoRepository.save({ ano: year });
-      }
-
-      this.loadDataConstructor();
 
     },
-    async loadDataConstructor() {
+    async loadDataConstructor(year) {
 
-      let year = null
       let url
-      if(this.selectedYear == null){
-        url = `http://ergast.com/api/f1/current/constructorStandings.json`; 
-      }else{
+      if(this.selectedYear == year){
         url = `http://ergast.com/api/f1/${this.selectedYear}/constructorStandings.json`; 
+      }else{
+        url = `http://ergast.com/api/f1/current/constructorStandings.json`; 
       }
 
       const response = await fetch(url);
       const data = await response.json(); 
-      if (this.selectedYear == null) {
-          console.log(data)
-          const anoCampeonatoStr = data.MRData.StandingsTable.season;
-          year = parseInt(anoCampeonatoStr, 10);
-          console.log("Entro en guardar año", year)
-        try {
-          await CampeonatoRepository.findOne(year);
-        } catch (error) {
-          console.log("No se ha podido encontrar el año especificado");
-          await CampeonatoRepository.save({ ano: year });
-        }
-
-        this.selectedYear = year
-
-      }else{
-        year = this.selectedYear
-      }
       let constructoresFromBackend = [];
       try {
         constructoresFromBackend = await ConstructorRepository.findByAno(year);
