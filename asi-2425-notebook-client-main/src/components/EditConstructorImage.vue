@@ -2,9 +2,10 @@
   <div class="edit-circuit-container">
     <h2>Gestionando Imagen del Constructor: {{ this.constructor.nombre }}</h2>
 
+    
     <div class="columns">
       <!-- Columna para Editar Imagen -->
-      <div class="column">
+      <div class="column" v-if="this.constructor.tieneImagen">
         <h3>Editar Imagen</h3>
         <form @submit.prevent="editImage">
           <div class="form-group">
@@ -14,16 +15,7 @@
           <button type="submit" class="edit-button">Guardar Cambios</button>
         </form>
       </div>
-
-      <!-- Columna para Eliminar Imagen -->
-      <div class="column">
-        <h3>Eliminar Imagen</h3>
-        <p>Esta acción eliminará la imagen actual del constructor.</p>
-        <button @click="deleteImage" class="delete-button">Eliminar Imagen</button>
-      </div>
-
-      <!-- Columna para Añadir Imagen desde 0 -->
-      <div class="column">
+      <div class="column" v-if="!this.constructor.tieneImagen">
         <h3>Añadir Nueva Imagen</h3>
         <form @submit.prevent="addImage">
           <div class="form-group">
@@ -36,6 +28,16 @@
           <label class="form-label">Imagen actual: {{ auxName }}</label>
         </div>
       </div>
+
+      <!-- Columna para Eliminar Imagen -->
+      <div class="column">
+        <h3>Eliminar Imagen</h3>
+        <p>Esta acción eliminará la imagen actual del constructor.</p>
+        <button @click="deleteImage" class="delete-button">Eliminar Imagen</button>
+      </div>
+
+      <!-- Columna para Añadir Imagen desde 0 -->
+      
     </div>
     <router-link to="/constructores" class="cancel-button">Cancelar</router-link>
   </div>
