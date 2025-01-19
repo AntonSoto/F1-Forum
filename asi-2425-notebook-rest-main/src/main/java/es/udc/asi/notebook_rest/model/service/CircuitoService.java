@@ -84,6 +84,13 @@ public class CircuitoService {
     return new CircuitoDTO(circuito);
   }
 
+  public Collection<CircuitoDTO> findByAno(Long ano) {
+    Stream<Circuito> circuitos;
+    circuitos = circuitoDAO.findByAno(ano).stream();
+
+    return circuitos.map(circuito -> new CircuitoDTO(circuito)).collect(Collectors.toList());
+  }
+
   public Collection<CircuitoDTO> findAll() {
     Stream<Circuito> circuitos;
     circuitos = circuitoDAO.findAll().stream();

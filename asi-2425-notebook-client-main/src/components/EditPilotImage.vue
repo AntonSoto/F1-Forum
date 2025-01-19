@@ -75,7 +75,7 @@ export default {
       try {
           // Llamar al repositorio para guardar la imagen
           await PilotoRepository.deleteImage(this.pilotoId);
-          console.log("Imagen eliminada exitosamente.");
+          this.$router.push({ name: 'Pilotos' })
         } catch (err) {
         console.error("Error al eliminar la imagen:", err);
       }
@@ -87,7 +87,7 @@ export default {
         if (file) {
           // Llamar al repositorio para guardar la imagen
           await PilotoRepository.saveImage(this.pilotoId, file);
-          console.log("Imagen añadida exitosamente.");
+          this.$router.push({ name: 'Pilotos' })
         } else {
           console.error("No se seleccionó ningún archivo.");
         }

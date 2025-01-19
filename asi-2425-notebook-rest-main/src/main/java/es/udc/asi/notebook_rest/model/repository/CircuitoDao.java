@@ -14,6 +14,8 @@ public interface CircuitoDao {
 
   Collection<Circuito> findAll();
 
+  Collection<Circuito> findByAno(Long ano);
+
   Circuito findById(String id);
 
 }

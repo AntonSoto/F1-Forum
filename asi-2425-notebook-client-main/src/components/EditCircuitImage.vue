@@ -77,7 +77,7 @@ export default {
       try {
           // Llamar al repositorio para guardar la imagen
           await CircuitRepository.deleteImage(this.circuitoId);
-          console.log("Imagen eliminada exitosamente.");
+          this.$router.push({ name: 'Circuitos' })
         } catch (err) {
         console.error("Error al eliminar la imagen:", err);
       }
@@ -89,7 +89,7 @@ export default {
         if (file) {
           // Llamar al repositorio para guardar la imagen
           await CircuitRepository.saveImage(this.circuitoId, file);
-          console.log("Imagen añadida exitosamente.");
+          this.$router.push({ name: 'Circuitos' })
         } else {
           console.error("No se seleccionó ningún archivo.");
         }

@@ -68,6 +68,7 @@ export default {
     return {
       currentIndex: 0,
       circuitos: null,
+      year: null,
     };
   },
   computed: {
@@ -96,40 +97,40 @@ export default {
       try {
         // Paso 1: Consultar los circuitos desde el backend
         let circuitosFromBackend;
-        
-        try {
-          const response  = await CircuitRepository.findAll();
+
+        const responseSeasons = await fetch("http://ergast.com/api/f1/seasons.json?limit=1000");
+        let seasons = await responseSeasons.json();
+        let mockYear = seasons.MRData.SeasonTable.Seasons[seasons.MRData.SeasonTable.Seasons.length -1].season
+        this.year = mockYear
+
+        let data;
+
+        try{
+          await CampeonatoRepository.findOne(this.year);
+        }catch{
+          await CampeonatoRepository.save({ ano: this.year });
+        }
+
+
+         
+          const response  = await CircuitRepository.findAllByAno(this.year);
+
+        if(response.data.length >0){ 
           circuitosFromBackend = response.data
-        } catch (error) {
-          console.error("Error al obtener los circuitos del backend:", error);
-        }
+          if (circuitosFromBackend.length > 0) {
+              const circuitosOrdenados = circuitosFromBackend.sort((a, b) => {
+                  const numOrdenA = a.grandesPremios[0].numOrden;
+                  const numOrdenB = b.grandesPremios[0].numOrden;
+                  return numOrdenA - numOrdenB;
+              });
 
-        if (circuitosFromBackend.length > 0) {
-          const circuitosOrdenados = circuitosFromBackend.sort((a, b) => {
-              const numOrdenA = a.grandesPremios[0].numOrden;
-              const numOrdenB = b.grandesPremios[0].numOrden;
-              return numOrdenA - numOrdenB;
-          });
+              this.circuitos = circuitosOrdenados;
+            }
+          console.log("Me voy a matar",circuitosFromBackend)
 
-          this.circuitos = circuitosOrdenados;
-        } else {
-          
-          // Paso 2: Consultar los circuitos desde la API externa
+        }else{
           const response = await fetch("http://ergast.com/api/f1/current.json");
-          const data = await response.json();
-          console.log("Oteniendo circuitos desde la API");
-
-          const anoCampeonatoStr = data.MRData.RaceTable.season;
-          const anoCampeonato = parseInt(anoCampeonatoStr, 10);
-
-          try{
-          console.log("Post antes del FINDONE",anoCampeonato)
-          await CampeonatoRepository.findOne(anoCampeonato);
-        }catch(error){
-          console.log("No se ha podido encontrar el año especificado");
-          await CampeonatoRepository.save({ ano: anoCampeonato });
-        }
-
+          data = await response.json();
           // Extraer datos relevantes de los circuitos
           const circuitosFromAPI = data.MRData.RaceTable.Races.map((race) => ({
             id: race.Circuit.circuitId,
@@ -158,7 +159,7 @@ export default {
                   ? this.formatToLocalDateTime(race.ThirdPractice.date, race.ThirdPractice.time)
                   : '',
 
-                ano: anoCampeonato,
+                ano: this.year,
 
                 fechaHoraClasificacion: race.Qualifying
                   ? this.formatToLocalDateTime(race.Qualifying.date, race.Qualifying.time)
@@ -194,11 +195,12 @@ export default {
           // Mostrar inmediatamente los datos obtenidos de la API
           this.circuitos = circuitosFromAPI;
           console.log("Circuitos desde API con estructura:", this.circuitos);
+
         }
 
-      } catch (error) {
-        console.error("Error al obtener y procesar los circuitos:", error);
-      }
+      }catch{
+        console.log("Error")
+      }    
     },
     nextImage() {
       console.log("siguiente")

@@ -1,9 +1,6 @@
 package es.udc.asi.notebook_rest.model.repository;
 
-import es.udc.asi.notebook_rest.model.domain.Category;
-import es.udc.asi.notebook_rest.model.domain.Circuito;
-import es.udc.asi.notebook_rest.model.domain.Note;
-import es.udc.asi.notebook_rest.model.domain.User;
+import es.udc.asi.notebook_rest.model.domain.*;
 import es.udc.asi.notebook_rest.model.repository.util.GenericDaoJpa;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
@@ -37,6 +34,13 @@ public class CircuitoDaoJpa extends GenericDaoJpa implements CircuitoDao {
   public void update(Circuito circuito) {
     entityManager.merge(circuito);
 
+  }
+
+  @Override
+  public Collection<Circuito> findByAno(Long ano){
+    return entityManager.createQuery(
+        "select c from Circuito c join c.grandesPremios gp where gp.campeonato.ano = :gp_ano", Circuito.class)
+      .setParameter("gp_ano", ano).getResultList();
   }
 
 }

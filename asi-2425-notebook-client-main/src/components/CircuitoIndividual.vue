@@ -16,7 +16,7 @@
       <ul><strong>Carrera:</strong> {{ formatFecha(circuit.fechaHoraCarrera) }}</ul>
 
       <!-- Nuevo botón -->
-      <button
+      <button v-if="user.userId != null"
         class="toggle-status"
         :class="{ 'not-viewed': !isViewed, 'viewed': isViewed }"
         @click="toggleViewStatus"
@@ -32,7 +32,7 @@
   <div class="valoraciones">
     <h2>Valoraciones</h2>
     <!-- Formulario para añadir valoración -->
-    <div class="add-valoracion">
+    <div class="add-valoracion" v-if="user.userId != null">
       <textarea v-model="nuevaValoracion.comentario" placeholder="Escribe tu valoración aquí..." rows="4"></textarea>
       <select v-model="nuevaValoracion.puntuacion">
         <option disabled value="">Selecciona una puntuación</option>
@@ -130,10 +130,11 @@ export default {
   async mounted() {
     // Obtiene los datos del usuario actual
     const fetchedUser = await AccountRepository.getAccount();
+    console.log("fetchedUser", fetchedUser)
     this.user = {
       userId: fetchedUser.id,
       login: fetchedUser.login,
-    };
+    };console.log("sex", this.user.userId)
     await this.fetchCircuitData();
 
     const circuitoId = this.$route.params.circuitoId;
@@ -141,10 +142,13 @@ export default {
     const granPremioId = circuitData.grandesPremios?.[0]?.id;
 
     try {
-      const visualizacion = await VisualizaRepository.findOneByUserAndGP(granPremioId);
-      console.log("TESTEANDO ANDO",visualizacion)
-      //if(visualizacion.response)
-      if(visualizacion.data.length>=1) this.isViewed = true;
+      if(this.user.userId != null){
+        const visualizacion = await VisualizaRepository.findOneByUserAndGP(granPremioId);
+        console.log("TESTEANDO ANDO",visualizacion)
+        //if(visualizacion.response)
+        if(visualizacion.data.length>=1) this.isViewed = true;
+      }
+
     } catch (error) {
       console.error("Error al verificar la visualización:", error.message);
       this.isViewed = false; // Si ocurre un error, el estado es false

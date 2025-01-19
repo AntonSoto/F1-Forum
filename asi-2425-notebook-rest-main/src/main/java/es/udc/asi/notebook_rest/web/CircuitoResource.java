@@ -36,6 +36,11 @@ public class CircuitoResource {
     return circuitoService.findById(id);
   }
 
+  @GetMapping("/ano/{ano}")
+  public Collection<CircuitoDTO> findByAno(@PathVariable Long ano) throws NotFoundException {
+    return circuitoService.findByAno(ano);
+  }
+
   @PostMapping
   public CircuitoDTO create(@RequestBody @Valid CircuitoDTO circuito, Errors errors) throws RequestBodyNotValidException {
     if (errors.hasErrors()) {

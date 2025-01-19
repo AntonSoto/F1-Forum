@@ -75,7 +75,7 @@ export default {
       try {
           // Llamar al repositorio para guardar la imagen
           await ConstructorRepository.deleteImage(this.constructorId);
-          console.log("Imagen eliminada exitosamente.");
+          this.$router.push({ name: 'Constructores' })
         } catch (err) {
         console.error("Error al eliminar la imagen:", err);
       }
@@ -87,7 +87,7 @@ export default {
         if (file) {
           // Llamar al repositorio para guardar la imagen
           await ConstructorRepository.saveImage(this.constructorId, file);
-          console.log("Imagen añadida exitosamente.");
+          this.$router.push({ name: 'Constructores' })
         } else {
           console.error("No se seleccionó ningún archivo.");
         }

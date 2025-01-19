@@ -83,6 +83,7 @@ export default {
     }
   },
   mounted() {
+    console.log("año seleccionado", this.selectedYear)
     this.fetchDriverStandings();
   },
   methods: {

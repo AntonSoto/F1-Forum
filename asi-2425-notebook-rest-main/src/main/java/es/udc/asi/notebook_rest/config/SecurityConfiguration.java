@@ -62,6 +62,7 @@ public class SecurityConfiguration {
       .authorizeHttpRequests((authorize) -> authorize
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/account").permitAll()
         .requestMatchers(HttpMethod.DELETE, "/api/users/**").authenticated()
         .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/circuitos/**").permitAll()

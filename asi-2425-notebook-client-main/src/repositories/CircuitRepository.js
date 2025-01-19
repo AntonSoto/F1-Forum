@@ -11,6 +11,13 @@ export default {
 
     return await HTTP.get(resource)
   },
+  async findAllByAno(ano) {
+    /*const response = (await HTTP.get(resource));
+    console.log(response)
+    return response.data*/
+
+    return await HTTP.get(`${resource}/ano/${ano}`)
+  },
 
   async findOne(circuitoId) {
     try {
