@@ -6,11 +6,11 @@ const resource = "/circuitos";
 export default {
   async findAll() {
     const response = await HTTP.get(`${resource}`);
-    console.log(response.data)
-    console.log("AQUIIIIIIII")
-    return response.data;
+    const circuitos = response.data;
+     
+    return circuitos;
+ 
   },
-
   async findOne(circuitoId) {
     try {
       const response = await HTTP.get(`${resource}/${circuitoId}`);
@@ -40,5 +40,27 @@ export default {
 
   async delete(circuitoId) {
     return await HTTP.delete(`${resource}/${circuitoId}`);
+  },
+
+
+  async saveImage(id, file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await HTTP.post(`${resource}/${id}/imagen`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    });
+    return response.data;
+  },
+
+  async deleteImage(id) {
+    const response = await HTTP.delete(`${resource}/${id}/imagen`);
+    return response.data;
+  },
+
+  async findById(id) {
+    const response = await HTTP.get(`${resource}/${id}`);
+    return response.data;
   }
 }; 

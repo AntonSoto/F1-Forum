@@ -34,7 +34,7 @@ const routes = [
     meta: { public: true } // Ahora es pública
   },
   {
-    path: '/edit/circuit/:circuitId',
+    path: '/edit/circuit/:circuitoId',
     name: 'EditCircuitImage',
     component: EditCircuitImage,
     props: true, // Habilitamos pasar el parámetro como prop

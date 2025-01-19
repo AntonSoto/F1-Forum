@@ -1,48 +1,26 @@
 <template>
   <div class="circuitos-container">
     <h2 class="circuitos-title">Circuitos</h2>
-
-    <!-- Carrusel -->
-    <div class="carousel-container">
-      <div class="carousel">
-        <!-- Imagen clickeable -->
-        <a class="carousel" :href="'/circuitos/' + images[currentIndex].name">
-          <img :src="images[currentIndex].src" :alt="images[currentIndex].name" class="carousel-image" />
-        </a>
-      </div>
-
-      <button @click="prevImage" class="carousel-button prev">‹</button>
-      <button @click="nextImage" class="carousel-button next">›</button>
-
-      <div class="indicator">
-        <span v-for="(image, index) in images" :key="index" :class="['dot', { active: index === currentIndex }]"></span>
-      </div>
-
-      <!-- Enlace debajo de la imagen -->
-      <div class="circuito-link">
-        <a :href="'/circuitos/' + images[currentIndex].name" class="circuito-name">
-          Ver circuito: {{ images[currentIndex].name }}
-        </a>
-      </div>
-    </div>
-
+    
     <!-- Lista de todos los circuitos por ID -->
     <div class="circuitos-list">
       <h3>Todos los Circuitos</h3>
       <div class="circuitos-list-container">
         <div class="circuitos-row">
           <!-- Iterar sobre circuitos en función del ID -->
-          <div class="circuito-item" v-for="(circuito, index) in circuitos" :key="circuito.id">
+          <div class="circuito-item" v-for="(circuito) in circuitos" :key="circuito.id">
             <a :href="'/circuitos/' + circuito.id" class="circuito-link-item">
               <!-- Nombre del circuito -->
               <span>{{ circuito.nombreCircuito }}</span>
-              
+              <img class="card-img-top"
+              :src="circuito.tieneImagen ? `http://localhost:8080/api/circuitos/${circuito.id}/imagen` : '/placeholder.png'"
+              alt="Imagen del piloto" />
             </a>
 
             <!-- Botón para editar imagen solo si admin() es true -->
             <router-link
               v-if="admin()"
-              :to="{ name: 'EditCircuitImage', params: { circuitId: circuito.id } }"
+              :to="{ name: 'EditCircuitImage', params: { circuitoId: circuito.id } }"
               class="edit-button"
             >
               Editar Imagen
@@ -56,7 +34,7 @@
 
 
 <script>
-import notexist from "@/assets/images/notexist.jpg";
+
 import auth from "@/common/auth";
 import CampeonatoRepository from "@/repositories/CampeonatoRepository";
 import CircuitRepository from "@/repositories/CircuitRepository";
@@ -65,9 +43,6 @@ export default {
   data() {
     return {
       currentIndex: 0,
-      images: [
-        { src: notexist, name: "notexist" },
-      ],
       circuitos: [], // Aquí almacenaremos los circuitos obtenidos desde la API
     };
   },
@@ -184,37 +159,10 @@ export default {
           console.log("Circuitos desde API con estructura:", this.circuitos);
         }
 
-        // Actualizar las imágenes basadas en los circuitos
-        this.images = this.circuitos.map((circuito) => ({
-          src: this.getImageForCircuit(circuito.id), // Usamos una función para asignar imágenes
-          name: circuito.id,
-        }));
-
       } catch (error) {
         console.error("Error al obtener y procesar los circuitos:", error);
       }
     }
-    ,
-    // Método para seleccionar una imagen para cada circuito (puedes mejorar esto con más imágenes)
-    getImageForCircuit(circuitId) {
-      try {
-        // Cargar la imagen del circuito dinámicamente desde la carpeta de imágenes
-        const imagePath = require(`@/assets/images/${circuitId}.jpg`);
-        return imagePath;
-      } catch (error) {
-        // Si no se encuentra la imagen, retornar la imagen por defecto
-        //console.log(`Imagen no encontrada para el circuito: ${circuitId}`);
-        return notexist; // Imagen por defecto
-      }
-    },
-
-    nextImage() {
-      this.currentIndex = (this.currentIndex + 1) % this.images.length;
-    },
-
-    prevImage() {
-      this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
-    },
   },
 };
 </script>
