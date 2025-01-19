@@ -16,7 +16,6 @@ public class PilotoDTO {
   private Long ano;
   private String constructorId;
   private String constructorNombre;
-  private String constructorNacionalidad;
   private Boolean tieneImagen = false;
 
   public PilotoDTO() {
@@ -57,7 +56,6 @@ public class PilotoDTO {
     this.ano = ano;
     this.constructorId = constructorId;
     this.constructorNombre = constructorNombre;
-    this.constructorNacionalidad = constructorNacionalidad;
   }
 
 
@@ -99,14 +97,6 @@ public class PilotoDTO {
 
   public void setConstructorNombre(String constructorNombre) {
     this.constructorNombre = constructorNombre;
-  }
-
-  public String getConstructorNacionalidad() {
-    return constructorNacionalidad;
-  }
-
-  public void setConstructorNacionalidad(String constructorNacionalidad) {
-    this.constructorNacionalidad = constructorNacionalidad;
   }
 
   public Long getVictorias() {
