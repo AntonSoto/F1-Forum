@@ -1,10 +1,10 @@
 <template>
   <div class="driver-standings">
     <div class="year-input">
-      <label for="year">Introduce un año (mínimo 1950):</label>
-      <input type="number" v-model="selectedYear" :min="1950" :max="currentYear" placeholder="Introduce un año" />
+      <label for="year">Introduce un año (mínimo 1958):</label>
+      <input type="number" v-model="selectedYear" :min="1958" :max="currentYear" placeholder="Introduce un año" />
       <button @click="fetchDriverStandings">Buscar</button>
-      <p v-if="invalidYear" class="error-message">El año debe ser mayor o igual a 1950 y menor que el año actual.</p>
+      <p v-if="invalidYear" class="error-message">El año debe ser mayor o igual a 1958 y menor que el año actual.</p>
     </div>
 
     <!-- Indicador de carga -->
@@ -74,7 +74,7 @@ export default {
 
       const year = Number(this.selectedYear);
       
-      if (year < 1950 || year > this.currentYear) {
+      if (year < 1958 || year > this.currentYear) {
         this.invalidYear = true;
         this.driverStandings = [];
         return;

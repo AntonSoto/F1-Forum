@@ -45,7 +45,7 @@
           <p>{{ valoracion.comentario }}</p>
           <button @click="editarValoracion(valoracion)" v-if="valoracion.user === user.login">Editar</button>
           <button @click="eliminarValoracion(valoracion.id)" v-if="valoracion.user === user.login">Eliminar</button>
-          <button @click="eliminarUsuario(valoracion.userId)" v-if="admin()">Eliminar</button>
+          <button @click="deleteUser(valoracion.idUser)" v-if="admin()">Eliminar Usuario</button>
           <!-- Muestra el formulario de edición sobre el comentario si esEditing es verdadero para este comentario -->
           <div v-if="isEditing === valoracion.id">
             <textarea v-model="editarValoracionForm.comentario" placeholder="Escribe tu valoración aquí..." rows="4"></textarea>
@@ -66,11 +66,13 @@
 
 
 <script>
+import Swal from 'sweetalert2';
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import CircuitRepository from "@/repositories/CircuitRepository";
 import ValoracionRepository from "@/repositories/ValoracionRepository";
 import AccountRepository from "@/repositories/AccountRepository";
+import UserRepository from '@/repositories/UserRepository';
 import auth from "@/common/auth";
 
 export default {
@@ -116,12 +118,46 @@ export default {
     this.user = {
       userId: fetchedUser.id,
       login: fetchedUser.login,
+    
     };
     await this.fetchCircuitData();
   },
   methods: {
     admin() {
       return auth.isAdmin();
+    },
+    async deleteUser(id) {
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará al usuario y todas sus valoraciones.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Eliminar"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await UserRepository.deleteUser(id);
+            Swal.fire({
+              title: "Eliminado",
+              text: "El usuario ha sido eliminado.",
+              icon: "success",
+              timer: 2000
+            });
+            const circuitoId = this.$route.params.circuitoId;
+            this.fetchValoraciones(circuitoId); // Recargar las valoraciones
+          } catch (err) {
+            console.error(err);
+            Swal.fire({
+              title: "Error",
+              text: "No se pudo eliminar al usuario.",
+              icon: "error"
+            });
+          }
+        }
+      });
+
     },
     async editarValoracion(valoracion) {
     this.isEditing = valoracion.id; // Mostrar el formulario de edición para este comentario
