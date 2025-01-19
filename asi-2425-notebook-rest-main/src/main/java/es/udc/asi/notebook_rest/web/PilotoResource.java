@@ -62,4 +62,8 @@ public class PilotoResource {
   }
 
 
+  @DeleteMapping("/{id}/imagen")
+  public void eliminarImagenDePiloto(@PathVariable String id, @RequestParam MultipartFile file) throws ModelException {
+    pilotoService.eliminarImagenDePiloto(id);
+  }
 }

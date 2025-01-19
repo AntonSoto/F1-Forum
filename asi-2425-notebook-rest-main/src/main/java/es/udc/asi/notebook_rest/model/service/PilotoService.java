@@ -141,6 +141,13 @@ public class PilotoService {
     return imageService.getImage(id, piloto.getNombreImagen());
   }
 
+  public void eliminarImagenDePiloto(String id) throws ModelException {
+    Piloto piloto = pilotoDao.findById(id);
+    if (piloto == null) {
+      throw new NotFoundException(id, Constructor.class);
+    }
 
+    imageService.getImage(id, piloto.getClass().getName());
+  }
 
 }

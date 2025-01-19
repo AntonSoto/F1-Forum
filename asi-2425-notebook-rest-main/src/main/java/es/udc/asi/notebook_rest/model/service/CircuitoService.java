@@ -2,6 +2,7 @@ package es.udc.asi.notebook_rest.model.service;
 
 
 import es.udc.asi.notebook_rest.model.domain.Circuito;
+import es.udc.asi.notebook_rest.model.domain.Constructor;
 import es.udc.asi.notebook_rest.model.domain.GranPremio;
 import es.udc.asi.notebook_rest.model.exception.ModelException;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
@@ -113,6 +114,15 @@ public class CircuitoService {
     }
 
     return imageService.getImage(id, circuito.getNombreImagen());
+  }
+
+  public void eliminarImagenDeCircuito(String id) throws ModelException {
+    Circuito circuito = circuitoDAO.findById(id);
+    if (circuito == null) {
+      throw new NotFoundException(id, Circuito.class);
+    }
+
+    imageService.getImage(id, circuito.getClass().getName());
   }
 
 }
