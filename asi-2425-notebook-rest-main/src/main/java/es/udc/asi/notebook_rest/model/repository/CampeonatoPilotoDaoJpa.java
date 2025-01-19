@@ -13,7 +13,7 @@ public class CampeonatoPilotoDaoJpa extends GenericDaoJpa implements CampeonatoP
   @Override
   public Collection<CampeonatoPiloto> findAllByAno(Long ano){
     return entityManager.createQuery(
-        "select cc from CampeonatoConstructor cc where cc.campeonato.ano = :ano", CampeonatoPiloto.class)
+        "select cp from CampeonatoPiloto cp where cp.campeonato.ano = :ano", CampeonatoPiloto.class)
       .setParameter("ano", ano).getResultList();
   }
 

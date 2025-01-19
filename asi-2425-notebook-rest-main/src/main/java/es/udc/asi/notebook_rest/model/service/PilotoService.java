@@ -2,10 +2,7 @@ package es.udc.asi.notebook_rest.model.service;
 
 import es.udc.asi.notebook_rest.model.domain.*;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
-import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
-import es.udc.asi.notebook_rest.model.repository.CampeonatoPilotoDao;
-import es.udc.asi.notebook_rest.model.repository.ConstructorDao;
-import es.udc.asi.notebook_rest.model.repository.PilotoDao;
+import es.udc.asi.notebook_rest.model.repository.*;
 import es.udc.asi.notebook_rest.model.service.dto.*;
 import es.udc.asi.notebook_rest.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +30,18 @@ public class PilotoService {
   @Autowired
   private CampeonatoPilotoDao cameponatoPilotoDao;
 
+  @Autowired
+  private PilotoConstructorDao pilotoConstructorDao;
+
   @Transactional(readOnly = false)
   public PilotoDTO create(PilotoDTO pilotoDTO) {
     Piloto piloto;
     if(pilotoDao.findById(pilotoDTO.getId()) == null) {
       piloto = new Piloto(
         pilotoDTO.getId(),
-        pilotoDTO.getNacionalidad(),
-        pilotoDTO.getNombreCompleto()
+        pilotoDTO.getNombreCompleto(),
+        pilotoDTO.getNacionalidad()
+
       );
     }else{
       piloto = pilotoDao.findById(pilotoDTO.getId());
@@ -72,26 +73,25 @@ public class PilotoService {
       campeonatoPiloto.setCampeonato(campeonato);
 
     }else{
-      throw new IllegalArgumentException("Constructor ya existente");
+      throw new IllegalArgumentException("Piloto ya existente");
     }
 
     Constructor constructor = constructorDao.findById(pilotoDTO.getConstructorId());
 
     if(constructor == null) {
-      throw new IllegalArgumentException("Constructor ya existente");
+      throw new IllegalArgumentException("Constructor no existente");
     }else{
+        PilotoConstructor pilotoConstructor = new PilotoConstructor();
 
-      PilotoConstructor pilotoConstructor = new PilotoConstructor();
+        piloto.getPilotoConstructor().add(pilotoConstructor);
 
-      piloto.getPilotoConstructor().add(pilotoConstructor);
+        constructor.getConstructorPiloto().add(pilotoConstructor);
 
-      constructor.getConstructorPiloto().add(pilotoConstructor);
+        pilotoConstructor.setPiloto(piloto);
+        pilotoConstructor.setConstructor(constructor);
 
-      pilotoConstructor.setPiloto(piloto);
-      pilotoConstructor.setConstructor(constructor);
-
-      pilotoDao.create(piloto);
-      return new PilotoDTO(piloto);
+        pilotoDao.create(piloto);
+        return new PilotoDTO(piloto);
     }
 
   }
@@ -102,9 +102,9 @@ public class PilotoService {
     List<Object[]> resultados = pilotoDao.findByCampeonatoAno(ano);
 
     return resultados.stream().map(resultado -> {
-      Piloto piloto = (Piloto) resultado[0];
-      CampeonatoPiloto campeonatoPiloto = (CampeonatoPiloto) resultado[1];
-      Constructor constructor = (Constructor) resultado[2];
+      Piloto piloto = (Piloto) resultado[1];
+      CampeonatoPiloto campeonatoPiloto = (CampeonatoPiloto) resultado[0];
+      Constructor constructor = (Constructor) resultado[3];
       return new PilotoDTO(piloto, campeonatoPiloto, constructor);
     }).collect(Collectors.toList());
   }

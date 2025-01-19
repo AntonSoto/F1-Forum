@@ -28,7 +28,7 @@ public class CampeonatoService {
   public CampeonatoDTO findById(Long ano) throws NotFoundException {
     Campeonato campeonato = campeonatoDao.findById(ano);
     if (campeonato == null) {
-      throw new NotFoundException(ano.toString(), Category.class);
+      throw new NotFoundException(ano.toString(), Campeonato.class);
     }
     return new CampeonatoDTO(campeonato);
   }

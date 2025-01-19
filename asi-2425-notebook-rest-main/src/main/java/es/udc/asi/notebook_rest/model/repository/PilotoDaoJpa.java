@@ -32,16 +32,24 @@ public class PilotoDaoJpa extends GenericDaoJpa implements PilotoDao {
 
   @Override
   public List<Object[]> findByCampeonatoAno(Long ano) {
-    return entityManager.createQuery(
-        "SELECT p, cp, cst " +
-          "FROM Piloto p " +
-          "JOIN p.campeonatoPilotos cp " +
-          "JOIN cp.campeonato c " +
-          "JOIN p.pilotoConstructor pc " +
-          "JOIN pc.constructor cst " +
-          "WHERE c.ano = :ano", Object[].class)
+    List<Object[]> lista = entityManager.createQuery(
+      "SELECT cp, p, pc, c " +
+        "FROM CampeonatoPiloto cp " +
+        "JOIN cp.piloto p " +
+        "JOIN PilotoConstructor pc ON p.id = pc.piloto.id " +
+        "JOIN pc.constructor c " +
+        "WHERE cp.campeonato.ano = :ano " +
+        "AND pc.id IN ( " +
+        "    SELECT MIN(pc2.id) " +
+        "    FROM PilotoConstructor pc2 " +
+        "    GROUP BY pc2.piloto.id " +
+        ") " +
+        "ORDER BY cp.piloto.id", Object[].class)
       .setParameter("ano", ano)
       .getResultList();
+
+    System.out.println(lista);
+    return lista;
   }
 
 }
