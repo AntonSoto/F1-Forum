@@ -9,7 +9,7 @@ public interface ImageService {
 
   String saveImage(MultipartFile file, String id, String folderName) throws ModelException;
 
-  ImageDTO getImage(String id, String nombreImagen) throws ModelException;
+  ImageDTO getImage(String folderName, String id) throws ModelException;
 
   void deleteImage(String id, String folderName) throws ModelException;
 

@@ -113,7 +113,7 @@ public class CircuitoService {
       throw new NotFoundException(id, Circuito.class);
     }
 
-    return imageService.getImage(id, circuito.getNombreImagen());
+    return imageService.getImage(circuito.getClass().getSimpleName(), id);
   }
 
   public void eliminarImagenDeCircuito(String id) throws ModelException {

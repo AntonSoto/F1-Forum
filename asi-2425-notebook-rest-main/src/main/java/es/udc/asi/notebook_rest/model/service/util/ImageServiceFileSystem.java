@@ -1,10 +1,6 @@
 package es.udc.asi.notebook_rest.model.service.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,24 +59,46 @@ public class ImageServiceFileSystem implements ImageService {
   }
 
   @Override
-  public ImageDTO getImage(String id, String nombreImagen) throws ModelException {
+  public ImageDTO getImage(String folderName, String id) throws ModelException {
     try {
-      InputStream is = new FileInputStream(properties.getRutaImagenes() + id + getExtension(nombreImagen));
+      // Obtener la ruta de la carpeta
+      Path folderPath = getRootLocation().resolve(folderName);
 
-      byte[] buffer = new byte[1024];
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
-      int len;
-      while ((len = is.read(buffer)) > -1) {
-        os.write(buffer, 0, len);
+      // Verificar si la carpeta existe y es un directorio
+      if (!Files.exists(folderPath) || !Files.isDirectory(folderPath)) {
+        throw new ModelException("La carpeta no existe o no es un directorio: " + folderPath);
       }
-      InputStream imageIs = new ByteArrayInputStream(os.toByteArray());
-      os.flush();
-      is.close();
 
-      return new ImageDTO(imageIs, nombreImagen, getImageMediaType(nombreImagen));
+      // Buscar la imagen dentro de la carpeta con el patrón especificado
+      try (DirectoryStream<Path> stream = Files.newDirectoryStream(folderPath, id + "*")) {
+        for (Path entry : stream) {
+          // Procesar la primera imagen que coincida con el patrón
+          try (InputStream is = Files.newInputStream(entry);
+               ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = is.read(buffer)) > -1) {
+              os.write(buffer, 0, len);
+            }
+
+            InputStream imageIs = new ByteArrayInputStream(os.toByteArray());
+            os.flush();
+
+            return new ImageDTO(imageIs, entry.getFileName().toString(), getImageMediaType(entry.getFileName().toString()));
+          }
+        }
+      }
+
+      // Si no se encuentra ninguna imagen
+      throw new ModelException("No se encontró una imagen con el id especificado: " + id);
+
     } catch (IOException e) {
       e.printStackTrace();
-      throw new ModelException("se ha producido algún error al recuperar la imagen");
+      throw new ModelException("Error inesperado: " + e.getMessage());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new ModelException("Error inesperado: " + e.getMessage());
     }
   }
 

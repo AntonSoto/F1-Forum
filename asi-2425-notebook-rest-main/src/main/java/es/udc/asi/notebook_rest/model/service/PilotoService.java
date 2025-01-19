@@ -138,7 +138,7 @@ public class PilotoService {
       throw new NotFoundException(id, Piloto.class);
     }
 
-    return imageService.getImage(id, piloto.getNombreImagen());
+    return imageService.getImage(piloto.getClass().getSimpleName(), id);
   }
 
   public void eliminarImagenDePiloto(String id) throws ModelException {
