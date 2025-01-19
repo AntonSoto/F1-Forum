@@ -23,17 +23,29 @@
           <th>Escudería</th>
           <th>Puntos</th>
           <th>Victorias</th>
+          <th></th> <!-- Nueva columna -->
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(driver, index, image) in driverStandings" :key="driver.id">
-          <td></td>
+        <tr v-for="(driver, index) in driverStandings" :key="driver.id">
+          <td>
+          <td>
+            <img class="card-img-top"
+              :src="driver.tieneImagen ? `http://localhost:8080/api/pilotos/${driver.id}/imagen` : '/placeholder.png'"
+              alt="Imagen del piloto" />
+          </td>
+          </td>
           <td>{{ index + 1 }}</td>
           <td>{{ driver.nombreCompleto }}</td>
           <td>{{ driver.nacionalidad }}</td>
           <td>{{ driver.constructorNombre }}</td>
           <td>{{ driver.puntos }}</td>
           <td>{{ driver.victorias }}</td>
+          <td>
+            <router-link v-if="admin()" class="btn btn-primary" :to="'/edit/pilotos/' + driver.id">
+              Gestionar foto
+            </router-link>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -49,6 +61,7 @@
 import CampeonatoRepository from '@/repositories/CampeonatoRepository';
 import PilotoRepository from '@/repositories/PilotoRepository';
 import ConstructorRepository from '@/repositories/ConstructorRepository';
+import auth from '@/common/auth';
 
 export default {
   data() {
@@ -65,6 +78,9 @@ export default {
     this.fetchDriverStandings();
   },
   methods: {
+    admin() {
+      return auth.isAdmin();
+    },
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;

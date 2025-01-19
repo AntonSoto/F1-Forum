@@ -28,13 +28,11 @@
       <tbody>
         <tr v-for="(constructor, index) in constructorStandings" :key="constructor.id">
           <td>
-            <td>
-      <img 
-        class="card-img-top" 
-        :src="constructor.tieneImagen ? `http://localhost:8080/api/constructores/${constructor.id}/imagen` : '/placeholder.png'" 
-        alt="Imagen del constructor" 
-      />
-    </td>
+          <td>
+            <img class="card-img-top"
+              :src="constructor.tieneImagen ? `http://localhost:8080/api/constructores/${constructor.id}/imagen` : '/placeholder.png'"
+              alt="Imagen del constructor" />
+          </td>
           </td>
           <td>{{ index + 1 }}</td>
           <td>{{ constructor.nombre }}</td>
@@ -77,7 +75,7 @@ export default {
     getImageSrc() {
       return this.constructorStandings?.map(constructor => {
         console.log(constructor.tieneImagen)
-        if (constructor.tieneImagen!=true) {
+        if (constructor.tieneImagen != true) {
           return `${BACKEND_URL}/Constructor/${constructor.id}/imagen`;
         }
         return "/placeholder.png";
@@ -94,6 +92,7 @@ export default {
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;
+
         return this.loadDataConstructor('current'); // Si no se ha seleccionado un año, cargar la temporada actual
       }
 
@@ -119,7 +118,15 @@ export default {
 
     },
     async loadDataConstructor(year) {
-      if (year == "current") year = 2024;
+      if (year == "current") {
+        year = 2024;
+        try {
+          await CampeonatoRepository.findOne(year);
+        } catch (error) {
+          console.log("No se ha podido encontrar el año especificado");
+          await CampeonatoRepository.save({ ano: year });
+        }
+      }
       let constructoresFromBackend = [];
       try {
         constructoresFromBackend = await ConstructorRepository.findByAno(year);
@@ -151,6 +158,7 @@ export default {
             ano: data.MRData.StandingsTable.season,
 
           }));
+
           this.constructorStandings = transformedData;
           const savePromises = [];
           for (const constructor of transformedData) {
