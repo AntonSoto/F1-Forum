@@ -51,6 +51,7 @@
 import { getStore } from "./common/store";
 import auth from "./common/auth";
 import AccountRepository from "./repositories/AccountRepository";
+import Swal from 'sweetalert2';
 
 export default {
   data() {
@@ -62,9 +63,23 @@ export default {
   },
   methods: {
     desautenticarme() {
-      auth.logout();
-      this.$router.push("/");
-    }
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Se cerrará tu sesión actual.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        auth.logout(); // Realiza el logout
+        this.$router.push("/"); // Redirige al inicio
+        Swal.fire("¡Sesión cerrada!", "Has cerrado tu sesión correctamente.", "success");
+      }
+    });
+  }
   },
   watch: {
     async $route(newValue) {

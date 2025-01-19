@@ -22,16 +22,24 @@
           <th>Nacionalidad</th>
           <th>Puntos</th>
           <th>Victorias</th>
+          <th></th> <!-- Nueva columna -->
         </tr>
       </thead>
       <tbody>
         <tr v-for="(constructor, index) in constructorStandings" :key="constructor.id">
-          <td></td>
+          <td>
+            <img :src="constructor.imagenUrl || 'placeholder.jpg'" alt="Constructor Image" width="50" height="50" />
+          </td>
           <td>{{ index + 1 }}</td>
           <td>{{ constructor.nombre }}</td>
           <td>{{ constructor.nacionalidad }}</td>
           <td>{{ constructor.puntos }}</td>
           <td>{{ constructor.victorias }}</td>
+          <td>
+            <router-link v-if="admin()" class="btn btn-primary" :to="'/edit/constructor/' + constructor.id">
+        Eliminar foto
+      </router-link>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -43,9 +51,11 @@
   </div>
 </template>
 
+
 <script>
 import CampeonatoRepository from '@/repositories/CampeonatoRepository';
 import ConstructorRepository from '@/repositories/ConstructorRepository';
+import auth from '@/common/auth';
 
 export default {
   data() {
@@ -61,6 +71,9 @@ export default {
     this.fetchDriverStandings(); // Cargar los standings de la escudería al cargar el componente
   },
   methods: {
+    admin() {
+      return auth.isAdmin();
+    },
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;

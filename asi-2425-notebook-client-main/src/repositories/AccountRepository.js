@@ -13,7 +13,7 @@ export default {
     return (await HTTP.post(`register`, user)).data;
   },
   async updatePassword(data) {
-    return (await HTTP.put(`account/change-password`, data)).data;
+    return (await HTTP.put(`changePwd`, data)).data;
   }
 
 };
