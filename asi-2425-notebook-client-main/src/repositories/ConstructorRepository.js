@@ -8,7 +8,8 @@ export default {
   async findByAno(ano) {
     try {
     console.log("BUSCANDO CONSTRUCTOR POR AÑO")
-      const response = await HTTP.get(`${resource}/${ano}`);
+    console.log("El año", ano)
+      const response = await HTTP.get(`${resource}/ano/${ano}`);
       console.log("RECUPERADOS CONSTRUCTOR POR AÑO")
       // Si la respuesta es exitosa, devolver los datos del circuito
       const constructores = response.data;

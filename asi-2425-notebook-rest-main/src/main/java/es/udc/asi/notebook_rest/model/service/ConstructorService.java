@@ -121,12 +121,6 @@ public class ConstructorService {
     if (constructor == null) {
       throw new NotFoundException(id, Constructor.class);
     }
-    System.out.println("ESTOY TESTING");
-    System.out.println("----------------------------------------------------------------------------");
-    System.out.println(constructor.getNombreImagen());
-    System.out.println(id);
-    System.out.println("ACABO EL TESTING TESTING");
-    System.out.println("----------------------------------------------------------------------------");
     return imageService.getImage(constructor.getClass().getSimpleName(), id );
   }
 

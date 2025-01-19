@@ -12,7 +12,7 @@ export default {
   async findByAnoPiloto(ano) {
     try {
     console.log("BUSCANDO PILOTO POR AÑO")
-      const response = await HTTP.get(`${resource}/${ano}`);
+      const response = await HTTP.get(`${resource}/ano/${ano}`);
       console.log("RECUPERADOS PILOTO POR AÑO")
       // Si la respuesta es exitosa, devolver los datos del circuito
       const pilotos = response.data;
