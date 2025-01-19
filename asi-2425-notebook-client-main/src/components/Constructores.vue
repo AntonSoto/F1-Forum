@@ -28,7 +28,13 @@
       <tbody>
         <tr v-for="(constructor, index) in constructorStandings" :key="constructor.id">
           <td>
-            <img :src="constructor.imagenUrl || 'placeholder.jpg'" alt="Constructor Image" width="50" height="50" />
+            <td>
+      <img 
+        class="card-img-top" 
+        :src="constructor.tieneImagen ? `http://localhost:8080/api/constructores/${constructor.id}/imagen` : '/placeholder.png'" 
+        alt="Imagen del constructor" 
+      />
+    </td>
           </td>
           <td>{{ index + 1 }}</td>
           <td>{{ constructor.nombre }}</td>
@@ -37,8 +43,8 @@
           <td>{{ constructor.victorias }}</td>
           <td>
             <router-link v-if="admin()" class="btn btn-primary" :to="'/edit/constructor/' + constructor.id">
-        Eliminar foto
-      </router-link>
+              Gestionar foto
+            </router-link>
           </td>
         </tr>
       </tbody>
@@ -66,6 +72,17 @@ export default {
       isLoading: false,
       currentYear: new Date().getFullYear(),
     };
+  },
+  computed: {
+    getImageSrc() {
+      return this.constructorStandings?.map(constructor => {
+        console.log(constructor.tieneImagen)
+        if (constructor.tieneImagen!=true) {
+          return `${BACKEND_URL}/Constructor/${constructor.id}/imagen`;
+        }
+        return "/placeholder.png";
+      }) || [];
+    }
   },
   mounted() {
     this.fetchDriverStandings(); // Cargar los standings de la escudería al cargar el componente
@@ -168,6 +185,10 @@ export default {
     }
   },
 };
+
+
+
+
 </script>
 
 <style scoped>

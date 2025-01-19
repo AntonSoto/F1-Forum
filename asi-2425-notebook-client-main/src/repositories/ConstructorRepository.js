@@ -28,4 +28,16 @@ export default {
     console.log("GUARDANDO CONSTRUCTOR")
       return (await HTTP.post(`${resource}`, constructor)).data;
   },
+
+  async saveImage(id, file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await HTTP.post(`${resource}/${id}/imagen`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    });
+    return response.data;
+  }
+
 }; 
