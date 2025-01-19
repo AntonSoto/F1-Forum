@@ -39,6 +39,9 @@ public class GranPremio {
   @OneToMany(fetch = FetchType.EAGER)
   private List<Valoracion> valoraciones = new ArrayList<>();
 
+  @OneToMany
+  private List<UserGP> visualizaciones = new ArrayList<>();
+
   public GranPremio() {
   }
 

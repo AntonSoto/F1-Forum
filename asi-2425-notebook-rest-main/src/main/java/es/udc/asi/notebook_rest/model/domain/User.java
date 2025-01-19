@@ -35,6 +35,9 @@ public class User {
   @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Valoracion> valoraciones = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<UserGP> Visualizacion = new ArrayList<>();
+
   private boolean active = true;
 
 
