@@ -7,13 +7,16 @@
       <!-- Columna para Editar Imagen -->
       <div class="column" v-if="this.constructor.tieneImagen">
         <h3>Editar Imagen</h3>
-        <form @submit.prevent="editImage">
+        <form @submit.prevent="addImage">
           <div class="form-group">
-            <label for="editImage">Nueva Imagen:</label>
-            <input type="file" id="editImage" ref="inputEditImage" />
+            <label for="newImage">Nueva Imagen:</label>
+            <input type="file" id="newImage" ref="inputNewImage" />
           </div>
-          <button type="submit" class="edit-button">Guardar Cambios</button>
+          <button type="submit" class="edit-button">Añadir Imagen</button>
         </form>
+        <div class="mb-3" v-if="auxName">
+          <label class="form-label">Imagen actual: {{ auxName }}</label>
+        </div>
       </div>
       <div class="column" v-if="!this.constructor.tieneImagen">
         <h3>Añadir Nueva Imagen</h3>
