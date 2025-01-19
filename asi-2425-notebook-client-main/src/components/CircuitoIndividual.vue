@@ -47,11 +47,22 @@
     <div class="lista-valoraciones" v-if="valoraciones.length > 0">
       <h3>Valoraciones del circuito</h3>
       <ul>
-        <li v-for="(valoracion, index) in valoraciones" :key="valoracion.id">
+        <li v-for="(valoracion) in valoraciones" :key="valoracion.id">
           <strong>{{ valoracion.user }}</strong>
           <strong>{{ formatFecha(valoracion.fechaValoracion) }}</strong>
           <span class="puntuacion">Puntuación: {{ valoracion.puntuacion }}</span>
           <p>{{ valoracion.comentario }}</p>
+          <div v-if="isEditing">
+  <h3>Editar Valoración</h3>
+  <textarea v-model="editarValoracionForm.comentario" placeholder="Editar comentario" rows="4"></textarea>
+  <select v-model="editarValoracionForm.puntuacion">
+    <option disabled value="">Selecciona una puntuación</option>
+    <option v-for="puntuacion in [1, 2, 3, 4, 5]" :key="puntuacion" :value="puntuacion">
+      {{ puntuacion }}
+    </option>
+  </select>
+  <button @click="actualizarValoracion(editarValoracionForm.id)">Actualizar Valoración</button>
+</div>
           <button @click="editarValoracion(valoracion)" v-if="valoracion.user === user.login">Editar</button>
           <button @click="eliminarValoracion(valoracion.id)" v-if="valoracion.user === user.login">Eliminar</button>
           <button @click="deleteUser(valoracion.idUser)" v-if="admin()">Eliminar Usuario</button>
@@ -60,6 +71,7 @@
     </div>
     <p v-else>Este circuito aún no tiene valoraciones. ¡Sé el primero en opinar!</p>
   </div>
+
 </template>
 
 
@@ -121,7 +133,6 @@ export default {
     this.user = {
       userId: fetchedUser.id,
       login: fetchedUser.login,
-
     };
     await this.fetchCircuitData();
 
