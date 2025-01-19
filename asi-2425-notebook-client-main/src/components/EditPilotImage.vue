@@ -1,29 +1,24 @@
 <template>
   <div class="edit-circuit-container">
-    <h2>Gestionando Imagen del Piloto: {{ pilotoId }}</h2>
+    <h2>Gestionando Imagen del Piloto: {{ this.piloto.nombreCompleto }}</h2>
 
     <div class="columns">
       <!-- Columna para Editar Imagen -->
-      <div class="column">
+      <div class="column" v-if="this.piloto.tieneImagen">
         <h3>Editar Imagen</h3>
-        <form @submit.prevent="editImage">
+        <form @submit.prevent="addImage">
           <div class="form-group">
-            <label for="editImage">Nueva Imagen:</label>
-            <input type="file" id="editImage" ref="inputEditImage" />
+            <label for="newImage">Nueva Imagen:</label>
+            <input type="file" id="newImage" ref="inputNewImage" />
           </div>
-          <button type="submit" class="edit-button">Guardar Cambios</button>
+          <button type="submit" class="edit-button">Editar Imagen</button>
         </form>
+        <div class="mb-3" v-if="auxName">
+          <label class="form-label">Imagen actual: {{ auxName }}</label>  
+        </div>
       </div>
-
-      <!-- Columna para Eliminar Imagen -->
-      <div class="column">
-        <h3>Eliminar Imagen</h3>
-        <p>Esta acción eliminará la imagen actual del piloto.</p>
-        <button @click="deleteImage" class="delete-button">Eliminar Imagen</button>
-      </div>
-
-      <!-- Columna para Añadir Imagen desde 0 -->
-      <div class="column">
+            <!-- Columna para Añadir Imagen desde 0 -->
+      <div class="column" v-if="!this.piloto.tieneImagen">
         <h3>Añadir Nueva Imagen</h3>
         <form @submit.prevent="addImage">
           <div class="form-group">
@@ -36,6 +31,14 @@
           <label class="form-label">Imagen actual: {{ auxName }}</label>  
         </div>
       </div>
+
+      <!-- Columna para Eliminar Imagen -->
+      <div class="column">
+        <h3>Eliminar Imagen</h3>
+        <p>Esta acción eliminará la imagen actual del piloto.</p>
+        <button @click="deleteImage" class="delete-button">Eliminar Imagen</button>
+      </div>
+
     </div>
     <router-link to="/pilotos" class="cancel-button">Cancelar</router-link>
   </div>
@@ -53,9 +56,14 @@ export default {
   },
   data() {
     return {
-      pilotos: {},
+      piloto: {},
       auxName: null,
     };
+  },
+  async mounted() {
+    const response = await PilotoRepository.findById(this.pilotoId);
+    console.log("Monto", response)
+    this.piloto = response
   },
 
   methods: {

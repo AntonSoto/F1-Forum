@@ -12,7 +12,7 @@
             <label for="newImage">Nueva Imagen:</label>
             <input type="file" id="newImage" ref="inputNewImage" />
           </div>
-          <button type="submit" class="edit-button">Añadir Imagen</button>
+          <button type="submit" class="edit-button">Editar Imagen</button>
         </form>
         <div class="mb-3" v-if="auxName">
           <label class="form-label">Imagen actual: {{ auxName }}</label>
