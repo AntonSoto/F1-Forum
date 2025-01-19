@@ -10,6 +10,8 @@ public interface ConstructorDao {
 
   void create(Constructor constructor);
 
+  void update(Constructor constructor);
+
   Constructor findById(String id);
 
   List<Object[]> findByCampeonatoAno(Long ano);

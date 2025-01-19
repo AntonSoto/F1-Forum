@@ -91,7 +91,7 @@ public class CircuitoService {
   }
 
   @Transactional(readOnly = false)
-  public void guardarImagenDeNota(String id, MultipartFile file) throws ModelException {
+  public void guardarImagenDeCircuito(String id, MultipartFile file) throws ModelException {
     Circuito circuito = circuitoDAO.findById(id);
     if (circuito == null) {
       throw new NotFoundException(id, Circuito.class);
@@ -106,7 +106,7 @@ public class CircuitoService {
     circuitoDAO.update(circuito);
   }
 
-  public ImageDTO recuperarImagenDeNota(String id) throws ModelException {
+  public ImageDTO recuperarImagenDeCircuito(String id) throws ModelException {
     Circuito circuito = circuitoDAO.findById(id);
     if (circuito == null) {
       throw new NotFoundException(id, Circuito.class);

@@ -47,7 +47,7 @@ public class CircuitoResource {
 
   @GetMapping("/{id}/imagen")
   public void recuperarImagenDeNota(@PathVariable String id, HttpServletResponse response) throws ModelException {
-    ImageDTO imagen = circuitoService.recuperarImagenDeNota(id);
+    ImageDTO imagen = circuitoService.recuperarImagenDeCircuito(id);
 
     try {
       response.setHeader("Content-disposition", "filename=" + imagen.getFilename());
@@ -61,7 +61,7 @@ public class CircuitoResource {
 
   @PostMapping("/{id}/imagen")
   public void guardarImagenDeNota(@PathVariable String id, @RequestParam MultipartFile file) throws ModelException {
-    circuitoService.guardarImagenDeNota(id, file);
+    circuitoService.guardarImagenDeCircuito(id, file);
   }
 
 

@@ -17,6 +17,8 @@ public class Constructor {
   private String nombre;
   private String nacionalidad;
 
+  private String nombreImagen;
+
   @OneToMany(mappedBy = "constructor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<CampeonatoConstructor> campeonatoConstructores = new ArrayList<>();
 
@@ -84,4 +86,13 @@ public class Constructor {
   public void setConstructorPiloto(List<PilotoConstructor> constructorPiloto) {
     this.constructorPiloto = constructorPiloto;
   }
+
+  public String getNombreImagen() {
+    return nombreImagen;
+  }
+
+  public void setNombreImagen(String nombreImagen) {
+    this.nombreImagen = nombreImagen;
+  }
+
 }

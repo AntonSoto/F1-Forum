@@ -19,6 +19,10 @@ public class ConstructorDaoJpa extends GenericDaoJpa implements ConstructorDao {
     entityManager.persist(constructor);
   }
 
+  public void update(Constructor constructor){
+    entityManager.merge(constructor);
+  }
+
   @Override
   public Constructor findById(String id) {
     return entityManager.find(Constructor.class, id);

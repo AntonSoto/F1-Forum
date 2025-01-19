@@ -13,6 +13,7 @@ public class ConstructorDTO {
   private Long ano;
   private Long victorias;
   private Float puntos;
+  private Boolean tieneImagen = false;
 
   public ConstructorDTO() {}
 
@@ -24,6 +25,10 @@ public class ConstructorDTO {
     this.victorias = campeonatoConstructor.getVictorias();
     this.puntos = campeonatoConstructor.getPuntos();
     this.ano = campeonatoConstructor.getCampeonato().getAno();
+    if (constructor.getNombreImagen() != null) {
+      this.tieneImagen = true;
+    }
+
 
   }
 
@@ -32,6 +37,10 @@ public class ConstructorDTO {
     this.id = constructor.getId();
     this.nombre = constructor.getNombre();
     this.nacionalidad = constructor.getNacionalidad();
+    if (constructor.getNombreImagen() != null) {
+      this.tieneImagen = true;
+    }
+
 
   }
 
@@ -82,4 +91,9 @@ public class ConstructorDTO {
   public void setAno(Long ano) {
     this.ano = ano;
   }
+
+  public Boolean getTieneImagen() {
+    return tieneImagen;
+  }
+
 }

@@ -2,16 +2,21 @@ package es.udc.asi.notebook_rest.model.service;
 
 
 import es.udc.asi.notebook_rest.model.domain.*;
+import es.udc.asi.notebook_rest.model.exception.ModelException;
+import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.repository.CampeonatoConstructorDao;
 import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
 import es.udc.asi.notebook_rest.model.repository.ConstructorDao;
 import es.udc.asi.notebook_rest.model.service.dto.ConstructorDTO;
+import es.udc.asi.notebook_rest.model.service.dto.ImageDTO;
 import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
 import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
+import es.udc.asi.notebook_rest.model.service.util.ImageService;
 import es.udc.asi.notebook_rest.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +32,10 @@ public class ConstructorService {
 
   @Autowired
   private CampeonatoDao campeonatoDao;
+
+  @Autowired
+  private ImageService imageService;
+
 
   @Autowired
   private CampeonatoConstructorDao campeonatoConstructorDao;
@@ -85,5 +94,31 @@ public class ConstructorService {
     }
 
   }
+
+  @Transactional(readOnly = false)
+  public void guardarImagenDeConstructor(String id, MultipartFile file) throws ModelException {
+    Constructor constructor = constructorDao.findById(id);
+    if (constructor == null) {
+      throw new NotFoundException(id, Constructor.class);
+    }
+
+    if (file.isEmpty()) {
+      throw new ModelException("No se ha enviado ninguna imagen");
+    }
+
+    String nombreFichero = imageService.saveImage(file, id, constructor.getClass().getName());
+    constructor.setNombreImagen(nombreFichero);
+    constructorDao.update(constructor);
+  }
+
+  public ImageDTO recuperarImagenDeConstructor(String id) throws ModelException {
+    Constructor constructor = constructorDao.findById(id);
+    if (constructor == null) {
+      throw new NotFoundException(id, Constructor.class);
+    }
+
+    return imageService.getImage(id, constructor.getNombreImagen());
+  }
+
 
 }
