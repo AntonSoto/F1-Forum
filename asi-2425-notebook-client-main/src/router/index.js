@@ -40,7 +40,7 @@ const routes = [
     props: true, // Habilitamos pasar el parámetro como prop
   },
   {
-    path: '/edit/pilotos/:pilotId',
+    path: '/edit/pilotos/:pilotoId',
     name: 'EditPilotImage',
     component: EditPilotImage,
     props: true, // Habilitamos pasar el parámetro como prop
