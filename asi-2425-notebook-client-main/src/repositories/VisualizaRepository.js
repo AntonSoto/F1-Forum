@@ -11,7 +11,6 @@ export default {
     
       async save(idGP) {
         const response = ((await HTTP.post(`${resource}`, idGP)));
-        console.log(response)
         return response;
       },
     

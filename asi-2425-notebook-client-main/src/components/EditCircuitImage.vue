@@ -69,7 +69,6 @@ export default {
   },
   methods: {
     editImage() {
-      console.log(`Editando imagen para el constructor: ${this.circuitoId}`);
       // Lógica para editar la imagen
     },
 

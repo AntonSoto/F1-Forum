@@ -11,9 +11,7 @@ export default {
 
   async findByAnoPiloto(ano) {
     try {
-    console.log("BUSCANDO PILOTO POR AÑO")
       const response = await HTTP.get(`${resource}/ano/${ano}`);
-      console.log("RECUPERADOS PILOTO POR AÑO")
       // Si la respuesta es exitosa, devolver los datos del circuito
       const pilotos = response.data;
       pilotos.sort((a, b) => b.puntos - a.puntos);
@@ -29,7 +27,6 @@ export default {
   },
 
   async save(piloto) {
-    console.log("GUARDANDO LOS PILOTOS ", piloto)
       return (await HTTP.post(`${resource}`, piloto)).data;
   },
 

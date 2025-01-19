@@ -74,7 +74,7 @@ export default {
   computed: {
     currentCircuitoImage() {
       const currentCircuito = this.circuitos[this.currentIndex];
-      console.log("ESTOY EN CURRENTCIRCUITO",currentCircuito)
+
       return currentCircuito?.tieneImagen
         ? `http://localhost:8080/api/circuitos/${currentCircuito.id}/imagen`
         : "/placeholder.png";
@@ -124,7 +124,7 @@ export default {
 
               this.circuitos = circuitosOrdenados;
             }
-          console.log("Me voy a matar",circuitosFromBackend)
+
 
         }else{
           const response = await fetch("http://ergast.com/api/f1/current.json");
@@ -168,7 +168,7 @@ export default {
               },
             ],
           }));
-          console.log(circuitosFromAPI.data)
+
           // Guardar cada circuito en el backend con la nueva estructura
           const savePromises = circuitosFromAPI.map(async (circuito) => {
             try {
@@ -192,7 +192,7 @@ export default {
 
           // Mostrar inmediatamente los datos obtenidos de la API
           this.circuitos = circuitosFromAPI;
-          console.log("Circuitos desde API con estructura:", this.circuitos);
+
 
         }
 
@@ -201,10 +201,8 @@ export default {
       }    
     },
     nextImage() {
-      console.log("siguiente")
       if (this.circuitos.length > 0) {
         this.currentIndex = (this.currentIndex + 1) % this.circuitos.length;
-        console.log(this.currentIndex)
       }
     },
     prevImage() {

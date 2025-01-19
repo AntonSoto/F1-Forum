@@ -5,24 +5,15 @@ const resource = "/circuitos";
 
 export default {
   async findAll() {
-    /*const response = (await HTTP.get(resource));
-    console.log(response)
-    return response.data*/
-
     return await HTTP.get(resource)
   },
   async findAllByAno(ano) {
-    /*const response = (await HTTP.get(resource));
-    console.log(response)
-    return response.data*/
-
     return await HTTP.get(`${resource}/ano/${ano}`)
   },
 
   async findOne(circuitoId) {
     try {
       const response = await HTTP.get(`${resource}/${circuitoId}`);
-      console.log(response.data)
       // Si la respuesta es exitosa, devolver los datos del circuito
       return response.data;
     } catch (error) {
@@ -36,12 +27,6 @@ export default {
   },
 
   async save(circuit) {
-    /*if (circuit.circuitoId) {
-      return (await HTTP.put(`${resource}/${circuit.circuitoId}`, circuit)).data;
-    } else {
-      */
-     //console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-    console.log(circuit)
     return (await HTTP.post(`${resource}`, circuit)).data;
     //}
   },

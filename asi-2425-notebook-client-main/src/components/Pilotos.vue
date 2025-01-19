@@ -134,7 +134,6 @@ export default {
       let driversFromBackend = [];
       try {
         driversFromBackend = await PilotoRepository.findByAnoPiloto(year);
-        console.log("Pilotos desde el backend:", driversFromBackend.length);
       } catch (error) {
         console.error("Error al obtener los pilotos del backend:", error);
       }
@@ -186,8 +185,6 @@ export default {
           // Esperar a que todos los circuitos se guarden
           await Promise.all(savePromises);
 
-          console.log(transformedData); // Aquí puedes ver el resultado transformado
-
         } catch (error) {
           console.error("Error al obtener la clasificación:", error);
         } finally {
@@ -210,8 +207,6 @@ export default {
       let constructoresFromBackend = [];
       try {
         constructoresFromBackend = await ConstructorRepository.findByAno(year);
-        console.log("Constructores desde el backend:", constructoresFromBackend.length);
-        console.log(constructoresFromBackend);
       } catch (error) {
         console.error("Error al obtener los constructores del backend:", error);
       }
@@ -259,8 +254,6 @@ export default {
 
           // Esperar a que todos los circuitos se guarden
           await Promise.all(savePromises);
-
-          console.log(transformedData); // Aquí puedes ver el resultado transformado
 
         } catch (error) {
           console.error("Error al obtener la clasificación:", error);

@@ -75,7 +75,6 @@ export default {
   computed: {
     getImageSrc() {
       return this.constructorStandings?.map(constructor => {
-        console.log(constructor.tieneImagen)
         if (constructor.tieneImagen != true) {
           return `${BACKEND_URL}/Constructor/${constructor.id}/imagen`;
         }
@@ -137,8 +136,6 @@ export default {
       let constructoresFromBackend = [];
       try {
         constructoresFromBackend = await ConstructorRepository.findByAno(year);
-        console.log("Constructores desde el backend:", constructoresFromBackend.length);
-        console.log(constructoresFromBackend);
       } catch (error) {
         console.error("Error al obtener los constructores del backend:", error);
       }
@@ -186,8 +183,6 @@ export default {
 
           // Esperar a que todos los circuitos se guarden
           await Promise.all(savePromises);
-
-          console.log(transformedData); // Aquí puedes ver el resultado transformado
 
         } catch (error) {
           console.error("Error al obtener la clasificación:", error);

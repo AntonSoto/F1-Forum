@@ -139,11 +139,11 @@ export default {
   async mounted() {
     // Obtiene los datos del usuario actual
     const fetchedUser = await AccountRepository.getAccount();
-    console.log("fetchedUser", fetchedUser)
+
     this.user = {
       userId: fetchedUser.id,
       login: fetchedUser.login,
-    };console.log("sex", this.user.userId)
+    };
     await this.fetchCircuitData();
 
     const circuitoId = this.$route.params.circuitoId;
@@ -153,7 +153,6 @@ export default {
     try {
       if(this.user.userId != null){
         const visualizacion = await VisualizaRepository.findOneByUserAndGP(granPremioId);
-        console.log("TESTEANDO ANDO",visualizacion)
         //if(visualizacion.response)
         if(visualizacion.data.length>=1) this.isViewed = true;
       }
@@ -193,7 +192,6 @@ export default {
         const visualizacionCompleta = await VisualizaRepository.save({ gpId: granPremioId });
         this.idVisualizacion = visualizacionCompleta.data.id;
         this.isViewed = true; // Actualizar el estado a visto
-        console.log(this.idVisualizacion)
         
         Swal.fire("Éxito", "Se ha marcado como visto.", "success");
       } catch (error) {
@@ -365,9 +363,9 @@ export default {
       return "No disponible";
     },
     cambioEdicion(){
-      console.log(this.editando)
+
       this.editando = !this.editando
-      console.log(this.editando)
+
     }
   },
 };

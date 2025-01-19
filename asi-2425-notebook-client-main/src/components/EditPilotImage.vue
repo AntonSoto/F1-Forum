@@ -67,7 +67,6 @@ export default {
 
   methods: {
     editImage() {
-      console.log(`Editando imagen para el piloto: ${this.pilotoId}`);
       // Lógica para editar la imagen
     },
 
