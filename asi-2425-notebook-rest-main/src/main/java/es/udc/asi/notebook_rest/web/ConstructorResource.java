@@ -4,10 +4,7 @@ package es.udc.asi.notebook_rest.web;
 import es.udc.asi.notebook_rest.model.exception.ModelException;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.service.ConstructorService;
-import es.udc.asi.notebook_rest.model.service.dto.ConstructorDTO;
-import es.udc.asi.notebook_rest.model.service.dto.ImageDTO;
-import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
-import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
+import es.udc.asi.notebook_rest.model.service.dto.*;
 import es.udc.asi.notebook_rest.web.exceptions.RequestBodyNotValidException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -30,6 +27,11 @@ public class ConstructorResource {
   @GetMapping("/{ano}")
   public Collection<ConstructorDTO> findByCampeonatoAno(@PathVariable Long ano) throws NotFoundException {
     return constructorService.findByCampeonatoAno(ano);
+  }
+
+  @GetMapping("/{id}")
+  public ConstructorDTO findOne(@PathVariable String id) throws NotFoundException {
+    return constructorService.findById(id);
   }
 
   @PostMapping

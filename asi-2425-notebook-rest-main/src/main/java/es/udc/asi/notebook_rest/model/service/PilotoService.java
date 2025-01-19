@@ -40,6 +40,14 @@ public class PilotoService {
   @Autowired
   private PilotoConstructorDao pilotoConstructorDao;
 
+  public PilotoDTO findById(String id) throws NotFoundException {
+    Piloto piloto = pilotoDao.findById(id);
+    if (piloto == null) {
+      throw new NotFoundException(id, Circuito.class);
+    }
+    return new PilotoDTO(piloto);
+  }
+
   @Transactional(readOnly = false)
   public PilotoDTO create(PilotoDTO pilotoDTO) {
     Piloto piloto;

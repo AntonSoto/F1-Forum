@@ -7,10 +7,7 @@ import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.repository.CampeonatoConstructorDao;
 import es.udc.asi.notebook_rest.model.repository.CampeonatoDao;
 import es.udc.asi.notebook_rest.model.repository.ConstructorDao;
-import es.udc.asi.notebook_rest.model.service.dto.ConstructorDTO;
-import es.udc.asi.notebook_rest.model.service.dto.ImageDTO;
-import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
-import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
+import es.udc.asi.notebook_rest.model.service.dto.*;
 import es.udc.asi.notebook_rest.model.service.util.ImageService;
 import es.udc.asi.notebook_rest.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +46,14 @@ public class ConstructorService {
       CampeonatoConstructor campeonatoConstructor = (CampeonatoConstructor) resultado[1];
       return new ConstructorDTO(constructor, campeonatoConstructor);
     }).collect(Collectors.toList());
+  }
+
+  public ConstructorDTO findById(String id) throws NotFoundException {
+    Constructor constructor = constructorDao.findById(id);
+    if (constructor == null) {
+      throw new NotFoundException(id, Circuito.class);
+    }
+    return new ConstructorDTO(constructor);
   }
 
   @Transactional(readOnly = false)

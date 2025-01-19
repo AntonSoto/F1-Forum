@@ -5,10 +5,7 @@ import es.udc.asi.notebook_rest.model.exception.ModelException;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.service.NoteService;
 import es.udc.asi.notebook_rest.model.service.PilotoService;
-import es.udc.asi.notebook_rest.model.service.dto.ImageDTO;
-import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
-import es.udc.asi.notebook_rest.model.service.dto.PilotoDTO;
-import es.udc.asi.notebook_rest.model.service.dto.ValoracionDTO;
+import es.udc.asi.notebook_rest.model.service.dto.*;
 import es.udc.asi.notebook_rest.web.exceptions.RequestBodyNotValidException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -35,6 +32,11 @@ public class PilotoResource {
     }
 
     return pilotoService.create(piloto);
+  }
+
+  @GetMapping("/{id}")
+  public PilotoDTO findOne(@PathVariable String id) throws NotFoundException {
+    return pilotoService.findById(id);
   }
 
   @GetMapping("/{ano}")
