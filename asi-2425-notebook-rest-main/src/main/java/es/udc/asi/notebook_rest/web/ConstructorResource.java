@@ -61,7 +61,7 @@ public class ConstructorResource {
   }
 
   @DeleteMapping("/{id}/imagen")
-  public void eliminarImagenDeConstructor(@PathVariable String id, @RequestParam MultipartFile file) throws ModelException {
+  public void eliminarImagenDeConstructor(@PathVariable String id) throws ModelException {
     constructorService.eliminarImagenDeConstructor(id);
   }
 

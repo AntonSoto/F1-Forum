@@ -64,9 +64,14 @@ export default {
       // Lógica para editar la imagen
     },
 
-    deleteImage() {
-      console.log(`Eliminando imagen para el constructor: ${this.constructorId}`);
-      // Lógica para eliminar la imagen
+    async deleteImage() {
+      try {
+          // Llamar al repositorio para guardar la imagen
+          await ConstructorRepository.deleteImage(this.constructorId);
+          console.log("Imagen eliminada exitosamente.");
+        } catch (err) {
+        console.error("Error al eliminar la imagen:", err);
+      }
     },
 
     async addImage() {

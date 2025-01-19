@@ -26,31 +26,34 @@
       </div>
     </div>
 
-    <!-- Lista de todos los circuitos con foto -->
+    <!-- Lista de todos los circuitos por ID -->
     <div class="circuitos-list">
       <h3>Todos los Circuitos</h3>
       <div class="circuitos-list-container">
         <div class="circuitos-row">
-          <div class="circuito-item" v-for="(image, index) in images" :key="index">
-            <a :href="'/circuitos/' + image.name" class="circuito-link-item">
-              <!-- Imagen del circuito -->
-              <img :src="image.src" :alt="image.name" class="circuito-thumbnail" />
+          <!-- Iterar sobre circuitos en función del ID -->
+          <div class="circuito-item" v-for="(circuito, index) in circuitos" :key="circuito.id">
+            <a :href="'/circuitos/' + circuito.id" class="circuito-link-item">
               <!-- Nombre del circuito -->
-              <span>{{ image.name }}</span>
+              <span>{{ circuito.nombreCircuito }}</span>
+              
             </a>
 
             <!-- Botón para editar imagen solo si admin() es true -->
-            <router-link v-if="admin()" :to="{ name: 'EditCircuitImage', params: { circuitId: image.name } }"
-              class="edit-button">
+            <router-link
+              v-if="admin()"
+              :to="{ name: 'EditCircuitImage', params: { circuitId: circuito.id } }"
+              class="edit-button"
+            >
               Editar Imagen
             </router-link>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
+
 
 <script>
 import notexist from "@/assets/images/notexist.jpg";

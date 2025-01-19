@@ -65,7 +65,7 @@ public class CircuitoResource {
   }
 
   @DeleteMapping("/{id}/imagen")
-  public void eliminarImagenDeCircuito(@PathVariable String id, @RequestParam MultipartFile file) throws ModelException {
+  public void eliminarImagenDeCircuito(@PathVariable String id) throws ModelException {
     circuitoService.eliminarImagenDeCircuito(id);
   }
 
