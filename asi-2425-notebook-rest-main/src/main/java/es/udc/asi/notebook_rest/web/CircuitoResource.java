@@ -1,16 +1,22 @@
 package es.udc.asi.notebook_rest.web;
 
+import es.udc.asi.notebook_rest.model.exception.ModelException;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.service.CircuitoService;
 import es.udc.asi.notebook_rest.model.service.NoteService;
 import es.udc.asi.notebook_rest.model.service.dto.CircuitoDTO;
+import es.udc.asi.notebook_rest.model.service.dto.ImageDTO;
 import es.udc.asi.notebook_rest.model.service.dto.NoteDTO;
 import es.udc.asi.notebook_rest.web.exceptions.RequestBodyNotValidException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 
 @RestController
@@ -38,5 +44,25 @@ public class CircuitoResource {
 
     return circuitoService.create(circuito);
   }
+
+  @GetMapping("/{id}/imagen")
+  public void recuperarImagenDeNota(@PathVariable String id, HttpServletResponse response) throws ModelException {
+    ImageDTO imagen = circuitoService.recuperarImagenDeNota(id);
+
+    try {
+      response.setHeader("Content-disposition", "filename=" + imagen.getFilename());
+      response.setContentType(imagen.getMimeType());
+      IOUtils.copy(imagen.getInputStream(), response.getOutputStream());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  @PostMapping("/{id}/imagen")
+  public void guardarImagenDeNota(@PathVariable String id, @RequestParam MultipartFile file) throws ModelException {
+    circuitoService.guardarImagenDeNota(id, file);
+  }
+
 
 }

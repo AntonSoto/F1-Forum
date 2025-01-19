@@ -1,5 +1,6 @@
 package es.udc.asi.notebook_rest.model.repository;
 
+import es.udc.asi.notebook_rest.model.domain.Category;
 import es.udc.asi.notebook_rest.model.domain.Circuito;
 import es.udc.asi.notebook_rest.model.domain.Note;
 import es.udc.asi.notebook_rest.model.domain.User;
@@ -30,6 +31,12 @@ public class CircuitoDaoJpa extends GenericDaoJpa implements CircuitoDao {
   @Override
   public Circuito findById(String id) {
     return entityManager.find(Circuito.class, id);
+  }
+
+  @Override
+  public void update(Circuito circuito) {
+    entityManager.merge(circuito);
+
   }
 
 }
