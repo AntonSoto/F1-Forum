@@ -20,6 +20,8 @@ public class PilotoDaoJpa extends GenericDaoJpa implements PilotoDao {
     entityManager.persist(piloto);
   }
 
+  public void update(Piloto piloto) {entityManager.merge(piloto);}
+
   @Override
   public Collection<Piloto> findAll() {
     return entityManager.createQuery("from Piloto ", Piloto.class).getResultList();

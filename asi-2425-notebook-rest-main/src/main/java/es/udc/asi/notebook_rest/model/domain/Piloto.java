@@ -22,6 +22,8 @@ public class Piloto {
   @OneToMany(mappedBy = "piloto", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<PilotoConstructor> pilotoConstructor = new ArrayList<>();
 
+  private String nombreImagen;
+
   public Piloto() {
     super();
   }
@@ -83,6 +85,14 @@ public class Piloto {
 
   public void setPilotoConstructor(List<PilotoConstructor> pilotoConstructor) {
     this.pilotoConstructor = pilotoConstructor;
+  }
+
+  public String getNombreImagen() {
+    return nombreImagen;
+  }
+
+  public void setNombreImagen(String nombreImagen) {
+    this.nombreImagen = nombreImagen;
   }
 
 }

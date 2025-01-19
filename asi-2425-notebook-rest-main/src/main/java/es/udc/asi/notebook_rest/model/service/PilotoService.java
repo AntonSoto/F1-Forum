@@ -1,13 +1,17 @@
 package es.udc.asi.notebook_rest.model.service;
 
 import es.udc.asi.notebook_rest.model.domain.*;
+import es.udc.asi.notebook_rest.model.exception.ModelException;
 import es.udc.asi.notebook_rest.model.exception.NotFoundException;
 import es.udc.asi.notebook_rest.model.repository.*;
 import es.udc.asi.notebook_rest.model.service.dto.*;
+import es.udc.asi.notebook_rest.model.service.util.ImageService;
 import es.udc.asi.notebook_rest.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,6 +21,9 @@ import java.util.stream.Stream;
 @Service
 @Transactional(readOnly = true, rollbackFor = Exception.class)
 public class PilotoService {
+
+  @Autowired
+  private ImageService imageService;
 
   @Autowired
   private PilotoDao pilotoDao;
@@ -108,6 +115,32 @@ public class PilotoService {
       return new PilotoDTO(piloto, campeonatoPiloto, constructor);
     }).collect(Collectors.toList());
   }
+
+  @Transactional(readOnly = false)
+  public void guardarImagenDePiloto(String id, MultipartFile file) throws ModelException {
+    Piloto piloto = pilotoDao.findById(id);
+    if (piloto == null) {
+      throw new NotFoundException(id, Piloto.class);
+    }
+
+    if (file.isEmpty()) {
+      throw new ModelException("No se ha enviado ninguna imagen");
+    }
+
+    String nombreFichero = imageService.saveImage(file, id, piloto.getClass().getName());
+    piloto.setNombreImagen(nombreFichero);
+    pilotoDao.update(piloto);
+  }
+
+  public ImageDTO recuperarImagenDePiloto(String id) throws ModelException {
+    Piloto piloto = pilotoDao.findById(id);
+    if (piloto == null) {
+      throw new NotFoundException(id, Piloto.class);
+    }
+
+    return imageService.getImage(id, piloto.getNombreImagen());
+  }
+
 
 
 }

@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface PilotoDao {
 
-  void create(Piloto note);
+  void create(Piloto piloto);
+
+  void update(Piloto piloto);
 
   Collection<Piloto> findAll();
 

@@ -17,7 +17,7 @@ public class PilotoDTO {
   private String constructorId;
   private String constructorNombre;
   private String constructorNacionalidad;
-
+  private Boolean tieneImagen = false;
 
   public PilotoDTO() {
   }
@@ -30,12 +30,20 @@ public class PilotoDTO {
     this.puntos = campeonatoPiloto.getPuntos();
     this.constructorId = constructor.getId();
     this.constructorNombre = constructor.getNombre();
+    if (piloto.getNombreImagen() != null) {
+      this.tieneImagen = true;
+    }
+
   }
 
   public PilotoDTO(Piloto piloto) {
     this.id = piloto.getId();
     this.nombreCompleto = piloto.getNombreCompleto();
     this.nacionalidad = piloto.getNacionalidad();
+    if (piloto.getNombreImagen() != null) {
+      this.tieneImagen = true;
+    }
+
   }
 
   public PilotoDTO(
@@ -124,4 +132,9 @@ public class PilotoDTO {
   public void setAno(Long ano) {
     this.ano = ano;
   }
+
+  public Boolean getTieneImagen() {
+    return tieneImagen;
+  }
+
 }

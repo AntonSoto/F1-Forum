@@ -42,7 +42,7 @@ public class ConstructorResource {
   }
 
   @GetMapping("/{id}/imagen")
-  public void recuperarImagenDeNota(@PathVariable String id, HttpServletResponse response) throws ModelException {
+  public void recuperarImagenDeConstructor(@PathVariable String id, HttpServletResponse response) throws ModelException {
     ImageDTO imagen = constructorService.recuperarImagenDeConstructor(id);
 
     try {
@@ -56,7 +56,7 @@ public class ConstructorResource {
   }
 
   @PostMapping("/{id}/imagen")
-  public void guardarImagenDeNota(@PathVariable String id, @RequestParam MultipartFile file) throws ModelException {
+  public void guardarImagenDeConstructor(@PathVariable String id, @RequestParam MultipartFile file) throws ModelException {
     constructorService.guardarImagenDeConstructor(id, file);
   }
 
