@@ -100,6 +100,28 @@ public class UserService {
     return new UserDTOPublic(user);
   }
 
+
+  @Transactional(readOnly = false)
+  public UserDTOPublic changePassword(Long id, String password) throws NotFoundException, OperationNotAllowed {
+    User user = userDAO.findById(id);
+    if (user == null) {
+      throw new NotFoundException(id.toString(), User.class);
+    }
+
+    UserDTOPrivate currentUser = getCurrentUserWithAuthority();
+    if (currentUser.getId().equals(user.getId())) {
+
+      String encryptedPassword = passwordEncoder.encode(password);
+      user.setPassword(encryptedPassword);
+      userDAO.update(user);
+      return new UserDTOPublic(user);
+
+    }else{
+      throw new OperationNotAllowed("No se puede marcar como visto por otro usuario");
+    }
+
+  }
+
   public UserDTOPrivate getCurrentUserWithAuthority() {
     String currentUserLogin = SecurityUtils.getCurrentUserLogin();
     if (currentUserLogin != null) {
