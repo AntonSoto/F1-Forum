@@ -68,7 +68,7 @@ export default {
     async fetchDriverStandings() {
       if (!this.selectedYear) {
         this.invalidYear = false;
-        this.loadDataConstructor('current');
+        await this.loadDataConstructor('current');
         return this.loadData('current');
       }
 
