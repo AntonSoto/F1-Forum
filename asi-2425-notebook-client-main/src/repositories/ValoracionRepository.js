@@ -39,7 +39,7 @@ export default {
   
       // Ordenar las valoraciones por la fecha más reciente (de mayor a menor)
       valoraciones.sort((a, b) => new Date(b.fechaValoracion) - new Date(a.fechaValoracion));
-        console.log("EEEEEEEE",valoraciones)
+        console.log("ESTOY ENCONTRANDO LAS VALORACIONES DE UN GRAN PREMIO",valoraciones)
       return valoraciones;
     } catch (error) {
       throw new Error("Error al obtener las valoraciones del gran premio: " + (error.response?.data?.message || error.message));

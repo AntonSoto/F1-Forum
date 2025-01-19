@@ -14,14 +14,23 @@
       <ul><strong>Clasificación:</strong> {{ formatFecha(circuit.fechaHoraClasificacion) }}</ul>
       <ul><strong>Sprint:</strong> {{ formatFecha(circuit.fechaHoraSprint) }}</ul>
       <ul><strong>Carrera:</strong> {{ formatFecha(circuit.fechaHoraCarrera) }}</ul>
+
+      <!-- Nuevo botón -->
+      <button
+        class="toggle-status"
+        :class="{ 'not-viewed': !isViewed, 'viewed': isViewed }"
+        @click="toggleViewStatus"
+      >
+        {{ isViewed ? 'Visto' : 'No Visto' }}
+      </button>
     </div>
     <div class="rigth-column">
       <div id="map" class="map-container"></div>
     </div>
   </div>
+
   <div class="valoraciones">
     <h2>Valoraciones</h2>
-
     <!-- Formulario para añadir valoración -->
     <div class="add-valoracion">
       <textarea v-model="nuevaValoracion.comentario" placeholder="Escribe tu valoración aquí..." rows="4"></textarea>
@@ -46,23 +55,13 @@
           <button @click="editarValoracion(valoracion)" v-if="valoracion.user === user.login">Editar</button>
           <button @click="eliminarValoracion(valoracion.id)" v-if="valoracion.user === user.login">Eliminar</button>
           <button @click="deleteUser(valoracion.idUser)" v-if="admin()">Eliminar Usuario</button>
-          <!-- Muestra el formulario de edición sobre el comentario si esEditing es verdadero para este comentario -->
-          <div v-if="isEditing === valoracion.id">
-            <textarea v-model="editarValoracionForm.comentario" placeholder="Escribe tu valoración aquí..." rows="4"></textarea>
-            <select v-model="editarValoracionForm.puntuacion">
-              <option disabled value="">Selecciona una puntuación</option>
-              <option v-for="puntuacion in [1, 2, 3, 4, 5]" :key="puntuacion" :value="puntuacion">
-                {{ puntuacion }}
-              </option>
-            </select>
-            <button @click="actualizarValoracion(valoracion.id)">Actualizar Valoración</button>
-          </div>
         </li>
       </ul>
     </div>
     <p v-else>Este circuito aún no tiene valoraciones. ¡Sé el primero en opinar!</p>
   </div>
 </template>
+
 
 
 <script>
@@ -74,6 +73,7 @@ import ValoracionRepository from "@/repositories/ValoracionRepository";
 import AccountRepository from "@/repositories/AccountRepository";
 import UserRepository from '@/repositories/UserRepository';
 import auth from "@/common/auth";
+import VisualizaRepository from '@/repositories/VisualizaRepository';
 
 export default {
   data() {
@@ -96,6 +96,7 @@ export default {
           fechaHoraClasificacion: "",
           fechaHoraCarrera: "",
           fechaHoraSprint: "",
+          granPremioId: null,
         },
       },
       valoraciones: [], // Lista de valoraciones
@@ -110,6 +111,8 @@ export default {
         comentario: "",
         puntuacion: "",
       },
+      isViewed: false,
+      idVisualizacion: null,
     };
   },
   async mounted() {
@@ -118,14 +121,64 @@ export default {
     this.user = {
       userId: fetchedUser.id,
       login: fetchedUser.login,
-    
+
     };
     await this.fetchCircuitData();
+
+    const circuitoId = this.$route.params.circuitoId;
+    const circuitData = await CircuitRepository.findOne(circuitoId);
+    const granPremioId = circuitData.grandesPremios?.[0]?.id;
+
+    try {
+      const visualizacion = await VisualizaRepository.findOneByUserAndGP(granPremioId);
+      console.log("TESTEANDO ANDO",visualizacion)
+      //if(visualizacion.response)
+      if(visualizacion.data.length>=1) this.isViewed = true;
+    } catch (error) {
+      console.error("Error al verificar la visualización:", error.message);
+      this.isViewed = false; // Si ocurre un error, el estado es false
+    }
+
   },
   methods: {
+    toggleViewStatus() {
+      this.isViewed = !this.isViewed;
+    },
     admin() {
       return auth.isAdmin();
     },
+    async toggleViewStatus() {
+    const circuitoId = this.$route.params.circuitoId;
+    const circuitData = await CircuitRepository.findOne(circuitoId);
+    const granPremioId = circuitData.grandesPremios?.[0]?.id;
+
+
+    if (this.isViewed) {
+      // Eliminar visualización
+      try {
+        await VisualizaRepository.delete( this.idVisualizacion);
+        this.isViewed = false; // Actualizar el estado a no visto
+        Swal.fire("Éxito", "Se ha eliminado la visualización.", "success");
+      } catch (error) {
+        console.error("Error al eliminar la visualización:", error.message);
+        Swal.fire("Error", "No se pudo eliminar la visualización.", "error");
+      }
+    } else {
+      // Crear visualización
+      try {
+        const visualizacionCompleta = await VisualizaRepository.save({ gpId: granPremioId });
+        this.idVisualizacion = visualizacionCompleta.data.id;
+        this.isViewed = true; // Actualizar el estado a visto
+        console.log(this.idVisualizacion)
+        
+        Swal.fire("Éxito", "Se ha marcado como visto.", "success");
+      } catch (error) {
+        console.error("Error al guardar la visualización:", error.message);
+        Swal.fire("Error", "No se pudo guardar la visualización.", "error");
+      }
+    }
+  },
+
     async deleteUser(id) {
       Swal.fire({
         title: "¿Estás seguro?",
@@ -216,7 +269,8 @@ export default {
           fechaHoraLibres3: circuitData.grandesPremios?.[0]?.fechaHoraLibres3,
           fechaHoraClasificacion: circuitData.grandesPremios?.[0]?.fechaHoraClasificacion,
           fechaHoraCarrera: circuitData.grandesPremios?.[0]?.fechaHoraCarrera,
-          fechaHoraSprint: circuitData.grandesPremios?.[0]?.fechaHoraSprint
+          fechaHoraSprint: circuitData.grandesPremios?.[0]?.fechaHoraSprint,
+          fechaHoraSprint: circuitData.grandesPremios?.[0]?.granPremioId
         };
 
         this.initializeMap();
@@ -230,7 +284,7 @@ export default {
         const circuitData = await CircuitRepository.findOne(circuitoId);
         const granPremioId = circuitData.grandesPremios?.[0]?.id
         this.valoraciones = await ValoracionRepository.findAllByGranPremio(granPremioId);
-        console.log("AQUIIIIII,", this.valoraciones)
+        
       } catch (error) {
         console.error("Error al obtener las valoraciones:", error.message);
       }
@@ -422,5 +476,22 @@ export default {
 
 .edit-valoracion button:hover {
   background-color: #b3272e;
+}
+.toggle-status {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  color: white;
+  margin-top: 20px;
+}
+
+.toggle-status.not-viewed {
+  background-color: red;
+}
+
+.toggle-status.viewed {
+  background-color: green;
 }
 </style>
